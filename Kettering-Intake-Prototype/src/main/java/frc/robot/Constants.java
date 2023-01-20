@@ -52,6 +52,7 @@ public final class Constants {
 
     //If we decide to use the PID controller just set this to true 
     public static final boolean ELEVATOR_IS_PID = false;
+    public static final String Motor_R_ID = null;
 
 
 
