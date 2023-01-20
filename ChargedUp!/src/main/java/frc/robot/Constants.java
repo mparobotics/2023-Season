@@ -13,12 +13,43 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final int MOTOR_FL_ID = 0;
-  public static final int MOTOR_FR_ID = 0;
-  public static final int MOTOR_BL_ID = 0;
-  public static final int MOTOR_BR_ID = 0;
+  public final class DriveTrainConstants{
+    //!  ALL PLACEHOLDERS - NOT TESTED!
+    //motor IDs
+    public static final int MOTOR_FL_ID = 0;
+    public static final int MOTOR_FR_ID = 0;
+    public static final int MOTOR_BL_ID = 0;
+    public static final int MOTOR_BR_ID = 0;
 
-  public static final int COMPRESSOR_ID = 0;
+    //pneumatics compressor
+    public static final int COMPRESSOR_ID = 0;
 
-  public static final int SOLENOID_CHANNEL = 0;
+    //gear shifter solenoids
+    public static final int LEFT_SOLENOID_CHANNEL = 0;
+    public static final int RIGHT_SOLENOID_CHANNEL = 0;
+
+    //driving speeds
+    public static final double TURNING_SPEED = 1;
+    public static final double DRIVE_SPEED = 1;
+
+    //if the drive speed exceeds this value, then shift into high gear
+    public static final double UPSHIFT_THRESHOLD = 5000;
+    //if the drive speed gets below this value, then shift into low gear
+    public static final double DOWNSHIFT_THRESHOLD = 1000;
+    //difference between motor speeds needs to be below this threshold (RPMs)
+    public static final double TURN_THRESHOLD = 50;
+
+    public static final boolean AUTO_SHIFT_ENABLED = true;
+  }
+  public final class OperatorConstants{
+    public static final int XBOX_CONTROLLER_PORT = 0;
+  }
+  
+  
+    
+
+  
+
+
+  
 }
