@@ -31,7 +31,7 @@ public class DriveSubsystem extends SubsystemBase {
   public DriveSubsystem() {
     motorBR.follow(motorFR); //make back motors follow front motors
     motorBL.follow(motorFL);
-    //invert left motor and keep right motor uninverted
+  //invert left motor and keep right motor uninverted
     motorFL.setInverted(true);
     motorFR.setInverted(false);
     //set following motors
