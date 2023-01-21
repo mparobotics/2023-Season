@@ -28,11 +28,11 @@ public class DriveSubsystem extends SubsystemBase {
   private static final RelativeEncoder encoderL = motorFL.getEncoder();
   private static final RelativeEncoder encoderR = motorFL.getEncoder();
 
-  
-  //differential drive
+
+  //differential drive to control the motors
   private static final DifferentialDrive differentialDrive = new DifferentialDrive(motorFR, motorFL);
 
-  //PH compressor
+  //PH compressor powers the solenoids
   private static final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
 
   //solenoids to control gear shifting
@@ -66,11 +66,7 @@ public class DriveSubsystem extends SubsystemBase {
     shiftSolenoidR.set(false);
   }
   public void setDriveSpeedArcade(double sForward, double sTurning){
-    
-    
     differentialDrive.arcadeDrive(sForward * Constants.DriveTrainConstants.DRIVE_SPEED, sTurning * Constants.DriveTrainConstants.TURNING_SPEED);
-    
-
   }
   
   public CommandBase ShiftUp(){
@@ -96,9 +92,9 @@ public class DriveSubsystem extends SubsystemBase {
       || Math.abs(rvelocity) > Constants.DriveTrainConstants.UPSHIFT_THRESHOLD){
         upShift();
       }
-      //if both motors are below the downshift threshold then shift down
-      if(Math.abs(lvelocity) > Constants.DriveTrainConstants.DOWNSHIFT_THRESHOLD
-      || Math.abs(rvelocity) > Constants.DriveTrainConstants.DOWNSHIFT_THRESHOLD){
+      //if both motors' speeds are below the downshift threshold then shift down
+      if(Math.abs(lvelocity) < Constants.DriveTrainConstants.DOWNSHIFT_THRESHOLD
+      && Math.abs(rvelocity) < Constants.DriveTrainConstants.DOWNSHIFT_THRESHOLD){
         downShift();
       }
     }
