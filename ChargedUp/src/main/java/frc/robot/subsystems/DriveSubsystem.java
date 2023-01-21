@@ -26,7 +26,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final CANSparkMax motorBL = new CANSparkMax(Constants.DriveTrainConstants.MOTOR_BL_ID, MotorType.kBrushless);
   //encoders to measure driving speed
   private final RelativeEncoder encoderL = motorFL.getEncoder();
-  private final RelativeEncoder encoderR = motorFL.getEncoder();
+  private final RelativeEncoder encoderR = motorFR.getEncoder();
 
 
   //differential drive to control the motors
