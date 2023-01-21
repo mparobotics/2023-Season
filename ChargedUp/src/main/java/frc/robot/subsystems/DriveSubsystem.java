@@ -20,24 +20,24 @@ import frc.robot.Constants;
 public class DriveSubsystem extends SubsystemBase {
   /** Creates a new DriveSubsystem. */
   //drive base motors
-  private static final CANSparkMax motorFR = new CANSparkMax(Constants.DriveTrainConstants.MOTOR_FR_ID, MotorType.kBrushless);
-  private static final CANSparkMax motorFL = new CANSparkMax(Constants.DriveTrainConstants.MOTOR_FL_ID, MotorType.kBrushless);
-  private static final CANSparkMax motorBR = new CANSparkMax(Constants.DriveTrainConstants.MOTOR_BR_ID, MotorType.kBrushless);
-  private static final CANSparkMax motorBL = new CANSparkMax(Constants.DriveTrainConstants.MOTOR_BL_ID, MotorType.kBrushless);
+  private final CANSparkMax motorFR = new CANSparkMax(Constants.DriveTrainConstants.MOTOR_FR_ID, MotorType.kBrushless);
+  private final CANSparkMax motorFL = new CANSparkMax(Constants.DriveTrainConstants.MOTOR_FL_ID, MotorType.kBrushless);
+  private final CANSparkMax motorBR = new CANSparkMax(Constants.DriveTrainConstants.MOTOR_BR_ID, MotorType.kBrushless);
+  private final CANSparkMax motorBL = new CANSparkMax(Constants.DriveTrainConstants.MOTOR_BL_ID, MotorType.kBrushless);
   //encoders to measure driving speed
-  private static final RelativeEncoder encoderL = motorFL.getEncoder();
-  private static final RelativeEncoder encoderR = motorFL.getEncoder();
+  private final RelativeEncoder encoderL = motorFL.getEncoder();
+  private final RelativeEncoder encoderR = motorFL.getEncoder();
 
 
   //differential drive to control the motors
-  private static final DifferentialDrive differentialDrive = new DifferentialDrive(motorFR, motorFL);
+  private final DifferentialDrive differentialDrive = new DifferentialDrive(motorFR, motorFL);
 
   //PH compressor powers the solenoids
-  private static final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
+  private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
 
   //solenoids to control gear shifting
-  private static final Solenoid shiftSolenoidL = new Solenoid(PneumaticsModuleType.REVPH, Constants.DriveTrainConstants.LEFT_SOLENOID_CHANNEL);
-  private static final Solenoid shiftSolenoidR = new Solenoid(PneumaticsModuleType.REVPH, Constants.DriveTrainConstants.RIGHT_SOLENOID_CHANNEL);
+  private final Solenoid shiftSolenoidL = new Solenoid(PneumaticsModuleType.REVPH, Constants.DriveTrainConstants.LEFT_SOLENOID_CHANNEL);
+  private final Solenoid shiftSolenoidR = new Solenoid(PneumaticsModuleType.REVPH, Constants.DriveTrainConstants.RIGHT_SOLENOID_CHANNEL);
   
 
 
