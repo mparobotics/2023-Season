@@ -6,9 +6,13 @@ package frc.robot;
 
 
 
+
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.ArcadeDrive;
+import frc.robot.subsystems.DriveSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -16,17 +20,22 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
+
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
- 
+  public static final CommandXboxController xbox = new CommandXboxController(Constants.OperatorConstants.XBOX_CONTROLLER_PORT);
+  //the drive subsystem
+  public static final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    m_driveSubsystem.setDefaultCommand(new ArcadeDrive(m_driveSubsystem, 
+    () -> xbox.getLeftY(), 
+    () -> xbox.getRightX()));
   }
 
   /**
@@ -40,8 +49,13 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    
+    //new JoystickButton(xbox, XboxController.Button.kA.value).onTrue(new ShiftUp(m_driveSubsystem));
+    //new JoystickButton(xbox, XboxController.Button.kB.value).onTrue(new ShiftDown(m_driveSubsystem));
+    xbox.button(Button.kA.value).onTrue(m_driveSubsystem.ShiftUp());
+    xbox.button(Button.kB.value).onTrue(m_driveSubsystem.ShiftDown());
 
+    m_driveSubsystem.setDefaultCommand(new ArcadeDrive(m_driveSubsystem, 
+    () -> xbox.getLeftY(), () -> xbox.getRightX()));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     
