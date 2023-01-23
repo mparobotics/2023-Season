@@ -19,9 +19,13 @@ import frc.robot.subsystems.IntakeSubsystem;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+  //creating xbox controller for intake 
   CommandXboxController xbox = new CommandXboxController(1);
+
   // The robot's subsystems and commands are defined here...
+  //Creating instance of IntakeSubsystem called m_intakeSubsystem
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
  
@@ -44,6 +48,7 @@ public class RobotContainer {
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
       //creates a command xbox controller on port 1
+    //Configuring xbox buttons to intake subsystem functions 
     xbox.button(Button.kLeftBumper.value).whileTrue(m_intakeSubsystem.intakeForward());
     xbox.button(Button.kRightBumper.value).whileTrue(m_intakeSubsystem.outtakeForward());
 
