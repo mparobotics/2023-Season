@@ -64,14 +64,14 @@ public class DriveSubsystem extends SubsystemBase { // creates a drive subsystem
     shiftSolenoidL.set(false);
     shiftSolenoidR.set(false);
   }
-  public void setDriveSpeedArcade(double sForward, double sTurning){   // 
-    differentialDrive.arcadeDrive(sForward * Constants.DriveTrainConstants.DRIVE_SPEED, sTurning * Constants.DriveTrainConstants.TURNING_SPEED);
-  }
+  public void setDriveSpeedArcade(double sForward, double sTurning){   // method that defines setDriveSpeedArcade as habing sforward and sturning va.ues. the values ae taken from ArcadeDrive which take it from robot container which take it from the input.
+    differentialDrive.arcadeDrive(sForward * Constants.DriveTrainConstants.DRIVE_SPEED/*It is set to 1, but subject to change */, sTurning * Constants.DriveTrainConstants.TURNING_SPEED);
+  } // arcade drive translates buttons to speed
   
   public CommandBase ShiftUp(){  //... what is this. I know this is only for stuf that runs once, but like what?
-    return runOnce(() -> upShift());
+    return runOnce(() -> upShift()); //method that returns command. it makes a command
   }
-  public CommandBase ShiftDown(){ //... I know what this does. It moves the thing down and you call this command. but idk syntaz. and also where is ShiftDown defined? 4 questions from these four lines.
+  public CommandBase ShiftDown(){ //... I know what this does. It moves the thing down and you call this command. but idk syntaz. and also where is ShiftDown defined? 2 questions from these two lines.
     return runOnce(() -> downShift());
   }
   @Override

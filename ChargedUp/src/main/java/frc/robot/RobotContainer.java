@@ -11,7 +11,9 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ArcadeDrive;
+import frc.robot.subsystems.DoubleSolenoidSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 
 /**
@@ -23,9 +25,9 @@ import frc.robot.subsystems.DriveSubsystem;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-
-
+  private final DoubleSolenoidSubsystem m_doublesolenoidSubsystem = new DoubleSolenoidSubsystem();
   public static final CommandXboxController xbox = new CommandXboxController(Constants.OperatorConstants.XBOX_CONTROLLER_PORT);
+  private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
   //the drive subsystem
   public static final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
 
@@ -48,6 +50,10 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    m_driverController.y().whileTrue(m_doublesolenoidSubsystem.retract());
+    m_driverController.b().whileTrue(m_doublesolenoidSubsystem.chuteIntake());
+    m_driverController.a().whileTrue(m_doublesolenoidSubsystem.shoot());
+    m_driverController.x().whileTrue(m_doublesolenoidSubsystem.groundIntake());
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     //new JoystickButton(xbox, XboxController.Button.kA.value).onTrue(new ShiftUp(m_driveSubsystem));
     //new JoystickButton(xbox, XboxController.Button.kB.value).onTrue(new ShiftDown(m_driveSubsystem));
@@ -70,4 +76,6 @@ public class RobotContainer {
     // An example command will be run in autonomous
     return null;
   }
+
+
 }

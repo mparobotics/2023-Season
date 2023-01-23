@@ -43,6 +43,7 @@ public final class Constants {
   }
   public final class OperatorConstants{
     public static final int XBOX_CONTROLLER_PORT = 0;
+    public static final int kDriverControllerPort = 0;
   }
   
   

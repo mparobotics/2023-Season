@@ -9,10 +9,10 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class ArcadeDrive extends CommandBase {
+public class ArcadeDrive extends CommandBase {    //
   /** Creates a new ArcadeDrive. */
-  private static DriveSubsystem m_driveSubsystem;
-  private DoubleSupplier m_sForward;
+  private static DriveSubsystem m_driveSubsystem; // making a new variable from prestablished variable
+  private DoubleSupplier m_sForward; //
   private DoubleSupplier m_sTurning;
   public ArcadeDrive(DriveSubsystem driveSub, DoubleSupplier sForward, DoubleSupplier sTurning) {
     // Use addRequirements() here to declare subsystem dependencies.
