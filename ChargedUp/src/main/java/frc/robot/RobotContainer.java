@@ -6,9 +6,11 @@ package frc.robot;
 
 
 
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.IntakeSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -17,8 +19,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+  CommandXboxController xbox = new CommandXboxController(1);
   // The robot's subsystems and commands are defined here...
-
+  private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
  
@@ -40,7 +43,9 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    
+      //creates a command xbox controller on port 1
+    xbox.button(Button.kLeftBumper.value).whileTrue(m_intakeSubsystem.intakeForward());
+    xbox.button(Button.kRightBumper.value).whileTrue(m_intakeSubsystem.outtakeForward());
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
