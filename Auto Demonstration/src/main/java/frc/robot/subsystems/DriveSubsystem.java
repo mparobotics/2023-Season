@@ -130,6 +130,8 @@ public class DriveSubsystem extends SubsystemBase {
   public void resetOdometry(Pose2d pose) {
     encoderReset();
     m_odometry.resetPosition(navx.getRotation2d(), encoderL.getPosition(), encoderR.getPosition(), pose);
+
+    //if things don't work look here first, need to convert position? shouldnt need to bc encoders are reset to 0
   }
 
   @Override

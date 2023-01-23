@@ -41,7 +41,7 @@ public final class Constants {
     //difference between motor speeds needs to be below this threshold (RPMs)
     public static final double TURN_THRESHOLD = 50;
 
-    public static final boolean AUTO_SHIFT_ENABLED = true;
+    public static boolean AUTO_SHIFT_ENABLED = false;
 
     public static final double ROTATIONS_TO_METERS = (8 * Math.PI * .0254); // wheel diameter in inches * pi * inches to meters conversion
     public static final double Drive_Ks = 0.6057;

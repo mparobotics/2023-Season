@@ -117,22 +117,25 @@ public class RobotContainer {
             DriveConstants.Drive_Ks,
             DriveConstants.Drive_Kv,
             DriveConstants.Drive_Ka),
-        DriveConstants.kDriveKinematics,
-        driveSub::getWheelSpeeds,
-        leftController,
-        rightController,
+          DriveConstants.kDriveKinematics,
+          driveSub::getWheelSpeeds,
+          leftController,
+          rightController,
         // RamseteCommand passes volts to the callback
         driveSub::tankDriveVolts,
         driveSub);
 
-      leftMeasurement.setNumber(driveSub.getWheelSpeeds().leftMetersPerSecond);
-      leftReference.setNumber(leftController.getSetpoint());
+
+    leftMeasurement.setNumber(driveSub.getWheelSpeeds().leftMetersPerSecond);
+    leftReference.setNumber(leftController.getSetpoint());
       
-      rightMeasurement.setNumber(driveSub.getWheelSpeeds().rightMetersPerSecond);
-      rightReference.setNumber(rightController.getSetpoint());
+    rightMeasurement.setNumber(driveSub.getWheelSpeeds().rightMetersPerSecond);
+    rightReference.setNumber(rightController.getSetpoint());
         
-      // Reset odometry to the starting pose of the trajectory.
-      driveSub.resetOdometry(trajectoryOne.getInitialPose());
+    // Reset odometry to the starting pose of the trajectory.
+    driveSub.resetOdometry(trajectoryOne.getInitialPose());
+
+    return ramseteCommandOne.andThen(() -> driveSub.tankDriveVolts(0, 0));
 
   }
 
