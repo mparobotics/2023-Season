@@ -7,6 +7,8 @@ package frc.robot;
 
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.DoubleSolenoidSubsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -18,13 +20,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-
-
+  private final DoubleSolenoidSubsystem m_doublesolenoidSubsystem = new DoubleSolenoidSubsystem(); //replicating a double solenoid subsystem
+  private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
   // Replace with CommandPS4Controller or CommandJoystick if needed
  
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    
     // Configure the trigger bindings
     configureBindings();
   }
@@ -44,7 +47,10 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    
+    m_driverController.y().whileTrue(m_doublesolenoidSubsystem.retract()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
+    m_driverController.b().whileTrue(m_doublesolenoidSubsystem.chuteintake()); 
+    m_driverController.a().whileTrue(m_doublesolenoidSubsystem.shoot()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
+    m_driverController.x().whileTrue(m_doublesolenoidSubsystem.groundintake());// when a is pressed, it calls the reverseSolenoid command that is inside the double solenoid subsystem which makes it go backward.
   }
 
   /**

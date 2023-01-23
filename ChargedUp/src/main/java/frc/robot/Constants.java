@@ -21,4 +21,12 @@ public final class Constants {
   public static final int COMPRESSOR_ID = 0;
 
   public static final int SOLENOID_CHANNEL = 0;
+
+  public static class Constants 
+  {
+    public static class OperatorConstants
+    {
+      public static final int kDrivercontrollerPort = 0; 
+    }
+  }
 }
