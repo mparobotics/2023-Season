@@ -47,7 +47,10 @@ public class RobotContainer {
 
   private  DifferentialDriveKinematics DRIVE_KINEMATICS =
             new DifferentialDriveKinematics(DriveConstants.TRACK_WIDTH_METERS);
-
+  
+  PIDController leftController; 
+  PIDController rightController; 
+  
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -80,37 +83,22 @@ public class RobotContainer {
     
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    //troubleshooting info
-    var table = NetworkTableInstance.getDefault().getTable("troubleshooting");
-    var leftReference = table.getEntry("left reference");
-    var leftMeasurement = table.getEntry("left measurement");
-    var rightReference = table.getEntry("right reference");
-    var rightMeasurement = table.getEntry("right measurement");
-    //Individual PID 
-    var leftController = new PIDController(DriveConstants.DRIVE_P_GAIN, 0, 0);
-    var rightController = new PIDController(DriveConstants.DRIVE_P_GAIN, 0, 0);
-
-    Trajectory TestTrajectory = new Trajectory();
-
-    String TestTrajectoryFile = "pathplanner/generatedJSON/Path1.wpilib.json";
-
+  //function makes a ramsete command from a file path String
+  private RamseteCommand makeRamseteCommand(String filePath){
+    //Individual PID controllers for the left and right sides 
+    
+    Trajectory pTrajectory = new Trajectory();
     try{
-      Path TestTrajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(TestTrajectoryFile);
-      TestTrajectory = TrajectoryUtil.fromPathweaverJson(TestTrajectoryPath);
+      Path TrajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(filePath);
+      pTrajectory = TrajectoryUtil.fromPathweaverJson(TrajectoryPath);
     }
     catch(IOException ex){
-      DriverStation.reportError("Unable to open trajectory:" + TestTrajectoryFile, ex.getStackTrace());
+      DriverStation.reportError("Unable to open trajectory:" + filePath, ex.getStackTrace());
     }
     
-    RamseteCommand TestRamseteCommand =
-      new RamseteCommand(
-        TestTrajectory,
+    
+    RamseteCommand rCommand = new RamseteCommand(
+        pTrajectory,
         m_driveSubsystem::getPose,
         new RamseteController(DriveConstants.RAMSETE_B, DriveConstants.RAMSETE_ZETA),
         new SimpleMotorFeedforward(DriveConstants.DRIVE_KS, DriveConstants.DRIVE_KV, DriveConstants.DRIVE_KA),
@@ -123,19 +111,41 @@ public class RobotContainer {
         m_driveSubsystem
       );
     
+    // Reset odometry to the starting pose of the trajectory.
+    m_driveSubsystem.resetOdometry(pTrajectory.getInitialPose());
+   
+    return rCommand;
+
+  }
+
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
+  public Command getAutonomousCommand() {
+    //troubleshooting info
+    var table = NetworkTableInstance.getDefault().getTable("troubleshooting");
+    var leftReference = table.getEntry("left reference");
+    var leftMeasurement = table.getEntry("left measurement");
+    var rightReference = table.getEntry("right reference");
+    var rightMeasurement = table.getEntry("right measurement");
+    
+    leftController = new PIDController(DriveConstants.DRIVE_P_GAIN, 0, 0);
+    rightController = new PIDController(DriveConstants.DRIVE_P_GAIN, 0, 0);
+    
+    String TrajectoryFile1 = "pathplanner/generatedJSON/Path1.wpilib.json";
+    
+    
+    
     leftMeasurement.setNumber(m_driveSubsystem.getWheelSpeeds().leftMetersPerSecond);
     leftReference.setNumber(leftController.getSetpoint());
 
     rightMeasurement.setNumber(m_driveSubsystem.getWheelSpeeds().rightMetersPerSecond);
     rightReference.setNumber(rightController.getSetpoint());
     
-    // Reset odometry to the starting pose of the trajectory.
-    m_driveSubsystem.resetOdometry(TestTrajectory.getInitialPose());
-
+    return makeRamseteCommand(TrajectoryFile1).andThen(() -> m_driveSubsystem.tankDriveVolts(0,0));
     
-    //run the ramsete command, then stop the robot at the end
-   
-    return TestRamseteCommand.andThen(() -> m_driveSubsystem.tankDriveVolts(0,0));
-    
+  
   }
 };
