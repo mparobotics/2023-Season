@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.DoubleSolenoidSubsystem;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -40,17 +41,17 @@ import frc.robot.subsystems.DriveSubsystem;
  */
 
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final DoubleSolenoidSubsystem m_doublesolenoidSubsystem = new DoubleSolenoidSubsystem(); //replicating a double solenoid subsystem
-  private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.XBOX_CONTROLLER_PORT);
-  // Replace with CommandPS4Controller or CommandJoystick if needed
  
 
 
   //xbox controller
   private CommandXboxController xbox = new CommandXboxController(Constants.OperatorConstants.XBOX_CONTROLLER_PORT);
+  private CommandJoystick box = new CommandJoystick(OperatorConstants.BOX_ID);
+
   //the drive subsystem
   private DriveSubsystem m_driveSubsystem = new DriveSubsystem();
+  //the pneumatics to control the arm
+  private DoubleSolenoidSubsystem m_doublesolenoidSubsystem = new DoubleSolenoidSubsystem(); 
 
   //moving the drive kinematics from Constants to DriveSubsystem fixed the static issue
   private  DifferentialDriveKinematics DRIVE_KINEMATICS =
@@ -92,10 +93,10 @@ public class RobotContainer {
     () -> xbox.getLeftY(), () -> xbox.getRightX()));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.y().whileTrue(m_doublesolenoidSubsystem.retract()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
-    m_driverController.b().whileTrue(m_doublesolenoidSubsystem.chuteintake()); 
-    m_driverController.a().whileTrue(m_doublesolenoidSubsystem.shoot()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
-    m_driverController.x().whileTrue(m_doublesolenoidSubsystem.groundintake());// when a is pressed, it calls the reverseSolenoid command that is inside the double solenoid subsystem which makes it go backward.
+    box.button(1).whileTrue(m_doublesolenoidSubsystem.retract()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
+    box.button(4).whileTrue(m_doublesolenoidSubsystem.chuteintake()); 
+    box.button(2).whileTrue(m_doublesolenoidSubsystem.shoot()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
+    box.button(3).whileTrue(m_doublesolenoidSubsystem.groundintake());// when a is pressed, it calls the reverseSolenoid command that is inside the double solenoid subsystem which makes it go backward.
   }
 
   /**
