@@ -19,7 +19,7 @@ public class DoubleSolenoidSubsystem extends SubsystemBase {
   Compressor phCompressorA = new Compressor(1, PneumaticsModuleType.REVPH);
   Compressor phCompressorB = new Compressor(2, PneumaticsModuleType.REVPH); // makes a new compressor class, the electricity port is number 1
   DoubleSolenoid doubleSolenoidA = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1); // makes a new double solenoid class at 1(retracts) and 0(forward)
-  DoubleSolenoid doubleSolenoidB = new DoulbeSolenoid (PneumaticsModuleType.REVPH, 2, 3);
+  DoubleSolenoid doubleSolenoidB = new DoubleSolenoid(PneumaticsModuleType.REVPH, 2, 3);
 
   public DoubleSolenoidSubsystem() {
     phCompressorA.enableDigital();
