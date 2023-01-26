@@ -40,14 +40,16 @@ import frc.robot.subsystems.DriveSubsystem;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-
+  //xbox controller
   private CommandXboxController xbox = new CommandXboxController(Constants.OperatorConstants.XBOX_CONTROLLER_PORT);
   //the drive subsystem
   private DriveSubsystem m_driveSubsystem = new DriveSubsystem();
 
+  //moving the drive kinematics from Constants to DriveSubsystem fixed the static issue
   private  DifferentialDriveKinematics DRIVE_KINEMATICS =
             new DifferentialDriveKinematics(DriveConstants.TRACK_WIDTH_METERS);
   
+  //individual pid controllers for the left and right sides of the robot
   PIDController leftController; 
   PIDController rightController; 
   
@@ -73,7 +75,9 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     //new JoystickButton(xbox, XboxController.Button.kA.value).onTrue(new ShiftUp(m_driveSubsystem));
     //new JoystickButton(xbox, XboxController.Button.kB.value).onTrue(new ShiftDown(m_driveSubsystem));
+    //A button shifts the gearbox into high gear
     xbox.button(Button.kA.value).onTrue(m_driveSubsystem.ShiftUp());
+    //B button shifts the gearbox into low gear
     xbox.button(Button.kB.value).onTrue(m_driveSubsystem.ShiftDown());
 
     m_driveSubsystem.setDefaultCommand(new ArcadeDrive(m_driveSubsystem, 
@@ -83,11 +87,14 @@ public class RobotContainer {
     
   }
 
-  //function makes a ramsete command from a file path String
+  /**
+   takes a location of the JSON file as an input
+   generates a ramsete command from the file
+   */
   private RamseteCommand makeRamseteCommand(String filePath){
-    //Individual PID controllers for the left and right sides 
-    
+    //trajectory object
     Trajectory pTrajectory = new Trajectory();
+    //try to open the file
     try{
       Path TrajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(filePath);
       pTrajectory = TrajectoryUtil.fromPathweaverJson(TrajectoryPath);
@@ -96,7 +103,7 @@ public class RobotContainer {
       DriverStation.reportError("Unable to open trajectory:" + filePath, ex.getStackTrace());
     }
     
-    
+    //creates the ramsete command
     RamseteCommand rCommand = new RamseteCommand(
         pTrajectory,
         m_driveSubsystem::getPose,
@@ -131,21 +138,21 @@ public class RobotContainer {
     var rightReference = table.getEntry("right reference");
     var rightMeasurement = table.getEntry("right measurement");
     
+    //Set PID controllers
     leftController = new PIDController(DriveConstants.DRIVE_P_GAIN, 0, 0);
     rightController = new PIDController(DriveConstants.DRIVE_P_GAIN, 0, 0);
     
+    //the loaction of a JSON file of the test path
     String TrajectoryFile1 = "pathplanner/generatedJSON/Path1.wpilib.json";
     
     
-    
+    //display values in the table
     leftMeasurement.setNumber(m_driveSubsystem.getWheelSpeeds().leftMetersPerSecond);
     leftReference.setNumber(leftController.getSetpoint());
-
     rightMeasurement.setNumber(m_driveSubsystem.getWheelSpeeds().rightMetersPerSecond);
     rightReference.setNumber(rightController.getSetpoint());
     
+    //execute a command with the first trajectory, then stop the robot
     return makeRamseteCommand(TrajectoryFile1).andThen(() -> m_driveSubsystem.tankDriveVolts(0,0));
-    
-  
   }
 };
