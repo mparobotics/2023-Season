@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import javax.script.Bindings;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -26,33 +27,21 @@ public class IntakeSubsystem extends SubsystemBase
   //Inverting left motor so wheels spin in same direction 
   public IntakeSubsystem()
   {
-  intakeMotorR.setInverted(false);
-  intakeMotorL.setInverted(true);
+  intakeMotorR.setInverted(true);
+  intakeMotorL.setInverted(false);
+
+  intakeMotorL.setIdleMode(IdleMode.kBrake);
+  intakeMotorR.setIdleMode(IdleMode.kBrake);
   }
   
   //setting speed of motors for intake
-  public CommandBase intakeForward()
+  public void intakeForward(double speed)
   {
-    return runOnce(
-    () -> {
       /* one-time action goes here*/
-      intakeMotorL.set(IntakeConstants.INTAKE_SPEED);
-      intakeMotorR.set(IntakeConstants.INTAKE_SPEED);
+      intakeMotorL.set(speed);
+      intakeMotorR.set(speed);
     }
-    );
-  }
   //setting speed of motors for outtake
-  public CommandBase outtakeForward()
-  {
-    return runOnce(
-    () -> {
-      /* one-time action goes here*/
-      intakeMotorL.set(IntakeConstants.OUTTAKE_SPEED);
-      intakeMotorR.set(IntakeConstants.OUTTAKE_SPEED);
-    }
-    );
-  }
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

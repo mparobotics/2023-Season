@@ -16,12 +16,12 @@ public final class Constants {
   public final class IntakeConstants 
   {
   //intake motor ID
-  public static final int INTAKE_MOTOR_R_ID = 0;
-  public static final int INTAKE_MOTOR_L_ID = 0;
-  //intake speed ID
-  public static final double INTAKE_SPEED = .25;
-  //outake speed ID
-  public static final double OUTTAKE_SPEED = -.25;
+  public static final int INTAKE_MOTOR_R_ID = 54;
+  public static final int INTAKE_MOTOR_L_ID = 53;
+  //intake speed
+  public static final double INTAKE_SPEED = .5;
+  public static final double OUTTAKE_SPEED = -1;
+
   }
 
   public static final int MOTOR_FL_ID = 0;

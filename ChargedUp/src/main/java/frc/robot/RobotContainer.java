@@ -6,10 +6,13 @@ package frc.robot;
 
 
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.commands.Intake;
 import frc.robot.subsystems.IntakeSubsystem;
 
 /**
@@ -20,7 +23,7 @@ import frc.robot.subsystems.IntakeSubsystem;
  */
 public class RobotContainer {
   //creating xbox controller for intake 
-  CommandXboxController xbox = new CommandXboxController(1);
+XboxController xbox = new XboxController(0);
 
   // The robot's subsystems and commands are defined here...
   //Creating instance of IntakeSubsystem called m_intakeSubsystem
@@ -49,8 +52,8 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
       //creates a command xbox controller on port 1
     //Configuring xbox buttons to intake subsystem functions 
-    xbox.button(Button.kLeftBumper.value).whileTrue(m_intakeSubsystem.intakeForward());
-    xbox.button(Button.kRightBumper.value).whileTrue(m_intakeSubsystem.outtakeForward());
+    new JoystickButton(xbox, Button.kA.value).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.INTAKE_SPEED));
+    new JoystickButton(xbox, Button.kB.value).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
