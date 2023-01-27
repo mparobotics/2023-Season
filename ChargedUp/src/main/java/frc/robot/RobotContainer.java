@@ -23,15 +23,18 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.DoubleSolenoidSubsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.commands.ArcadeDrive;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ArcadeDrive;
+import frc.robot.commands.Intake;
+import frc.robot.subsystems.IntakeSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -45,6 +48,13 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   //the pneumatics to control the arm
   private final DoubleSolenoidSubsystem m_doublesolenoidSubsystem = new DoubleSolenoidSubsystem(); //replicating a double solenoid subsystem
+  //creating xbox controller for intake 
+
+  // The robot's subsystems and commands are defined here...
+  //Creating instance of IntakeSubsystem called m_intakeSubsystem
+  private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
   //xbox controller
@@ -89,7 +99,10 @@ public class RobotContainer {
     xbox.button(Button.kA.value).onTrue(m_driveSubsystem.ShiftUp());
     //B button shifts the gearbox into low gear
     xbox.button(Button.kB.value).onTrue(m_driveSubsystem.ShiftDown());
-
+      //creates a command xbox controller on port 1
+    //Configuring xbox buttons to intake subsystem functions 
+    box.button(5).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.INTAKE_SPEED)); // when b 
+    box.button(6).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED));
     m_driveSubsystem.setDefaultCommand(new ArcadeDrive(m_driveSubsystem, 
     () -> xbox.getLeftY(), () -> xbox.getRightX()));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
