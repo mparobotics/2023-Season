@@ -22,17 +22,22 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.DoubleSolenoidSubsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.Constants.AutoSelectorConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ArcadeDrive;
+import frc.robot.commands.AutoIntake;
 import frc.robot.commands.Intake;
 import frc.robot.subsystems.IntakeSubsystem;
 
@@ -71,15 +76,22 @@ public class RobotContainer {
   //individual pid controllers for the left and right sides of the robot
   PIDController leftController; 
   PIDController rightController; 
+
+  
+  private String m_autoSelected;
+  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  
+  
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    
+    m_chooser.setDefaultOption("Pick & Score", AutoSelectorConstants.Pick_and_Score);
+    m_chooser.addOption("Leave", AutoSelectorConstants.Leave);
+    m_chooser.addOption("Balance1" , AutoSelectorConstants.Auto3);
+    SmartDashboard.putData("Auto choices", m_chooser);
     // Configure the trigger bindings
     configureBindings();
-    m_driveSubsystem.setDefaultCommand(new ArcadeDrive(m_driveSubsystem, 
-    () -> xbox.getLeftY(), 
-    () -> xbox.getRightX()));
+
   }
 
   /**
@@ -92,33 +104,31 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+    
     //new JoystickButton(xbox, XboxController.Button.kA.value).onTrue(new ShiftUp(m_driveSubsystem));
     //new JoystickButton(xbox, XboxController.Button.kB.value).onTrue(new ShiftDown(m_driveSubsystem));
     //A button shifts the gearbox into high gear
     xbox.button(Button.kA.value).onTrue(m_driveSubsystem.ShiftUp());
     //B button shifts the gearbox into low gear
     xbox.button(Button.kB.value).onTrue(m_driveSubsystem.ShiftDown());
-      //creates a command xbox controller on port 1
-    //Configuring xbox buttons to intake subsystem functions 
-    box.button(5).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.INTAKE_SPEED)); // when b 
-    box.button(6).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED));
+    
+    
     m_driveSubsystem.setDefaultCommand(new ArcadeDrive(m_driveSubsystem, 
     () -> xbox.getLeftY(), () -> xbox.getRightX()));
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
+    
     box.button(1).whileTrue(m_doublesolenoidSubsystem.retract()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
     box.button(4).whileTrue(m_doublesolenoidSubsystem.chuteintake()); 
     box.button(2).whileTrue(m_doublesolenoidSubsystem.shoot()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
     box.button(3).whileTrue(m_doublesolenoidSubsystem.groundintake());// when a is pressed, it calls the reverseSolenoid command that is inside the double solenoid subsystem which makes it go backward.
-
+    box.button(5).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.INTAKE_SPEED));
+    box.button(6).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED));
   }
 
   /**
    takes a location of the JSON file as an input
    generates a ramsete command from the file
    */
-  private RamseteCommand makeRamseteCommand(String filePath){
+  public RamseteCommand makeRamseteCommand(String filePath){
     //trajectory object
     Trajectory pTrajectory = new Trajectory();
     //try to open the file
@@ -157,7 +167,9 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+  
   public Command getAutonomousCommand() {
+    
     //troubleshooting info
     var table = NetworkTableInstance.getDefault().getTable("troubleshooting");
     var leftReference = table.getEntry("left reference");
@@ -170,8 +182,9 @@ public class RobotContainer {
     rightController = new PIDController(DriveConstants.DRIVE_P_GAIN, 0, 0);
     
     //the loaction of a JSON file of the test path
-    String Trajectory_Leave = "pathplanner/generatedJSON/1,2,3 - Leave.wpilib.json";
-    //String Trajectory_Balance = "pathplanner/generatedJSON/2 - Balance.wpilib.json";
+    String Trajectory_pickandscore1 = "pathplanner/generatedJSON/1,2,3 - Pick Up & Score (1).wpilib.json";
+    String Trajectory_pickandscore2 = "pathplanner/generatedJSON/1,2,3 - Pick Up & Score (2).wpilib.json";
+    String Trajectory_leave = "pathplanner/generatedJSON/1,2,3 - Leave.wpilib.json";
     
     //display values in the table
     leftMeasurement.setNumber(m_driveSubsystem.getWheelSpeeds().leftMetersPerSecond);
@@ -179,10 +192,34 @@ public class RobotContainer {
     rightMeasurement.setNumber(m_driveSubsystem.getWheelSpeeds().rightMetersPerSecond);
     rightReference.setNumber(rightController.getSetpoint());
     
-    //execute a command with the first trajectory, then stop the robot
-    return makeRamseteCommand(Trajectory_Leave) //Starts Trajectory_Leave
-          .andThen(m_doublesolenoidSubsystem.retract()) //Retracts Arm
-          .andThen()
-          .andThen(() -> m_driveSubsystem.tankDriveVolts(0,0)); //Stops Robot
+    
+     m_autoSelected = m_chooser.getSelected();
+     System.out.println("Auto Selected: " + m_autoSelected);
+    switch (m_autoSelected)
+    {
+      case AutoSelectorConstants.Pick_and_Score:
+        return m_doublesolenoidSubsystem.groundintake() //Arm moves to groundintake position
+        .andThen(new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED)).withTimeout(2) //Starts outtaking for 2 seconds (for pre-loaded cargo)
+        .andThen(m_doublesolenoidSubsystem.retract()) //Arm moves to retract position
+        .andThen(makeRamseteCommand(Trajectory_pickandscore1)) //Runs "Trajectory_pickandscore1" file
+        .andThen(() -> m_driveSubsystem.tankDriveVolts(0,0)) //stops robot
+        .andThen(new AutoIntake(m_intakeSubsystem, IntakeConstants.INTAKE_SPEED)).withTimeout(3) //Starts intaking for 3 seconds
+        .andThen(Commands.parallel(makeRamseteCommand(Trajectory_pickandscore2))) //Runs "Trajectory_pickandscore2" as soon as robot starts intaking
+        .andThen(m_doublesolenoidSubsystem.groundintake()) //Arm moves to groundintake position
+        .andThen(new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED)).withTimeout(2) //Starts outtaking for 2 seconds
+        .andThen(() -> m_driveSubsystem.tankDriveVolts(0,0)); //stop robot
+      case AutoSelectorConstants.Leave:
+        return makeRamseteCommand(Trajectory_leave);
+      case AutoSelectorConstants.Auto3:
+      //
+        break; 
+    } 
+
+      return null;
+    
+    
+
+
   }
+  
 };

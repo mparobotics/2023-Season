@@ -84,6 +84,14 @@ public final class Constants
     public static final int BOX_ID = 1;
     //public static final int kDrivercontrollerPort = 0; 
     }
+
+    public final class AutoSelectorConstants
+    {
+      public static final String Pick_and_Score = "Pick and Score";
+      public static final String Leave = "Leave";
+      public static final String Auto3 = "Balance";
+
+    }
   
   
     

@@ -36,7 +36,7 @@ public class IntakeSubsystem extends SubsystemBase
       /* one-time action goes here*/
       intakeMotorL.set(speed);
       intakeMotorR.set(speed);
-    }
+  }
   //setting speed of motors for outtake
   @Override
   public void periodic() {
