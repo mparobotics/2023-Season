@@ -155,8 +155,8 @@ public class RobotContainer {
     rightController = new PIDController(DriveConstants.DRIVE_P_GAIN, 0, 0);
     
     //the loaction of a JSON file of the test path
-    String TrajectoryFile1 = "pathplanner/generatedJSON/Path1.wpilib.json";
-    
+    String Trajectory_Leave = "pathplanner/generatedJSON/1,2,3 - Leave.wpilib.json";
+    String Trajectory_Balance = "pathplanner/generatedJSON/2 - Balance.wpilib.json";
     
     //display values in the table
     leftMeasurement.setNumber(m_driveSubsystem.getWheelSpeeds().leftMetersPerSecond);
@@ -165,6 +165,8 @@ public class RobotContainer {
     rightReference.setNumber(rightController.getSetpoint());
     
     //execute a command with the first trajectory, then stop the robot
-    return makeRamseteCommand(TrajectoryFile1).andThen(() -> m_driveSubsystem.tankDriveVolts(0,0));
+    return makeRamseteCommand(Trajectory_Leave) //Starts Trajectory_Leave
+          .andThen(m_doublesolenoidSubsystem.retract()) //Retracts Arm
+          .andThen(() -> m_driveSubsystem.tankDriveVolts(0,0)); //Stops Robot
   }
 };
