@@ -41,8 +41,11 @@ import frc.robot.subsystems.DriveSubsystem;
  */
 
 public class RobotContainer {
- 
 
+  // The robot's subsystems and commands are defined here...
+  //the pneumatics to control the arm
+  private final DoubleSolenoidSubsystem m_doublesolenoidSubsystem = new DoubleSolenoidSubsystem(); //replicating a double solenoid subsystem
+  // Replace with CommandPS4Controller or CommandJoystick if needed
 
   //xbox controller
   private CommandXboxController xbox = new CommandXboxController(Constants.OperatorConstants.XBOX_CONTROLLER_PORT);
@@ -50,8 +53,6 @@ public class RobotContainer {
 
   //the drive subsystem
   private DriveSubsystem m_driveSubsystem = new DriveSubsystem();
-  //the pneumatics to control the arm
-  private DoubleSolenoidSubsystem m_doublesolenoidSubsystem = new DoubleSolenoidSubsystem(); 
 
   //moving the drive kinematics from Constants to DriveSubsystem fixed the static issue
   private  DifferentialDriveKinematics DRIVE_KINEMATICS =
@@ -97,6 +98,7 @@ public class RobotContainer {
     box.button(4).whileTrue(m_doublesolenoidSubsystem.chuteintake()); 
     box.button(2).whileTrue(m_doublesolenoidSubsystem.shoot()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
     box.button(3).whileTrue(m_doublesolenoidSubsystem.groundintake());// when a is pressed, it calls the reverseSolenoid command that is inside the double solenoid subsystem which makes it go backward.
+
   }
 
   /**
@@ -156,7 +158,7 @@ public class RobotContainer {
     
     //the loaction of a JSON file of the test path
     String Trajectory_Leave = "pathplanner/generatedJSON/1,2,3 - Leave.wpilib.json";
-    String Trajectory_Balance = "pathplanner/generatedJSON/2 - Balance.wpilib.json";
+    //String Trajectory_Balance = "pathplanner/generatedJSON/2 - Balance.wpilib.json";
     
     //display values in the table
     leftMeasurement.setNumber(m_driveSubsystem.getWheelSpeeds().leftMetersPerSecond);
@@ -167,6 +169,7 @@ public class RobotContainer {
     //execute a command with the first trajectory, then stop the robot
     return makeRamseteCommand(Trajectory_Leave) //Starts Trajectory_Leave
           .andThen(m_doublesolenoidSubsystem.retract()) //Retracts Arm
+          .andThen()
           .andThen(() -> m_driveSubsystem.tankDriveVolts(0,0)); //Stops Robot
   }
 };
