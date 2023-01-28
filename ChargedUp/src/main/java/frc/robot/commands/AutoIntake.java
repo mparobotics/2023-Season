@@ -4,21 +4,18 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
-public class ArcadeDrive extends CommandBase {
-  /** Creates a new ArcadeDrive. */
-  private DriveSubsystem m_driveSubsystem;
-  private DoubleSupplier m_sForward;
-  private DoubleSupplier m_sTurning;
-  public ArcadeDrive(DriveSubsystem driveSub, DoubleSupplier sForward, DoubleSupplier sTurning) {
+public class AutoIntake extends CommandBase {
+  /** Creates a new AutoIntake. */
+  private final IntakeSubsystem m_IntakeSubsystem;
+  private double m_speed;
+  public AutoIntake(IntakeSubsystem intakeSubsystem, Double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_sForward = sForward;
-    m_driveSubsystem = driveSub;
-    addRequirements(driveSub);
+    m_IntakeSubsystem = intakeSubsystem;
+    m_speed = speed;
+    addRequirements(m_IntakeSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -28,12 +25,14 @@ public class ArcadeDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_driveSubsystem.setDriveSpeedArcade(m_sForward.getAsDouble(), m_sTurning.getAsDouble());
+    m_IntakeSubsystem.intakeForward(m_speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_IntakeSubsystem.intakeForward(0);
+  }
 
   // Returns true when the command should end.
   @Override
