@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 
 
+
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -50,7 +52,7 @@ public class DriveSubsystem extends SubsystemBase {
   private Solenoid shiftSolenoidL = new Solenoid(PneumaticsModuleType.REVPH, DriveConstants.LEFT_SOLENOID_CHANNEL);
   private Solenoid shiftSolenoidR = new Solenoid(PneumaticsModuleType.REVPH, DriveConstants.RIGHT_SOLENOID_CHANNEL);
   
-  public PigeonIMU pige = new AHRS(SPI.Port.kMXP);
+  public WPI_Pigeon2 pigeon = new WPI_Pigeon2(0);
   //odometry object 
   private final DifferentialDriveOdometry m_odometry;
   /** Creates a new DriveSubsystem. */
@@ -72,7 +74,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     //create odometry object using motor positions
     //drive position = motor rotations * rotations to meters conversion constant
-    m_odometry = new DifferentialDriveOdometry(navx.getRotation2d(), 
+    m_odometry = new DifferentialDriveOdometry(pigeon.getRotation2d(), 
     encoderL.getPosition() * DriveConstants.ROTATIONS_TO_METERS, 
     encoderR.getPosition() * DriveConstants.ROTATIONS_TO_METERS);
     
@@ -107,7 +109,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
   public void resetOdometry(Pose2d pose) {
     encoderReset();
-    m_odometry.resetPosition(navx.getRotation2d(), 0,0,pose);
+    m_odometry.resetPosition(pigeon.getRotation2d(), 0,0,pose);
     //we know that the encoders' positions are both zero since we just set them in encoderReset();
   }
   public void tankDriveVolts(double leftVolts, double rightVolts){
@@ -126,6 +128,21 @@ public class DriveSubsystem extends SubsystemBase {
     Double leftWheelMetersPerSecond = (1/60) * DriveConstants.ROTATIONS_TO_METERS * encoderL.getVelocity();
     Double rightWheelMetersPerSecond = (1/60) * DriveConstants.ROTATIONS_TO_METERS * encoderL.getVelocity();
     return new DifferentialDriveWheelSpeeds(leftWheelMetersPerSecond, rightWheelMetersPerSecond);
+  }
+  public void AutoBalance(){
+    double pitch_error = pigeon.getPitch();
+    double balance_kp = .01;
+    double position_adjust = 0.0;
+    double min_command = .01;
+    if (pitch_error > 2.0)
+    {
+            position_adjust = balance_kp * pitch_error - min_command;
+    }
+    else if (pitch_error < 2.0)
+    {
+            position_adjust = balance_kp * pitch_error + min_command;
+    }
+    differentialDrive.arcadeDrive(position_adjust, 0);
   }
   @Override
   public void periodic() {
