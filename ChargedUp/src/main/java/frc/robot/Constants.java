@@ -40,7 +40,7 @@ public final class Constants
     //pneumatics compressor
     public static final int COMPRESSOR_ID = 0;
 
-  public static final int SOLENOID_CHANNEL = 0;
+    public static final int SOLENOID_CHANNEL = 0;
   
     //gear shifter solenoids
     public static final int LEFT_SOLENOID_CHANNEL = 0;
@@ -89,7 +89,7 @@ public final class Constants
     {
       public static final String Pick_and_Score = "Pick and Score";
       public static final String Leave = "Leave";
-      public static final String Auto3 = "Balance";
+      public static final String Balance = "Balance";
 
     }
   

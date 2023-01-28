@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.Constants.AutoSelectorConstants;
 import frc.robot.Constants.DriveConstants;
@@ -39,6 +40,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutoIntake;
 import frc.robot.commands.Intake;
+import frc.robot.commands.TankDriveVolts;
 import frc.robot.subsystems.IntakeSubsystem;
 
 /**
@@ -87,7 +89,7 @@ public class RobotContainer {
   public RobotContainer() {
     m_chooser.setDefaultOption("Pick & Score", AutoSelectorConstants.Pick_and_Score);
     m_chooser.addOption("Leave", AutoSelectorConstants.Leave);
-    m_chooser.addOption("Balance1" , AutoSelectorConstants.Auto3);
+    m_chooser.addOption("Balance1" , AutoSelectorConstants.Balance);
     SmartDashboard.putData("Auto choices", m_chooser);
     // Configure the trigger bindings
     configureBindings();
@@ -198,21 +200,24 @@ public class RobotContainer {
     switch (m_autoSelected)
     {
       case AutoSelectorConstants.Pick_and_Score:
-        return m_doublesolenoidSubsystem.groundintake() //Arm moves to groundintake position
-        .andThen(new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED)).withTimeout(2) //Starts outtaking for 2 seconds (for pre-loaded cargo)
-        .andThen(m_doublesolenoidSubsystem.retract()) //Arm moves to retract position
-        .andThen(makeRamseteCommand(Trajectory_pickandscore1)) //Runs "Trajectory_pickandscore1" file
-        .andThen(() -> m_driveSubsystem.tankDriveVolts(0,0)) //stops robot
-        .andThen(new AutoIntake(m_intakeSubsystem, IntakeConstants.INTAKE_SPEED)).withTimeout(3) //Starts intaking for 3 seconds
-        .andThen(Commands.parallel(makeRamseteCommand(Trajectory_pickandscore2))) //Runs "Trajectory_pickandscore2" as soon as robot starts intaking
-        .andThen(m_doublesolenoidSubsystem.groundintake()) //Arm moves to groundintake position
-        .andThen(new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED)).withTimeout(2) //Starts outtaking for 2 seconds
-        .andThen(() -> m_driveSubsystem.tankDriveVolts(0,0)); //stop robot
+        return new SequentialCommandGroup
+        (m_doublesolenoidSubsystem.groundintake(), //Arm moves to groundintake position
+        new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2), //Starts outtaking for 2 seconds (for pre-loaded cargo)
+        m_doublesolenoidSubsystem.retract(), //Arm moves to retract position
+        makeRamseteCommand(Trajectory_pickandscore1), //Runs "Trajectory_pickandscore1" file
+        new TankDriveVolts(m_driveSubsystem), //stops robot
+        new AutoIntake(m_intakeSubsystem, IntakeConstants.INTAKE_SPEED).withTimeout(3), //Starts intaking for 3 seconds
+        Commands.parallel(makeRamseteCommand(Trajectory_pickandscore2)), //Runs "Trajectory_pickandscore2" as soon as robot starts intaking
+        m_doublesolenoidSubsystem.groundintake(), //Arm moves to groundintake position
+        new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2), //Starts outtaking for 2 seconds
+        new TankDriveVolts(m_driveSubsystem)); //stop robot
       case AutoSelectorConstants.Leave:
-        return makeRamseteCommand(Trajectory_leave);
-      case AutoSelectorConstants.Auto3:
-      //
-        break; 
+        return new SequentialCommandGroup(makeRamseteCommand(Trajectory_leave), new TankDriveVolts(m_driveSubsystem));
+      case AutoSelectorConstants.Balance:
+        return new SequentialCommandGroup(m_doublesolenoidSubsystem.groundintake(), new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED), 
+        (new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED)).withTimeout(2),
+        m_doublesolenoidSubsystem.retract(),
+        makeRamseteCommand(Trajectory_leave));  
     } 
 
       return null;

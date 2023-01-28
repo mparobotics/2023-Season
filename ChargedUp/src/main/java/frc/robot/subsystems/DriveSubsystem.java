@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.DriveConstants;
 
-import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.SPI;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -50,7 +50,7 @@ public class DriveSubsystem extends SubsystemBase {
   private Solenoid shiftSolenoidL = new Solenoid(PneumaticsModuleType.REVPH, DriveConstants.LEFT_SOLENOID_CHANNEL);
   private Solenoid shiftSolenoidR = new Solenoid(PneumaticsModuleType.REVPH, DriveConstants.RIGHT_SOLENOID_CHANNEL);
   
-  public AHRS navx = new AHRS(SPI.Port.kMXP);
+  public PigeonIMU pige = new AHRS(SPI.Port.kMXP);
   //odometry object 
   private final DifferentialDriveOdometry m_odometry;
   /** Creates a new DriveSubsystem. */
