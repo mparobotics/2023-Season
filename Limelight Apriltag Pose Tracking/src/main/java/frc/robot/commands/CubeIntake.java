@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.ElevatorSubsystem;
 
-public class OverrideElevatorMax extends CommandBase {
+public class CubeIntake extends CommandBase {
   private final ElevatorSubsystem m_ElevatorSubsystem;
   /** Command to continue moving the elevator beyond the maximum setpoint (at a slower speed). */
-  public OverrideElevatorMax(ElevatorSubsystem elevSub) {
+  public CubeIntake(ElevatorSubsystem elevSub) {
     m_ElevatorSubsystem = elevSub;
     addRequirements(elevSub);
   }
@@ -26,7 +26,7 @@ public class OverrideElevatorMax extends CommandBase {
     //disable the maximum height limit
     m_ElevatorSubsystem.overrideMax = true;
     //move at a slower speed so we don't break the robot
-    m_ElevatorSubsystem.setElevatorSpeed(1);
+    m_ElevatorSubsystem.setElevatorSpeed(.3);
   }
 
   // Called once the command ends or is interrupted.
