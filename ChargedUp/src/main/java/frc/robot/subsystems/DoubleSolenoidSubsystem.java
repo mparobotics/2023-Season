@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,8 +15,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 public class DoubleSolenoidSubsystem extends SubsystemBase {
   /** Creates a new DoubleSolenoidSubsystem. */
-  
-  Compressor phCompressorB = new Compressor(2, PneumaticsModuleType.REVPH); // makes a new compressor class, the electricity port is number 1
   DoubleSolenoid doubleSolenoidA = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1); // makes a new double solenoid class at 1(retracts) and 0(forward)
   DoubleSolenoid doubleSolenoidB = new DoubleSolenoid(PneumaticsModuleType.REVPH, 2, 3);
 
