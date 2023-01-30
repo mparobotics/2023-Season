@@ -88,7 +88,8 @@ public final class Constants
     public final class AutoSelectorConstants
     {
       public static final String Pick_and_Score = "Pick and Score";
-      public static final String Leave = "Leave";
+      public static final String Score_Low_and_Leave = "Low and Leave";
+      public static final String Score_High_and_Leave = "High and Leave";
       public static final String Balance = "Balance";
       public static final String Example = "Example";
 

@@ -91,7 +91,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     m_chooser.setDefaultOption("Pick & Score", AutoSelectorConstants.Pick_and_Score);
-    m_chooser.addOption("Leave", AutoSelectorConstants.Leave);
+    m_chooser.addOption("Leave", AutoSelectorConstants.Score_Low_and_Leave);
     m_chooser.addOption("Balance1" , AutoSelectorConstants.Balance);
     m_chooser.addOption("Example", AutoSelectorConstants.Example);
     SmartDashboard.putData("Auto choices", m_chooser);
@@ -194,7 +194,6 @@ public class RobotContainer {
     String Trajectory_pickandscore1 = "pathplanner/generatedJSON/1,2,3 - Pick Up & Score (1).wpilib.json";
     String Trajectory_pickandscore2 = "pathplanner/generatedJSON/1,2,3 - Pick Up & Score (2).wpilib.json";
     String Trajectory_leave = "pathplanner/generatedJSON/1,2,3 - Leave.wpilib.json";
-    String Trajectory_example = "pathplanner/generatedJSON/2 - Balance.wpilib.json";
     
     //display values in the table
     leftMeasurement.setNumber(m_driveSubsystem.getWheelSpeeds().leftMetersPerSecond);
@@ -218,14 +217,17 @@ public class RobotContainer {
         m_doublesolenoidSubsystem.groundintake(), //Arm moves to groundintake position
         new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2), //Starts outtaking for 2 seconds
         new TankDriveVolts(m_driveSubsystem)); //stop robot
-      case AutoSelectorConstants.Leave:
-        return new SequentialCommandGroup(makeRamseteCommand(Trajectory_leave), 
+      case AutoSelectorConstants.Score_Low_and_Leave:
+        return new SequentialCommandGroup(m_doublesolenoidSubsystem.groundintake(),
+        new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2),
+        makeRamseteCommand(Trajectory_leave), 
         new TankDriveVolts(m_driveSubsystem));
-      case AutoSelectorConstants.Balance:
-        return new SequentialCommandGroup(m_doublesolenoidSubsystem.groundintake(), new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED), 
-        (new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED)).withTimeout(2),
-        m_doublesolenoidSubsystem.retract(),
-        makeRamseteCommand(Trajectory_leave));  
+      //case AutoSelectorConstants.Score_High_and_Leave:
+        //return new SequentialCommandGroup(m_doublesolenoidSubsystem.shoot(),
+        //new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2),
+        //makeRamseteCommand(Trajectory_score_low_and_leave),
+        //new TankDriveVolts(m_driveSubsystem));
+
 
     } 
 
