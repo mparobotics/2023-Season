@@ -217,9 +217,11 @@ public class RobotContainer {
         m_doublesolenoidSubsystem.groundintake(), //Arm moves to groundintake position
         new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2), //Starts outtaking for 2 seconds
         new TankDriveVolts(m_driveSubsystem)); //stop robot
+      
       case AutoSelectorConstants.Score_Low_and_Leave:
         return new SequentialCommandGroup(m_doublesolenoidSubsystem.groundintake(),
         new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2),
+        m_doublesolenoidSubsystem.retract(),
         makeRamseteCommand(Trajectory_leave), 
         new TankDriveVolts(m_driveSubsystem));
       //case AutoSelectorConstants.Score_High_and_Leave:
