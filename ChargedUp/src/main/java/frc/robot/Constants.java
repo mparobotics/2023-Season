@@ -23,6 +23,9 @@ public final class Constants
   public static final int INTAKE_MOTOR_L_ID = 53;
   //intake speed
   public static final double INTAKE_SPEED = .5;
+
+  public static final double SHOOTING_SPEED = -4; 
+
   public static final double OUTTAKE_SPEED = -1;
 
   }
@@ -90,7 +93,7 @@ public final class Constants
       public static final String Pick_and_Score = "Pick and Score";
       public static final String Leave = "Leave";
       public static final String Balance = "Balance";
-
+      public static final String lowAndLeave = "Score low and Leave";
     }
   
   
