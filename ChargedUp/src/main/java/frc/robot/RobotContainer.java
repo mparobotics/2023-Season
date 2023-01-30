@@ -42,7 +42,6 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutoIntake;
 import frc.robot.commands.Intake;
-import frc.robot.commands.TankDriveVolts;
 import frc.robot.subsystems.IntakeSubsystem;
 
 /**
@@ -137,7 +136,7 @@ public class RobotContainer {
    takes a location of the JSON file as an input
    generates a ramsete command from the file
    */
-  public RamseteCommand makeRamseteCommand(String filePath){
+  private RamseteCommand followTrajectory(String filePath){
     //trajectory object
     Trajectory pTrajectory = new Trajectory();
     //try to open the file
@@ -171,6 +170,30 @@ public class RobotContainer {
 
   }
 
+  private Command runIntaking(double seconds){
+    return new AutoIntake(m_intakeSubsystem, IntakeConstants.INTAKE_SPEED).withTimeout(seconds);
+  }
+  private Command runScoring(double seconds){
+    return new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(seconds);
+  }
+  private Command runShooting(double seconds){
+    return new AutoIntake(m_intakeSubsystem, IntakeConstants.SHOOTING_SPEED).withTimeout(seconds);
+  }
+  private Command setArmGround(){
+    return m_doublesolenoidSubsystem.groundintake();
+  }
+  private Command setArmRetracted(){
+    return m_doublesolenoidSubsystem.groundintake();
+  }
+  private Command setArmShooting(){
+    return m_doublesolenoidSubsystem.groundintake();
+  }
+  private Command setArmIntaking(){
+    return m_doublesolenoidSubsystem.groundintake();
+  }
+  private Command stopRobot(){
+    return m_driveSubsystem.setVolts(0, 0);
+  }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -208,25 +231,31 @@ public class RobotContainer {
     switch (m_autoSelected)
     {
       case AutoSelectorConstants.Pick_and_Score:
-        return new SequentialCommandGroup(m_doublesolenoidSubsystem.groundintake(), 
-        new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2), //Starts outtaking for 2 seconds (for pre-loaded cargo)
-        m_doublesolenoidSubsystem.retract(), //Arm moves to retract position
-        makeRamseteCommand(Trajectory_pickandscore1), //Runs "Trajectory_pickandscore1" file
-        new TankDriveVolts(m_driveSubsystem), //stops robot
-        new AutoIntake(m_intakeSubsystem, IntakeConstants.INTAKE_SPEED).withTimeout(3), //Starts intaking for 3 seconds
-        Commands.parallel(makeRamseteCommand(Trajectory_pickandscore2)), //Runs "Trajectory_pickandscore2" as soon as robot starts intaking
-        m_doublesolenoidSubsystem.groundintake(), //Arm moves to groundintake position
-        new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2), //Starts outtaking for 2 seconds
-        new TankDriveVolts(m_driveSubsystem)); //stop robot
+        return new SequentialCommandGroup(
+          setArmGround(), //Arm moves to groundintake position
+          runScoring(2), //Starts outtaking for 2 seconds (for pre-loaded cargo)
+          setArmRetracted(), //Arm moves to retract position
+          followTrajectory(Trajectory_pickandscore1), //Runs "Trajectory_pickandscore1" file
+          stopRobot(), //stops robot
+          Commands.parallel(
+            runIntaking(3), //Starts intaking for 3 seconds
+            followTrajectory(Trajectory_pickandscore2)//Runs "Trajectory_pickandscore2" as soon as robot starts intaking
+            ), 
+          setArmGround(), //Arm moves to groundintake position
+          runScoring(2), //Starts outtaking for 2 seconds
+          stopRobot()); //stop robot
+      
       case AutoSelectorConstants.Leave:
-        return new SequentialCommandGroup(makeRamseteCommand(Trajectory_leave), 
-        new TankDriveVolts(m_driveSubsystem));
+        return new SequentialCommandGroup(
+          followTrajectory(Trajectory_leave), 
+          stopRobot());
+      
       case AutoSelectorConstants.Balance:
-        return new SequentialCommandGroup(m_doublesolenoidSubsystem.groundintake(), new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED), 
-        (new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED)).withTimeout(2),
-        m_doublesolenoidSubsystem.retract(),
-        makeRamseteCommand(Trajectory_leave));  
-
+        return new SequentialCommandGroup(
+          setArmGround(), 
+          runScoring(2), 
+          setArmRetracted(),
+          followTrajectory(Trajectory_leave));  
     } 
 
       return null;

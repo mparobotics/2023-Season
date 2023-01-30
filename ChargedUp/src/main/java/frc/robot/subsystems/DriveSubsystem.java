@@ -116,6 +116,9 @@ public class DriveSubsystem extends SubsystemBase {
     SCG_R.setVoltage(rightVolts);
     differentialDrive.feed();
   }
+  public CommandBase setVolts(double left, double right){
+    return runOnce(() -> tankDriveVolts(left, right));
+  }
   public CommandBase ShiftUp(){
     return runOnce(() -> upShift());
   }
