@@ -9,21 +9,20 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 
 
 public class DoubleSolenoidSubsystem extends SubsystemBase {
   /** Creates a new DoubleSolenoidSubsystem. */
-  Compressor phCompressorA = new Compressor(1, PneumaticsModuleType.REVPH);
+  
   Compressor phCompressorB = new Compressor(2, PneumaticsModuleType.REVPH); // makes a new compressor class, the electricity port is number 1
   DoubleSolenoid doubleSolenoidA = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1); // makes a new double solenoid class at 1(retracts) and 0(forward)
   DoubleSolenoid doubleSolenoidB = new DoubleSolenoid(PneumaticsModuleType.REVPH, 2, 3);
 
   public DoubleSolenoidSubsystem() {
-    phCompressorA.enableDigital();
-    phCompressorB.enableDigital(); //enables the compressor
+    //enables the compressor
     //boolean isEnabled = phCompressor.isEnabled(); //boolean = true or false, "isEnabled" holds either true or false value depending on if the compressor is enabled or not
     //boolean pressureSwitch = phCompressor.getPressureSwitchValue(); //again, "pressureSwitch" holds either true or false depending if there is pressure applied to pressure switch or not 
   }
@@ -31,10 +30,7 @@ public class DoubleSolenoidSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    double currentA = phCompressorA.getCurrent();
-    double currentB = phCompressorB.getCurrent(); //gets current value (pressure) from compressor
-    SmartDashboard.putNumber("compressor current", currentA);
-    SmartDashboard.putNumber("compressor current", currentB); //displays it on smart dashboard
+    
   }
 
   public CommandBase retract() //if forwardSolenoid is called, returns a command to set doublesolenoid forward at port 0

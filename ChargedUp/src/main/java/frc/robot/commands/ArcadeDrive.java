@@ -17,6 +17,7 @@ public class ArcadeDrive extends CommandBase {
   public ArcadeDrive(DriveSubsystem driveSub, DoubleSupplier sForward, DoubleSupplier sTurning) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_sForward = sForward;
+    m_sTurning = sTurning;
     m_driveSubsystem = driveSub;
     addRequirements(driveSub);
   }

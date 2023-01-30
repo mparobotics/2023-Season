@@ -19,8 +19,10 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -55,8 +57,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   //the pneumatics to control the arm
   private final DoubleSolenoidSubsystem m_doublesolenoidSubsystem = new DoubleSolenoidSubsystem(); //replicating a double solenoid subsystem
-  //creating xbox controller for intake 
-
+  
+  private final Compressor phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
+  
   // The robot's subsystems and commands are defined here...
   //Creating instance of IntakeSubsystem called m_intakeSubsystem
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
@@ -91,8 +94,11 @@ public class RobotContainer {
     m_chooser.addOption("Leave", AutoSelectorConstants.Leave);
     m_chooser.addOption("Balance1" , AutoSelectorConstants.Balance);
     SmartDashboard.putData("Auto choices", m_chooser);
+    
+    phCompressor.enableDigital();
     // Configure the trigger bindings
     configureBindings();
+
 
   }
 
