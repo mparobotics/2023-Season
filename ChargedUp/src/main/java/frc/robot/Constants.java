@@ -90,6 +90,7 @@ public final class Constants
       public static final String Pick_and_Score = "Pick and Score";
       public static final String Leave = "Leave";
       public static final String Balance = "Balance";
+      public static final String Example = "Example";
 
     }
   
