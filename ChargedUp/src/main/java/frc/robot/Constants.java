@@ -24,7 +24,7 @@ public final class Constants
   //intake speed
   public static final double INTAKE_SPEED = .5;
   public static final double OUTTAKE_SPEED = -1;
-
+  public static final double SHOOTING_SPEED = 3;
   }
 
   public final class DriveConstants
