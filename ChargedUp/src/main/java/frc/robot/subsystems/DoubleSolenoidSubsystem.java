@@ -15,8 +15,9 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 public class DoubleSolenoidSubsystem extends SubsystemBase {                                                  
   /** Creates a new DoubleSolenoidSubsystem. */
-  DoubleSolenoid doubleSolenoidA = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1); // makes a new double solenoid class at 1(retracts) and 0(forward)
-  DoubleSolenoid doubleSolenoidB = new DoubleSolenoid(PneumaticsModuleType.REVPH, 2, 3);
+  DoubleSolenoid doubleSolenoidAR = new DoubleSolenoid(PneumaticsModuleType.REVPH, 1,0); // makes a new double solenoid class at 1(retracts) and 0(forward)
+  DoubleSolenoid doubleSolenoidBR = new DoubleSolenoid(PneumaticsModuleType.REVPH, 3, 2);
+
 
   public DoubleSolenoidSubsystem() {
     //enables the compressor
@@ -35,8 +36,8 @@ public class DoubleSolenoidSubsystem extends SubsystemBase {
     System.out.println("Retracting!");
     return runOnce(
       () -> {
-        doubleSolenoidA.set(Value.kForward); //O
-        doubleSolenoidB.set(Value.kForward); //O
+        doubleSolenoidAR.set(Value.kForward); //O
+        doubleSolenoidBR.set(Value.kForward); //O
       });
   }
   
@@ -45,8 +46,8 @@ public class DoubleSolenoidSubsystem extends SubsystemBase {
     System.out.println("Chute Intake!");
     return runOnce(
       () -> {
-        doubleSolenoidA.set(Value.kReverse); //X
-        doubleSolenoidB.set(Value.kForward); //O
+        doubleSolenoidAR.set(Value.kReverse); //X
+        doubleSolenoidBR.set(Value.kForward); //O
       });
   }
 
@@ -55,8 +56,8 @@ public class DoubleSolenoidSubsystem extends SubsystemBase {
     System.out.println("Shooting!");
     return runOnce(
       () -> {
-        doubleSolenoidA.set(Value.kForward); //O
-        doubleSolenoidB.set(Value.kReverse); //X
+        doubleSolenoidAR.set(Value.kForward); //O
+        doubleSolenoidBR.set(Value.kReverse); //X
       });
   }
 
@@ -65,8 +66,8 @@ public class DoubleSolenoidSubsystem extends SubsystemBase {
     System.out.println("GroundIntake!");
     return runOnce(
       () -> {
-        doubleSolenoidA.set(Value.kReverse); //X
-        doubleSolenoidB.set(Value.kReverse); //X
+        doubleSolenoidAR.set(Value.kReverse); //X
+        doubleSolenoidBR.set(Value.kReverse); //X
       });
   }
 }

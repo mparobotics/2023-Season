@@ -45,7 +45,6 @@ public class DriveSubsystem extends SubsystemBase {
   private final DifferentialDrive differentialDrive = new DifferentialDrive(motorFR, motorFL);
 
   //PH compressor powers the solenoids
-  private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
 
   //solenoids to control gear shifting
   private Solenoid shiftSolenoidL = new Solenoid(PneumaticsModuleType.REVPH, DriveConstants.LEFT_SOLENOID_CHANNEL);
@@ -66,7 +65,6 @@ public class DriveSubsystem extends SubsystemBase {
     motorFR.setInverted(false);
     motorBR.setInverted(false);
     //turn on compressor
-    compressor.enableDigital();
     //set solenoid to OFF
     shiftSolenoidL.set(false);
     shiftSolenoidR.set(false);

@@ -24,7 +24,7 @@ public final class Constants
   //intake speed
   public static final double INTAKE_SPEED = 1;
   public static final double OUTTAKE_SPEED = -1;
-  public static final double SHOOTING_SPEED = 3;
+  public static final double SHOOTING_SPEED = -3;
   }
 
   public final class DriveConstants
@@ -48,7 +48,7 @@ public final class Constants
 
     //driving speeds
     public static final double TURNING_SPEED = 1;
-    public static final double DRIVE_SPEED = 1;
+    public static final double DRIVE_SPEED = -1;
 
     //if the motor speed (RPMs) exceeds this value, then shift into high gear
     public static final double UPSHIFT_THRESHOLD = 5000;

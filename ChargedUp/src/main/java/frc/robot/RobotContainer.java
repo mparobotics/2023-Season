@@ -125,12 +125,12 @@ public class RobotContainer {
     m_driveSubsystem.setDefaultCommand(new ArcadeDrive(m_driveSubsystem, 
     () -> xbox.getLeftY(), () -> xbox.getRightX()));
     
-    xbox.x().whileTrue(m_doublesolenoidSubsystem.retract()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
-    box.button(4).whileTrue(m_doublesolenoidSubsystem.chuteintake()); 
+    box.button(1).whileTrue(m_doublesolenoidSubsystem.retract()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
     box.button(2).whileTrue(m_doublesolenoidSubsystem.shoot()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
-    box.button(3).whileTrue(m_doublesolenoidSubsystem.groundintake());// when a is pressed, it calls the reverseSolenoid command that is inside the double solenoid subsystem which makes it go backward.
+    box.button(3).whileTrue(m_doublesolenoidSubsystem.groundintake());
+    box.button(4).whileTrue(m_doublesolenoidSubsystem.chuteintake()); 
     box.button(5).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.INTAKE_SPEED));
-    box.button(6).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED));
+    box.button(6).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.SHOOTING_SPEED));
   }
 
   /**
