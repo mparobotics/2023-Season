@@ -170,6 +170,28 @@ public class RobotContainer {
     return rCommand;
 
   }
+  
+  private Command runIntaking (double seconds){
+    return new AutoIntake(m_intakeSubsystem, IntakeConstants.INTAKE_SPEED).withTimeout(seconds);
+  }
+  private Command runOuttaking(double seconds){
+    return new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(seconds);
+  }
+  private Command runShooting(double seconds){
+    return new AutoIntake(m_intakeSubsystem, IntakeConstants.SHOOTING_SPEED).withTimeout(seconds);
+  }
+  private Command setArmGround(){
+    return m_doublesolenoidSubsystem.groundintake();
+  }
+  private Command setArmRetract(){
+    return m_doublesolenoidSubsystem.retract();
+  }
+  private Command setArmShoot(){
+    return m_doublesolenoidSubsystem.shoot();
+  }
+  private Command stopRobot(){
+    return new TankDriveVolts(m_driveSubsystem);
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -219,11 +241,11 @@ public class RobotContainer {
         new TankDriveVolts(m_driveSubsystem)); //stop robot
       
       case AutoSelectorConstants.Score_Low_and_Leave:
-        return new SequentialCommandGroup(m_doublesolenoidSubsystem.groundintake(),
-        new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2),
-        m_doublesolenoidSubsystem.retract(),
+        return new SequentialCommandGroup(setArmGround(),
+        runOuttaking(2),
+        setArmRetract(),
         makeRamseteCommand(Trajectory_leave), 
-        new TankDriveVolts(m_driveSubsystem));
+        stopRobot());
       //case AutoSelectorConstants.Score_High_and_Leave:
         //return new SequentialCommandGroup(m_doublesolenoidSubsystem.shoot(),
         //new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2),
