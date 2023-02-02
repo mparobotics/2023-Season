@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import javax.swing.plaf.TreeUI;
+
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -16,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class PneumaticsSubsystem extends SubsystemBase {
 
 //Compressor pcmCompressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
-Compressor phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
+Compressor phCompressor = new Compressor(16, PneumaticsModuleType.REVPH);
 DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1);
 
 
@@ -26,7 +28,7 @@ DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0
     phCompressor.enableDigital();
  
 
-
+    SmartDashboard.putBoolean("solenoidTrigger", false);
     boolean isEnabled = phCompressor.isEnabled();
     boolean pressureSwitch = phCompressor.getPressureSwitchValue();
     
@@ -36,6 +38,7 @@ DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0
   @Override
   public void periodic() {
     double current = phCompressor.getCurrent();
+    
     SmartDashboard.putNumber("compressor current", current);
     // This method will be called once per scheduler run
   }
@@ -45,6 +48,7 @@ DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0
       () -> {
         /* one-time action goes here */
         doubleSolenoid.set(Value.kForward);
+        SmartDashboard.putBoolean("solenoidTrigger", true);
       });
     
   }
@@ -54,6 +58,7 @@ DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0
       () -> {
         /* one-time action goes here */
         doubleSolenoid.set(Value.kReverse);
+        SmartDashboard.putBoolean("solenoidTrigger", true);
       });
     
   }

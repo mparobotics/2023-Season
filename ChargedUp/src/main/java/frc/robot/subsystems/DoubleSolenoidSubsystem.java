@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 
 
-public class DoubleSolenoidSubsystem extends SubsystemBase {
+public class DoubleSolenoidSubsystem extends SubsystemBase {                                                  
   /** Creates a new DoubleSolenoidSubsystem. */
   DoubleSolenoid doubleSolenoidA = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1); // makes a new double solenoid class at 1(retracts) and 0(forward)
   DoubleSolenoid doubleSolenoidB = new DoubleSolenoid(PneumaticsModuleType.REVPH, 2, 3);
@@ -32,6 +32,7 @@ public class DoubleSolenoidSubsystem extends SubsystemBase {
 
   public CommandBase retract() //if forwardSolenoid is called, returns a command to set doublesolenoid forward at port 0
   {
+    System.out.println("Retracting!");
     return runOnce(
       () -> {
         doubleSolenoidA.set(Value.kForward); //O
@@ -41,6 +42,7 @@ public class DoubleSolenoidSubsystem extends SubsystemBase {
   
   public CommandBase chuteintake() //if reverseSolenoid is called, returns a command to set doublesolenoid reverse at port 1
   {
+    System.out.println("Chute Intake!");
     return runOnce(
       () -> {
         doubleSolenoidA.set(Value.kReverse); //X
@@ -50,6 +52,7 @@ public class DoubleSolenoidSubsystem extends SubsystemBase {
 
   public CommandBase shoot()
   {
+    System.out.println("Shooting!");
     return runOnce(
       () -> {
         doubleSolenoidA.set(Value.kForward); //O
@@ -59,6 +62,7 @@ public class DoubleSolenoidSubsystem extends SubsystemBase {
 
   public CommandBase groundintake()
   {
+    System.out.println("GroundIntake!");
     return runOnce(
       () -> {
         doubleSolenoidA.set(Value.kReverse); //X

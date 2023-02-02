@@ -19,20 +19,20 @@ public final class Constants
   public final class IntakeConstants 
   {
   //intake motor ID
-  public static final int INTAKE_MOTOR_R_ID = 54;
-  public static final int INTAKE_MOTOR_L_ID = 53;
+  public static final int INTAKE_MOTOR_R_ID = 14;
+  public static final int INTAKE_MOTOR_L_ID = 15;
   //intake speed
-  public static final double INTAKE_SPEED = .5;
+  public static final double INTAKE_SPEED = 1;
   public static final double OUTTAKE_SPEED = -1;
 
   }
 
   public final class DriveConstants
   {
-    public static final int MOTOR_FL_ID = 0;
-    public static final int MOTOR_FR_ID = 0;
-    public static final int MOTOR_BL_ID = 0;
-    public static final int MOTOR_BR_ID = 0;
+    public static final int MOTOR_FL_ID = 11;
+    public static final int MOTOR_FR_ID = 13;
+    public static final int MOTOR_BL_ID = 10;
+    public static final int MOTOR_BR_ID = 12;
   
   
 
@@ -43,8 +43,8 @@ public final class Constants
     public static final int SOLENOID_CHANNEL = 0;
   
     //gear shifter solenoids
-    public static final int LEFT_SOLENOID_CHANNEL = 0;
-    public static final int RIGHT_SOLENOID_CHANNEL = 0;
+    public static final int LEFT_SOLENOID_CHANNEL = 5;
+    public static final int RIGHT_SOLENOID_CHANNEL = 6;
 
     //driving speeds
     public static final double TURNING_SPEED = 1;
