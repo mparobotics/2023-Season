@@ -87,12 +87,12 @@ public class RobotContainer {
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    m_chooser.setDefaultOption("Pick & Score", AutoSelectorConstants.Pick_and_Score);
+    m_chooser.setDefaultOption("Low and Leave and Pick and Low", AutoSelectorConstants.Low_Leave_Pick_Low);
     m_chooser.addOption("Leave", AutoSelectorConstants.Leave);
-    m_chooser.addOption("Low and Balance" , AutoSelectorConstants.Low_and_Balance);
-    m_chooser.addOption("High and Balance", AutoSelectorConstants.High_and_Balance);
-    m_chooser.addOption("Low and Leave and Balance", AutoSelectorConstants.Low_and_Leave_and_Balance);
-    m_chooser.addOption("High and Leave and Balance", AutoSelectorConstants.High_and_Leave_and_Balance);
+    m_chooser.addOption("Low and Balance" , AutoSelectorConstants.Low_Balance);
+    m_chooser.addOption("High and Balance", AutoSelectorConstants.High_Balance);
+    m_chooser.addOption("Low and Leave and Balance", AutoSelectorConstants.Low_Leave_Balance);
+    m_chooser.addOption("High and Leave and Balance", AutoSelectorConstants.High_Leave_Balance);
     SmartDashboard.putData("Auto choices", m_chooser);
     // Configure the trigger bindings
     configureBindings();
@@ -166,6 +166,27 @@ public class RobotContainer {
     return rCommand;
 
   }
+  private Command runIntaking (double seconds){
+    return new AutoIntake(m_intakeSubsystem, IntakeConstants.INTAKE_SPEED).withTimeout(seconds);
+  }
+  private Command runOuttaking(double seconds){
+    return new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(seconds);
+  }
+  private Command runShooting(double seconds){
+    return new AutoIntake(m_intakeSubsystem, IntakeConstants.SHOOTING_SPEED).withTimeout(seconds);
+  }
+  private Command setArmGround(){
+    return m_doublesolenoidSubsystem.groundintake();
+  }
+  private Command setArmRetract(){
+    return m_doublesolenoidSubsystem.retract();
+  }
+  private Command setArmShoot(){
+    return m_doublesolenoidSubsystem.shoot();
+  }
+  private Command stopRobot(){
+    return new TankDriveVolts(m_driveSubsystem);
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -204,43 +225,44 @@ public class RobotContainer {
      System.out.println("Auto Selected: " + m_autoSelected);
     switch (m_autoSelected)
     {
-      case AutoSelectorConstants.Pick_and_Score:
+      case AutoSelectorConstants.Low_Leave_Pick_Low:
         return new SequentialCommandGroup
-        (m_doublesolenoidSubsystem.groundintake(), //Arm moves to groundintake position
-        new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2), //Starts outtaking for 2 seconds (for pre-loaded cargo)
-        m_doublesolenoidSubsystem.retract(), //Arm moves to retract position
+        (setArmGround(), //Arm moves to groundintake position
+        runOuttaking(2), //Starts outtaking for 2 seconds (for pre-loaded cargo)
+        setArmRetract(), //Arm moves to retract position
         makeRamseteCommand(Trajectory_pickandscore1), //Runs "Trajectory_pickandscore1" file
-        new TankDriveVolts(m_driveSubsystem), //stops robot
-        new AutoIntake(m_intakeSubsystem, IntakeConstants.INTAKE_SPEED).withTimeout(3), //Starts intaking for 3 seconds
+        stopRobot(), //stops robot
+        runIntaking (3), //Starts intaking for 3 seconds
         Commands.parallel(makeRamseteCommand(Trajectory_pickandscore2)), //Runs "Trajectory_pickandscore2" as soon as robot starts intaking
-        m_doublesolenoidSubsystem.groundintake(), //Arm moves to groundintake position
-        new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2), //Starts outtaking for 2 seconds
-        new TankDriveVolts(m_driveSubsystem)); //stop robot
+        setArmGround(), //Arm moves to groundintake position
+        runOuttaking(2), //Starts outtaking for 2 seconds
+        stopRobot()); //stop robot
       case AutoSelectorConstants.Leave:
-        return new SequentialCommandGroup(makeRamseteCommand(Trajectory_leave), new TankDriveVolts(m_driveSubsystem));
-      case AutoSelectorConstants.Low_and_Balance:
+        return new SequentialCommandGroup(makeRamseteCommand(Trajectory_leave), 
+        stopRobot());
+      case AutoSelectorConstants.Low_Balance:
         return new SequentialCommandGroup
-        (m_doublesolenoidSubsystem.groundintake(), //Arm moves to groundintake position
-        new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2),
-        m_doublesolenoidSubsystem.retract(),
+        (setArmGround(), //Arm moves to groundintake position
+        runOuttaking(2),
+        setArmRetract(),
         makeRamseteCommand(Trajectory_balance)); 
-      case AutoSelectorConstants.High_and_Balance:
+      case AutoSelectorConstants.High_Balance:
         return new SequentialCommandGroup
-        (m_doublesolenoidSubsystem.shoot(), //Arm moves to groundintake position
-        new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2), //Starts outtaking for 2 seconds (for pre-loaded cargo))
-        m_doublesolenoidSubsystem.retract(),
+        (setArmShoot(), //Arm moves to groundintake position
+        runOuttaking(2), //Starts outtaking for 2 seconds (for pre-loaded cargo))
+        setArmRetract(),
         makeRamseteCommand(Trajectory_balance));
-      case AutoSelectorConstants.Low_and_Leave_and_Balance:
+      case AutoSelectorConstants.Low_Leave_Balance:
         return new SequentialCommandGroup
-          (m_doublesolenoidSubsystem.groundintake(), 
-          new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2),
-          m_doublesolenoidSubsystem.retract(),
+          (setArmGround(), 
+          runOuttaking(2),
+          setArmRetract(),
           makeRamseteCommand(Trajectory_leave_and_balance)); 
-          case AutoSelectorConstants.High_and_Leave_and_Balance:
+          case AutoSelectorConstants.High_Leave_Balance:
           return new SequentialCommandGroup
-            (m_doublesolenoidSubsystem.shoot(), 
-            new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2),
-            m_doublesolenoidSubsystem.retract(),
+            (setArmShoot(), 
+            runOuttaking(2),
+            setArmRetract(),
             makeRamseteCommand(Trajectory_leave_and_balance)); 
     } 
      

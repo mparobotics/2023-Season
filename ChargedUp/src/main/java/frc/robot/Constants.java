@@ -24,6 +24,7 @@ public final class Constants
   //intake speed
   public static final double INTAKE_SPEED = .5;
   public static final double OUTTAKE_SPEED = -1;
+  public static final double SHOOTING_SPEED = -3;
 
   }
 
@@ -87,12 +88,12 @@ public final class Constants
 
     public final class AutoSelectorConstants
     {
-      public static final String Pick_and_Score = "Pick and Score";
+      public static final String Low_Leave_Pick_Low = "Low and Leave and Pick and Low";
       public static final String Leave = "Leave";
-      public static final String Low_and_Balance = "Low and Balance";
-      public static final String High_and_Balance = "High and Balance";
-      public static final String Low_and_Leave_and_Balance = "Low and Leave and Balance";
-      public static final String High_and_Leave_and_Balance = "High and Leave and Balanace";
+      public static final String Low_Balance = "Low and Balance";
+      public static final String High_Balance = "High and Balance";
+      public static final String Low_Leave_Balance = "Low and Leave and Balance";
+      public static final String High_Leave_Balance = "High and Leave and Balanace";
       //name of constants for autonomous 
     }
   
