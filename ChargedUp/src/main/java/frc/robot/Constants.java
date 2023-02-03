@@ -89,8 +89,11 @@ public final class Constants
     {
       public static final String Pick_and_Score = "Pick and Score";
       public static final String Leave = "Leave";
-      public static final String Balance = "Balance";
-
+      public static final String Low_and_Balance = "Low and Balance";
+      public static final String High_and_Balance = "High and Balance";
+      public static final String Low_and_Leave_and_Balance = "Low and Leave and Balance";
+      public static final String High_and_Leave_and_Balance = "High and Leave and Balanace";
+      //name of constants for autonomous 
     }
   
   
