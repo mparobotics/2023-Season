@@ -194,6 +194,7 @@ public class RobotContainer {
     String Trajectory_pickandscore1 = "pathplanner/generatedJSON/1,2,3 - Pick Up & Score (1).wpilib.json";
     String Trajectory_pickandscore2 = "pathplanner/generatedJSON/1,2,3 - Pick Up & Score (2).wpilib.json";
     String Trajectory_leave = "pathplanner/generatedJSON/1,2,3 - Leave.wpilib.json";
+    String Trajectory_return = "pathplanner/generatedJSON/Return.wpilib.json";
 
     //display values in the table
     leftMeasurement.setNumber(m_driveSubsystem.getWheelSpeeds().leftMetersPerSecond);
@@ -235,6 +236,47 @@ public class RobotContainer {
         makeRamseteCommand(Trajectory_leave)
         ); 
       
+      case AutoSelectorConstants.lowLeavePickHigh: 
+        return new SequentialCommandGroup(
+          m_doublesolenoidSubsystem.groundintake(), 
+            new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2),
+            m_doublesolenoidSubsystem.retract(), 
+            makeRamseteCommand(Trajectory_leave), 
+            m_doublesolenoidSubsystem.groundintake(),
+            new AutoIntake(m_intakeSubsystem, IntakeConstants.INTAKE_SPEED).withTimeout(2),
+            Commands.parallel(makeRamseteCommand(Trajectory_return)),
+            m_doublesolenoidSubsystem.shoot(),
+          new AutoIntake(m_intakeSubsystem, IntakeConstants.SHOOTING_SPEED).withTimeout(2)
+        ); 
+
+        case AutoSelectorConstants.highLeavePickLow:
+          return new SequentialCommandGroup(
+            m_doublesolenoidSubsystem.shoot(),
+            new AutoIntake(m_intakeSubsystem, IntakeConstants.SHOOTING_SPEED).withTimeout(2),
+            m_doublesolenoidSubsystem.retract(), 
+            makeRamseteCommand(Trajectory_leave), 
+            m_doublesolenoidSubsystem.groundintake(),
+            new AutoIntake(m_intakeSubsystem, IntakeConstants.INTAKE_SPEED).withTimeout(2),
+            Commands.parallel(makeRamseteCommand(Trajectory_return)),
+            m_doublesolenoidSubsystem.groundintake(),
+            new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2)
+           );
+
+        case AutoSelectorConstants.highLeavePickHigh:
+          return new SequentialCommandGroup(
+            m_doublesolenoidSubsystem.shoot(),
+            new AutoIntake(m_intakeSubsystem, IntakeConstants.SHOOTING_SPEED).withTimeout(2),
+            m_doublesolenoidSubsystem.retract(), 
+            makeRamseteCommand(Trajectory_leave), 
+            m_doublesolenoidSubsystem.groundintake(),
+            new AutoIntake(m_intakeSubsystem, IntakeConstants.INTAKE_SPEED).withTimeout(2),
+            Commands.parallel(makeRamseteCommand(Trajectory_return)),
+            m_doublesolenoidSubsystem.shoot(),
+            new AutoIntake(m_intakeSubsystem, IntakeConstants.SHOOTING_SPEED).withTimeout(2)
+          );
+
+          
+
    
             
     } 

@@ -24,7 +24,7 @@ public final class Constants
   //intake speed
   public static final double INTAKE_SPEED = .5;
 
-  public static final double SHOOTING_SPEED = -4; 
+  public static final double SHOOTING_SPEED = -3; 
 
   public static final double OUTTAKE_SPEED = -1;
 
@@ -94,6 +94,9 @@ public final class Constants
       public static final String Leave = "Leave";
       public static final String Balance = "Balance";
       public static final String lowAndLeave = "Score low and Leave";
+      public static final String lowLeavePickHigh = "score low, leave, pick, score high";
+      public static final String highLeavePickLow = "score high, leave, pick, score low";
+      public static final String highLeavePickHigh = "score high, leave, pick, score high"; 
     }
   
   
