@@ -43,8 +43,8 @@ public final class Constants
     public static final int SOLENOID_CHANNEL = 0;
   
     //gear shifter solenoids
-    public static final int LEFT_SOLENOID_CHANNEL = 5;
-    public static final int RIGHT_SOLENOID_CHANNEL = 6;
+    public static final int LEFT_SOLENOID_CHANNEL = 4;
+    public static final int RIGHT_SOLENOID_CHANNEL = 5;
 
     //driving speeds
     public static final double TURNING_SPEED = 1;
