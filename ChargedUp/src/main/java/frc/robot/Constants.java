@@ -88,12 +88,20 @@ public final class Constants
 
     public final class AutoSelectorConstants
     {
+      public static final String Do_Nothing = "Do nothing";
       public static final String Low_Leave_Pick_Low = "Low and Leave and Pick and Low";
-      public static final String Leave = "Leave";
+      public static final String Low_Leave_Pick_High = "Low and Leave and Pick and High";
+      public static final String High_Leave_Pick_Low = "High and Leave and Pick and Low";
+      public static final String High_Leave_Pick_High = "High and Leave and Pick and High";
+      public static final String Low_Leave = "Low and Leave";
+      public static final String High_Leave = "High and Leave";
       public static final String Low_Balance = "Low and Balance";
       public static final String High_Balance = "High and Balance";
       public static final String Low_Leave_Balance = "Low and Leave and Balance";
       public static final String High_Leave_Balance = "High and Leave and Balanace";
+      public static final double Auto_Outtake_Seconds = 2;
+      public static final double Auto_Intake_Seconds = 3;
+      public static final double Auto_Shoot_Seconds = 2; 
       //name of constants for autonomous 
     }
   
