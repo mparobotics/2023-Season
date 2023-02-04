@@ -226,44 +226,48 @@ public class RobotContainer {
     switch (m_autoSelected)
     {
       case AutoSelectorConstants.Low_Leave_Pick_Low:
-        return new SequentialCommandGroup
-        (setArmGround(), //Arm moves to groundintake position
-        runOuttaking(2), //Starts outtaking for 2 seconds (for pre-loaded cargo)
-        setArmRetract(), //Arm moves to retract position
-        makeRamseteCommand(Trajectory_pickandscore1), //Runs "Trajectory_pickandscore1" file
-        stopRobot(), //stops robot
-        runIntaking (3), //Starts intaking for 3 seconds
-        Commands.parallel(makeRamseteCommand(Trajectory_pickandscore2)), //Runs "Trajectory_pickandscore2" as soon as robot starts intaking
-        setArmGround(), //Arm moves to groundintake position
-        runOuttaking(2), //Starts outtaking for 2 seconds
-        stopRobot()); //stop robot
+        return new SequentialCommandGroup(
+          setArmGround(), //Arm moves to groundintake position
+          runOuttaking(2), //Starts outtaking for 2 seconds (for pre-loaded cargo)
+          setArmRetract(), //Arm moves to retract position
+          makeRamseteCommand(Trajectory_pickandscore1), //Runs "Trajectory_pickandscore1" file
+          stopRobot(), //stops robot
+          runIntaking (3), //Starts intaking for 3 seconds
+          Commands.parallel(makeRamseteCommand(Trajectory_pickandscore2)), //Runs "Trajectory_pickandscore2" as soon as robot starts intaking
+          setArmGround(), //Arm moves to groundintake position
+          runOuttaking(2), //Starts outtaking for 2 seconds
+          stopRobot()); //stop robot
       case AutoSelectorConstants.Leave:
         return new SequentialCommandGroup(makeRamseteCommand(Trajectory_leave), 
-        stopRobot());
+          stopRobot());
       case AutoSelectorConstants.Low_Balance:
-        return new SequentialCommandGroup
-        (setArmGround(), //Arm moves to groundintake position
-        runOuttaking(2),
-        setArmRetract(),
-        makeRamseteCommand(Trajectory_balance)); 
-      case AutoSelectorConstants.High_Balance:
-        return new SequentialCommandGroup
-        (setArmShoot(), //Arm moves to groundintake position
-        runOuttaking(2), //Starts outtaking for 2 seconds (for pre-loaded cargo))
-        setArmRetract(),
-        makeRamseteCommand(Trajectory_balance));
-      case AutoSelectorConstants.Low_Leave_Balance:
-        return new SequentialCommandGroup
-          (setArmGround(), 
+        return new SequentialCommandGroup(
+          setArmGround(), //Arm moves to groundintake position
           runOuttaking(2),
           setArmRetract(),
-          makeRamseteCommand(Trajectory_leave_and_balance)); 
-          case AutoSelectorConstants.High_Leave_Balance:
-          return new SequentialCommandGroup
-            (setArmShoot(), 
-            runOuttaking(2),
-            setArmRetract(),
-            makeRamseteCommand(Trajectory_leave_and_balance)); 
+          makeRamseteCommand(Trajectory_balance),
+          stopRobot());
+      case AutoSelectorConstants.High_Balance:
+        return new SequentialCommandGroup(
+          setArmShoot(), //Arm moves to groundintake position
+          runOuttaking(2), //Starts outtaking for 2 seconds (for pre-loaded cargo))
+          setArmRetract(),
+          makeRamseteCommand(Trajectory_balance),
+          stopRobot());
+      case AutoSelectorConstants.Low_Leave_Balance:
+        return new SequentialCommandGroup(
+          setArmGround(), 
+          runOuttaking(2),
+          setArmRetract(),
+          makeRamseteCommand(Trajectory_leave_and_balance),
+          stopRobot());
+      case AutoSelectorConstants.High_Leave_Balance:
+        return new SequentialCommandGroup(
+          setArmShoot(), 
+          runOuttaking(2),
+          setArmRetract(),
+          makeRamseteCommand(Trajectory_leave_and_balance),
+          stopRobot());
     } 
      
       return null;
