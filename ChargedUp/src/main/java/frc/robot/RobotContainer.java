@@ -57,9 +57,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   //the pneumatics to control the arm
   private final DoubleSolenoidSubsystem m_doublesolenoidSubsystem = new DoubleSolenoidSubsystem(); //replicating a double solenoid subsystem
-  
-  private final Compressor phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
-  
+
   // The robot's subsystems and commands are defined here...
   //Creating instance of IntakeSubsystem called m_intakeSubsystem
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
@@ -86,17 +84,21 @@ public class RobotContainer {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   
+    
+  private final Compressor phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
+  
   
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    phCompressor.enableDigital();
+
     m_chooser.setDefaultOption("Pick & Score", AutoSelectorConstants.Pick_and_Score);
     m_chooser.addOption("Leave", AutoSelectorConstants.Score_Low_and_Leave);
     m_chooser.addOption("Balance1" , AutoSelectorConstants.Balance);
     m_chooser.addOption("Example", AutoSelectorConstants.Example);
     SmartDashboard.putData("Auto choices", m_chooser);
     
-    phCompressor.enableDigital();
     // Configure the trigger bindings
     configureBindings();
 

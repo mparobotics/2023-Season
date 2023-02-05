@@ -42,7 +42,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final MotorControllerGroup SCG_L = new MotorControllerGroup(motorFL, motorBL);
 
   //differential drive to control the motors
-  private final DifferentialDrive differentialDrive = new DifferentialDrive(motorFR, motorFL);
+  private final DifferentialDrive differentialDrive = new DifferentialDrive(motorFL, motorFR);
 
   //PH compressor powers the solenoids
 

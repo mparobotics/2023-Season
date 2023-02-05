@@ -20,21 +20,15 @@ public class Robot extends TimedRobot {
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
-  Compressor phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  
+  Compressor phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
 
-  /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
-   */
   @Override
   public void robotInit() {
     
     phCompressor.enableDigital();
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
+ 
   }
 
   /**
