@@ -25,6 +25,7 @@ public final class Constants
   public static final double INTAKE_SPEED = 1;
   public static final double OUTTAKE_SPEED = -1;
   public static final double SHOOTING_SPEED = -3;
+
   }
 
   public final class DriveConstants
@@ -91,8 +92,8 @@ public final class Constants
       public static final String Score_Low_and_Leave = "Low and Leave";
       public static final String Score_High_and_Leave = "High and Leave";
       public static final String Balance = "Balance";
-      public static final String Example = "Example";
-
+      public static final String Leave = "Leave";
+     
     }
   
   

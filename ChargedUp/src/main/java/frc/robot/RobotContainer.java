@@ -42,7 +42,6 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutoIntake;
 import frc.robot.commands.Intake;
-import frc.robot.commands.TankDriveVolts;
 import frc.robot.subsystems.IntakeSubsystem;
 
 /**
@@ -94,9 +93,9 @@ public class RobotContainer {
     phCompressor.enableDigital();
 
     m_chooser.setDefaultOption("Pick & Score", AutoSelectorConstants.Pick_and_Score);
-    m_chooser.addOption("Leave", AutoSelectorConstants.Score_Low_and_Leave);
+    m_chooser.addOption("Score Low &Leave", AutoSelectorConstants.Score_Low_and_Leave);
     m_chooser.addOption("Balance1" , AutoSelectorConstants.Balance);
-    m_chooser.addOption("Example", AutoSelectorConstants.Example);
+    m_chooser.addOption("Leave", AutoSelectorConstants.Leave);
     SmartDashboard.putData("Auto choices", m_chooser);
     
     // Configure the trigger bindings
@@ -139,7 +138,7 @@ public class RobotContainer {
    takes a location of the JSON file as an input
    generates a ramsete command from the file
    */
-  public RamseteCommand makeRamseteCommand(String filePath){
+  private RamseteCommand followTrajectory(String filePath){
     //trajectory object
     Trajectory pTrajectory = new Trajectory();
     //try to open the file
@@ -173,10 +172,12 @@ public class RobotContainer {
 
   }
   
-  private Command runIntaking (double seconds){
+  
+ 
+  private Command runIntaking(double seconds){
     return new AutoIntake(m_intakeSubsystem, IntakeConstants.INTAKE_SPEED).withTimeout(seconds);
   }
-  private Command runOuttaking(double seconds){
+  private Command runScoring(double seconds){
     return new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(seconds);
   }
   private Command runShooting(double seconds){
@@ -185,16 +186,18 @@ public class RobotContainer {
   private Command setArmGround(){
     return m_doublesolenoidSubsystem.groundintake();
   }
-  private Command setArmRetract(){
-    return m_doublesolenoidSubsystem.retract();
+  private Command setArmRetracted(){
+    return m_doublesolenoidSubsystem.groundintake();
   }
-  private Command setArmShoot(){
-    return m_doublesolenoidSubsystem.shoot();
+  private Command setArmShooting(){
+    return m_doublesolenoidSubsystem.groundintake();
+  }
+  private Command setArmIntaking(){
+    return m_doublesolenoidSubsystem.groundintake();
   }
   private Command stopRobot(){
-    return m_driveSubsystem.TankDriveVolts(0,0);
+    return m_driveSubsystem.setVolts(0, 0);
   }
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -231,31 +234,31 @@ public class RobotContainer {
     switch (m_autoSelected)
     {
       case AutoSelectorConstants.Pick_and_Score:
-        return new SequentialCommandGroup(m_doublesolenoidSubsystem.groundintake(), 
-        new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2), //Starts outtaking for 2 seconds (for pre-loaded cargo)
-        m_doublesolenoidSubsystem.retract(), //Arm moves to retract position
-        makeRamseteCommand(Trajectory_pickandscore1), //Runs "Trajectory_pickandscore1" file
-        new TankDriveVolts(m_driveSubsystem),
-        m_doublesolenoidSubsystem.groundintake(), //stops robot
-        new AutoIntake(m_intakeSubsystem, IntakeConstants.INTAKE_SPEED).withTimeout(3), //Starts intaking for 3 seconds
-        Commands.parallel(makeRamseteCommand(Trajectory_pickandscore2)), //Runs "Trajectory_pickandscore2" as soon as robot starts intaking
-        m_doublesolenoidSubsystem.groundintake(), //Arm moves to groundintake position
-        new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2), //Starts outtaking for 2 seconds
-        new TankDriveVolts(m_driveSubsystem)); //stop robot
+        return new SequentialCommandGroup(
+          setArmGround(), //Arm moves to groundintake position
+          runScoring(2), //Starts outtaking for 2 seconds (for pre-loaded cargo)
+          setArmRetracted(), //Arm moves to retract position
+          followTrajectory(Trajectory_pickandscore1), //Runs "Trajectory_pickandscore1" file
+          stopRobot(), //stops robot
+          Commands.parallel(
+            runIntaking(3), //Starts intaking for 3 seconds
+            followTrajectory(Trajectory_pickandscore2)//Runs "Trajectory_pickandscore2" as soon as robot starts intaking
+            ), 
+          setArmGround(), //Arm moves to groundintake position
+          runScoring(2), //Starts outtaking for 2 seconds
+          stopRobot()); //stop robot
       
-      case AutoSelectorConstants.Score_Low_and_Leave:
-        return new SequentialCommandGroup(setArmGround(),
-        runOuttaking(2),
-        setArmRetract(),
-        makeRamseteCommand(Trajectory_leave), 
-        stopRobot());
-      //case AutoSelectorConstants.Score_High_and_Leave:
-        //return new SequentialCommandGroup(m_doublesolenoidSubsystem.shoot(),
-        //new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2),
-        //makeRamseteCommand(Trajectory_score_low_and_leave),
-        //new TankDriveVolts(m_driveSubsystem));
-
-
+      case AutoSelectorConstants.Leave:
+        return new SequentialCommandGroup(
+          followTrajectory(Trajectory_leave), 
+          stopRobot());
+      
+      case AutoSelectorConstants.Balance:
+        return new SequentialCommandGroup(
+          setArmGround(), 
+          runScoring(2), 
+          setArmRetracted(),
+          followTrajectory(Trajectory_leave));  
     } 
 
       return null;
