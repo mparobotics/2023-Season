@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class PneumaticsSubsystem extends SubsystemBase {
 
 //Compressor pcmCompressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
-Compressor phCompressor = new Compressor(16, PneumaticsModuleType.REVPH);
+Compressor phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
 DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1);
 
 
