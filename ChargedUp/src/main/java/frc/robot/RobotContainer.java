@@ -88,15 +88,17 @@ public class RobotContainer {
   
   
   
+  
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    phCompressor.enableDigital();
+
     m_chooser.setDefaultOption("Pick & Score", AutoSelectorConstants.Pick_and_Score);
     m_chooser.addOption("Leave", AutoSelectorConstants.Score_Low_and_Leave);
     m_chooser.addOption("Balance1" , AutoSelectorConstants.Balance);
     m_chooser.addOption("Example", AutoSelectorConstants.Example);
     SmartDashboard.putData("Auto choices", m_chooser);
     
-    phCompressor.enableDigital();
     // Configure the trigger bindings
     configureBindings();
 
