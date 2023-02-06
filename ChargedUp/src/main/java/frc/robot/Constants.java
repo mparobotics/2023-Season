@@ -95,11 +95,13 @@ public final class Constants
       public static final String Leave = "Leave";
      
     }
-  
-  
-    
+    public final class LEDConstants{
+      public static final int LED_ID = 0;
+      public static final int LED_COUNT = 60;
 
-  
+      public final int[] PURPLE_RGB = {188,0,255};
+      public final int[] YELLOW_RGB = {255,255,0};
+    }
 
 
   
