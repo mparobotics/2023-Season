@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.led.CANdle;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDConstants;
 
@@ -15,9 +16,14 @@ public class LEDsubsystem extends SubsystemBase {
   public LEDsubsystem() {
 
   }
-
   public void setColor(int[] color){
     leds.setLEDs(color[0], color[1], color[2],0,0,LEDConstants.LED_COUNT);
+  }
+  public CommandBase Cube(){
+    return runOnce(() -> setColor(LEDConstants.PURPLE_RGB));
+  }
+  public CommandBase Cone(){
+    return runOnce(() -> setColor(LEDConstants.YELLOW_RGB));
   }
   @Override
   public void periodic() {

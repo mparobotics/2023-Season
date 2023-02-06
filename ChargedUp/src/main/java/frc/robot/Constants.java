@@ -18,13 +18,13 @@ public final class Constants
 {
   public final class IntakeConstants 
   {
-  //intake motor ID
-  public static final int INTAKE_MOTOR_R_ID = 14;
-  public static final int INTAKE_MOTOR_L_ID = 15;
-  //intake speed
-  public static final double INTAKE_SPEED = 1;
-  public static final double OUTTAKE_SPEED = -1;
-  public static final double SHOOTING_SPEED = -3;
+    //intake motor ID
+    public static final int INTAKE_MOTOR_R_ID = 14;
+    public static final int INTAKE_MOTOR_L_ID = 15;
+    //intake speed
+    public static final double INTAKE_SPEED = 1;
+    public static final double OUTTAKE_SPEED = -1;
+    public static final double SHOOTING_SPEED = -3;
 
   }
 
@@ -79,30 +79,27 @@ public final class Constants
     public static final double Drive_KpTest = 0;
     public static final double Drive_Kd = 0.0;
     } 
-    public final class OperatorConstants
-    {
+  public final class OperatorConstants
+  {
     public static final int XBOX_CONTROLLER_PORT = 0;
     public static final int BOX_ID = 1;
     //public static final int kDrivercontrollerPort = 0; 
-    }
+  }
 
-    public final class AutoSelectorConstants
-    {
-      public static final String Pick_and_Score = "Pick and Score";
-      public static final String Score_Low_and_Leave = "Low and Leave";
-      public static final String Score_High_and_Leave = "High and Leave";
-      public static final String Balance = "Balance";
-      public static final String Leave = "Leave";
+  public final class AutoSelectorConstants
+  {
+    public static final String Pick_and_Score = "Pick and Score";
+    public static final String Score_Low_and_Leave = "Low and Leave";
+    public static final String Score_High_and_Leave = "High and Leave";
+    public static final String Balance = "Balance";
+    public static final String Leave = "Leave";
      
-    }
-    public final class LEDConstants{
-      public static final int LED_ID = 0;
-      public static final int LED_COUNT = 60;
+  }
+  public final static class LEDConstants{
+    public static final int LED_ID = 0;
+    public static final int LED_COUNT = 60;
 
-      public final int[] PURPLE_RGB = {188,0,255};
-      public final int[] YELLOW_RGB = {255,255,0};
-    }
-
-
-  
+    public static final int[] PURPLE_RGB = {188,0,255};
+    public static final int[] YELLOW_RGB = {255,255,0};
+  } 
 }
