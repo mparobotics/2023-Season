@@ -192,7 +192,7 @@ public class RobotContainer {
     return m_doublesolenoidSubsystem.shoot();
   }
   private Command stopRobot(){
-    return new TankDriveVolts(m_driveSubsystem);
+    return m_driveSubsystem.TankDriveVolts(0,0);
   }
 
   /**

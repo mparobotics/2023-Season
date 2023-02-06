@@ -14,7 +14,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.Compressor;
+
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -113,6 +113,9 @@ public class DriveSubsystem extends SubsystemBase {
     SCG_L.setVoltage(leftVolts);
     SCG_R.setVoltage(rightVolts);
     differentialDrive.feed();
+  }
+  public CommandBase TankDriveVolts(double leftVolts, double rightVolts){
+    return runOnce(() -> tankDriveVolts(leftVolts, rightVolts));
   }
   public CommandBase ShiftUp(){
     return runOnce(() -> upShift());
