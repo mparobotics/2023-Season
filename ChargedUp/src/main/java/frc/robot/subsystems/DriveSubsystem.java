@@ -12,6 +12,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.Compressor;
@@ -166,4 +167,12 @@ public class DriveSubsystem extends SubsystemBase {
       }
     }
   }
+public double getVelocityMeters() {
+    return (1/60) * DriveConstants.ROTATIONS_TO_METERS * encoderL.getVelocity();//might need both r and l
+}
+
+public Rotation2d getHeading() {
+  return m_odometry.getPoseMeters().getRotation();
+}
+
 }
