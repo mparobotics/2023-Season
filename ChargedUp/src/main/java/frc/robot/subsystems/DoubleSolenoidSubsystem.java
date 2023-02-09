@@ -37,8 +37,8 @@ public class DoubleSolenoidSubsystem extends SubsystemBase {
     System.out.println("Retracting!");
     return runOnce(
       () -> {
-        doubleSolenoidAR.set(Value.kForward); //O
-        doubleSolenoidBR.set(Value.kForward); //O
+        doubleSolenoidAR.set(Value.kReverse); //O
+        doubleSolenoidBR.set(Value.kReverse); //O
       });
   }
   
@@ -47,8 +47,8 @@ public class DoubleSolenoidSubsystem extends SubsystemBase {
     System.out.println("Chute Intake!");
     return runOnce(
       () -> {
-        doubleSolenoidAR.set(Value.kReverse); //X
-        doubleSolenoidBR.set(Value.kForward); //O
+        doubleSolenoidAR.set(Value.kForward); //X
+        doubleSolenoidBR.set(Value.kReverse); //O
       });
   }
 
@@ -57,8 +57,8 @@ public class DoubleSolenoidSubsystem extends SubsystemBase {
     System.out.println("Shooting!");
     return runOnce(
       () -> {
-        doubleSolenoidAR.set(Value.kForward); //O
-        doubleSolenoidBR.set(Value.kReverse); //X
+        doubleSolenoidAR.set(Value.kReverse); //O
+        doubleSolenoidBR.set(Value.kForward); //X
       });
   }
 
@@ -67,8 +67,8 @@ public class DoubleSolenoidSubsystem extends SubsystemBase {
     System.out.println("GroundIntake!");
     return runOnce(
       () -> {
-        doubleSolenoidAR.set(Value.kReverse); //X
-        doubleSolenoidBR.set(Value.kReverse); //X
+        doubleSolenoidAR.set(Value.kForward); //X
+        doubleSolenoidBR.set(Value.kForward); //X
       });
   }
 }
