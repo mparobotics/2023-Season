@@ -178,6 +178,8 @@ public class DriveSubsystem extends SubsystemBase {
     double rvelocity = encoderR.getVelocity();
 
     SmartDashboard.putBoolean("HighGear?", inHighGear);
+    SmartDashboard.putNumber("LeftWheelSpeeds", encoderL.getVelocity());
+    SmartDashboard.putNumber("RightWheelSpeeds", encoderR.getVelocity());
 
     //* Automatic gear shifter - automatically shifts into high gear when the robot is driving fast enough and shifts into low gear when the robot slows down */
     //check if the robot is turning - if the speeds of the left and right motors are different
