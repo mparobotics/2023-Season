@@ -119,9 +119,9 @@ public class RobotContainer {
     //new JoystickButton(xbox, XboxController.Button.kA.value).onTrue(new ShiftUp(m_driveSubsystem));
     //new JoystickButton(xbox, XboxController.Button.kB.value).onTrue(new ShiftDown(m_driveSubsystem));
     //A button shifts the gearbox into high gear
-    xbox.button(Button.kA.value).onTrue(m_driveSubsystem.ShiftUp());
+    xbox.button(Button.kRightBumper.value).onTrue(m_driveSubsystem.ShiftUp());
     //B button shifts the gearbox into low gear
-    xbox.button(Button.kB.value).onTrue(m_driveSubsystem.ShiftDown());
+    xbox.button(Button.kLeftBumper.value).onTrue(m_driveSubsystem.ShiftDown());
     
     
     m_driveSubsystem.setDefaultCommand(new ArcadeDrive(m_driveSubsystem, 

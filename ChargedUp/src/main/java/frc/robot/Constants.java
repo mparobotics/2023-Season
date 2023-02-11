@@ -43,11 +43,12 @@ public final class Constants
     public static final int SOLENOID_CHANNEL = 0;
   
     //gear shifter solenoids
-    public static final int LEFT_SOLENOID_CHANNEL = 14;
-    public static final int RIGHT_SOLENOID_CHANNEL = 5;
+    public static final int SHIFT_SOLENOID_CHANNEL = 9;
+   
 
     //driving speeds
-    public static final double TURNING_SPEED = -1;
+    public static final double TURNING_SPEED_LOW = -.5;
+    public static final double TURNING_SPEED_HIGH = -.3;
     public static final double DRIVE_SPEED = -1;
 
     //if the motor speed (RPMs) exceeds this value, then shift into high gear
