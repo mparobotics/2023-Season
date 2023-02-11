@@ -14,11 +14,8 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -178,8 +175,8 @@ public class DriveSubsystem extends SubsystemBase {
     double rvelocity = encoderR.getVelocity();
 
     SmartDashboard.putBoolean("HighGear?", inHighGear);
-    SmartDashboard.putNumber("LeftWheelSpeeds", encoderL.getVelocity());
-    SmartDashboard.putNumber("RightWheelSpeeds", encoderR.getVelocity());
+    SmartDashboard.putNumber("LeftWheelSpeeds", lvelocity);
+    SmartDashboard.putNumber("RightWheelSpeeds", rvelocity);
 
     //* Automatic gear shifter - automatically shifts into high gear when the robot is driving fast enough and shifts into low gear when the robot slows down */
     //check if the robot is turning - if the speeds of the left and right motors are different
