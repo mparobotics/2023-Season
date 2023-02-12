@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.IntakeConstants;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -16,8 +15,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 public class DoubleSolenoidSubsystem extends SubsystemBase {                                                  
   /** Creates a new DoubleSolenoidSubsystem. */
-  DoubleSolenoid ShortPiston = new DoubleSolenoid(PneumaticsModuleType.REVPH, IntakeConstants.SHORT_FORWARD,IntakeConstants.SHORT_REVERSE); // makes a new double solenoid class at 1(retracts) and 0(forward)
-  DoubleSolenoid LongPiston = new DoubleSolenoid(PneumaticsModuleType.REVPH, IntakeConstants.LONG_FORWARD, IntakeConstants.LONG_REVERSE);
+  DoubleSolenoid doubleSolenoidAR = new DoubleSolenoid(PneumaticsModuleType.REVPH, 1,0); // makes a new double solenoid class at 1(retracts) and 0(forward)
+  DoubleSolenoid doubleSolenoidBR = new DoubleSolenoid(PneumaticsModuleType.REVPH, 3, 2);
 
 
   public DoubleSolenoidSubsystem() {
@@ -37,8 +36,8 @@ public class DoubleSolenoidSubsystem extends SubsystemBase {
     System.out.println("Retracting!");
     return runOnce(
       () -> {
-        ShortPiston.set(Value.kForward); //O
-        LongPiston.set(Value.kForward); //O
+        doubleSolenoidAR.set(Value.kForward); //O
+        doubleSolenoidBR.set(Value.kForward); //O
       });
   }
   
@@ -47,8 +46,8 @@ public class DoubleSolenoidSubsystem extends SubsystemBase {
     System.out.println("Chute Intake!");
     return runOnce(
       () -> {
-        ShortPiston.set(Value.kReverse); //X
-        LongPiston.set(Value.kForward); //O
+        doubleSolenoidAR.set(Value.kReverse); //X
+        doubleSolenoidBR.set(Value.kForward); //O
       });
   }
 
@@ -57,8 +56,8 @@ public class DoubleSolenoidSubsystem extends SubsystemBase {
     System.out.println("Shooting!");
     return runOnce(
       () -> {
-        LongPiston.set(Value.kForward); //O
-        ShortPiston.set(Value.kReverse); //X
+        doubleSolenoidAR.set(Value.kForward); //O
+        doubleSolenoidBR.set(Value.kReverse); //X
       });
   }
 
@@ -67,8 +66,8 @@ public class DoubleSolenoidSubsystem extends SubsystemBase {
     System.out.println("GroundIntake!");
     return runOnce(
       () -> {
-        LongPiston.set(Value.kReverse); //X
-        ShortPiston.set(Value.kReverse); //X
+        doubleSolenoidAR.set(Value.kReverse); //X
+        doubleSolenoidBR.set(Value.kReverse); //X
       });
   }
 }

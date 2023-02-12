@@ -15,10 +15,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -49,7 +47,8 @@ public class DriveSubsystem extends SubsystemBase {
   //PH compressor powers the solenoids
 
   //solenoids to control gear shifting
-  private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, DriveConstants.SHIFT_SOLENOID_CHANNEL, 9);
+  private Solenoid shiftSolenoidL = new Solenoid(PneumaticsModuleType.REVPH, DriveConstants.LEFT_SOLENOID_CHANNEL);
+  private Solenoid shiftSolenoidR = new Solenoid(PneumaticsModuleType.REVPH, DriveConstants.RIGHT_SOLENOID_CHANNEL);
   
   public WPI_Pigeon2 pigeon = new WPI_Pigeon2(0);
   //odometry object 
@@ -67,7 +66,8 @@ public class DriveSubsystem extends SubsystemBase {
     motorBR.setInverted(false);
     //turn on compressor
     //set solenoid to OFF
-    shiftSolenoid.set(Value.kForward);
+    shiftSolenoidL.set(false);
+    shiftSolenoidR.set(false);
 
     //create odometry object using motor positions
     //drive position = motor rotations * rotations to meters conversion constant
@@ -79,13 +79,15 @@ public class DriveSubsystem extends SubsystemBase {
   /** shifts the gearbox into high gear */
   public void upShift(){
     //shift into high gear by extending both solenoids
-    shiftSolenoid.set(Value.kReverse);
+    shiftSolenoidL.set(true);
+    shiftSolenoidR.set(true);
   }
   /** shifts the gearbox into low gear */
   public void downShift(){
     //shift into low gear by retracting both solenoids
-    shiftSolenoid.set(Value.kReverse);
-    }
+    shiftSolenoidL.set(false);
+    shiftSolenoidR.set(false);
+  }
 
    /** sets the driving speed of the robot ]
     * @param sForward  (Double) - the speed to drive forward

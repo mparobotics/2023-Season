@@ -58,7 +58,7 @@ public class RobotContainer {
   //the pneumatics to control the arm
   private final DoubleSolenoidSubsystem m_doublesolenoidSubsystem = new DoubleSolenoidSubsystem(); //replicating a double solenoid subsystem
   
-  private final Compressor phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
+  private final Compressor phCompressor = new Compressor(16, PneumaticsModuleType.REVPH);
   
   // The robot's subsystems and commands are defined here...
   //Creating instance of IntakeSubsystem called m_intakeSubsystem
@@ -168,7 +168,7 @@ public class RobotContainer {
     m_driveSubsystem.resetOdometry(pTrajectory.getInitialPose());
    
     return rCommand;
-    
+
   }
   
   private Command runIntaking (double seconds){

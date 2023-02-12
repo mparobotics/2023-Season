@@ -24,13 +24,7 @@ public final class Constants
   //intake speed
   public static final double INTAKE_SPEED = 1;
   public static final double OUTTAKE_SPEED = -1;
-  public static final double SHOOTING_SPEED = -1;
-
-  public static final int SHORT_FORWARD = 8;
-  public static final int SHORT_REVERSE = 15;
-
-  public static final int LONG_FORWARD = 10;
-  public static final int LONG_REVERSE = 13;
+  public static final double SHOOTING_SPEED = -3;
   }
 
   public final class DriveConstants
@@ -44,14 +38,13 @@ public final class Constants
 
 
     //pneumatics compressor
-    public static final int COMPRESSOR_ID = 1;
+    public static final int COMPRESSOR_ID = 0;
 
     public static final int SOLENOID_CHANNEL = 0;
   
     //gear shifter solenoids
-    
-    public static final int SHIFT_SOLENOID_CHANNEL = 14;
-  
+    public static final int LEFT_SOLENOID_CHANNEL = 4;
+    public static final int RIGHT_SOLENOID_CHANNEL = 5;
 
     //driving speeds
     public static final double TURNING_SPEED = 1;
