@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -45,13 +44,12 @@ public class DriveSubsystem extends SubsystemBase {
   private final MotorControllerGroup SCG_L = new MotorControllerGroup(motorFL, motorBL);
 
   //differential drive to control the motors
-  private final DifferentialDrive differentialDrive = new DifferentialDrive(motorFL, motorFR);
-// error for driving straight
-  public double error;
+  private final DifferentialDrive differentialDrive = new DifferentialDrive(motorFR, motorFL);
+
+  //PH compressor powers the solenoids
 
   //solenoids to control gear shifting
-  private Solenoid shiftSolenoid = new Solenoid(PneumaticsModuleType.REVPH, DriveConstants.SHIFT_SOLENOID_CHANNEL);
-  public Boolean inHighGear = false;
+  private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, DriveConstants.SHIFT_SOLENOID_CHANNEL, 9);
   
   public WPI_Pigeon2 pigeon = new WPI_Pigeon2(0);
   //odometry object 
@@ -67,14 +65,9 @@ public class DriveSubsystem extends SubsystemBase {
     //dont invert right motors
     motorFR.setInverted(false);
     motorBR.setInverted(false);
-
-    motorFR.setSmartCurrentLimit(30, 60);
-    motorBR.setSmartCurrentLimit(30, 60);
-    motorFL.setSmartCurrentLimit(30, 60);
-    motorBL.setSmartCurrentLimit(30, 60);
     //turn on compressor
-
-  
+    //set solenoid to OFF
+    shiftSolenoid.set(Value.kForward);
 
     //create odometry object using motor positions
     //drive position = motor rotations * rotations to meters conversion constant
@@ -86,45 +79,22 @@ public class DriveSubsystem extends SubsystemBase {
   /** shifts the gearbox into high gear */
   public void upShift(){
     //shift into high gear by extending both solenoids
-    shiftSolenoid.set(true);
-    inHighGear = true;
-
+    shiftSolenoid.set(Value.kReverse);
   }
   /** shifts the gearbox into low gear */
   public void downShift(){
     //shift into low gear by retracting both solenoids
-    shiftSolenoid.set(false);
-    inHighGear = false;
-
-  }
+    shiftSolenoid.set(Value.kReverse);
+    }
 
    /** sets the driving speed of the robot ]
-    * @param xSpeed  (Double) - the speed to drive forward
-    * @param zRotation  (Double) - the speed to drive forward
+    * @param sForward  (Double) - the speed to drive forward
+    * @param sTurning  (Double) - the speed to drive forward
    */
-  public void setDriveSpeedArcade(double xSpeed, double zRotation){
+  public void setDriveSpeedArcade(double sForward, double sTurning){
     //set the driving speed based on a forward speed and turning speed - controlled in ArcadeDrive.jave
-    if (Math.abs(xSpeed) < .1) {xSpeed = 0;}//deadzones
-    if (Math.abs(zRotation) < .1) {zRotation = 0;}//deadzones
-    if (zRotation == 0 ){
-      driveStraight(xSpeed);}
-
-      else{
-    
-        if (inHighGear){differentialDrive.arcadeDrive(xSpeed * DriveConstants.DRIVE_SPEED, zRotation * DriveConstants.TURNING_SPEED_HIGH);}
-        else{differentialDrive.arcadeDrive(xSpeed * DriveConstants.DRIVE_SPEED, zRotation * DriveConstants.TURNING_SPEED_LOW);}
-  }}
-
-  private double driveTrainP() {
-    error = encoderL.getVelocity() - encoderR.getVelocity();
-    //integral += error*.02;
-    return DriveConstants.DRIVE_STRAIGHT_P*error;
+    differentialDrive.arcadeDrive(sForward * DriveConstants.DRIVE_SPEED, sTurning * DriveConstants.TURNING_SPEED);
   }
-
-  public void driveStraight(double xSpeed) {
-    differentialDrive.arcadeDrive(xSpeed, -driveTrainP());
-  }
-  
   public void encoderReset() {
     encoderL.setPosition(0);
     encoderR.setPosition(0);
@@ -177,15 +147,11 @@ public class DriveSubsystem extends SubsystemBase {
     //the speed of the right motor in RPMs
     double rvelocity = encoderR.getVelocity();
 
-    SmartDashboard.putBoolean("HighGear?", inHighGear);
-    SmartDashboard.putNumber("LeftWheelSpeeds", encoderL.getVelocity());
-    SmartDashboard.putNumber("RightWheelSpeeds", encoderR.getVelocity());
-
     //* Automatic gear shifter - automatically shifts into high gear when the robot is driving fast enough and shifts into low gear when the robot slows down */
     //check if the robot is turning - if the speeds of the left and right motors are different
-    //boolean izRotation = Math.abs(lvelocity - rvelocity) < DriveConstants.TURN_THRESHOLD;
+    boolean isTurning = Math.abs(lvelocity - rvelocity) < DriveConstants.TURN_THRESHOLD;
     //check if automatic shifitng is enabling and the robot IS NOT turning
-/*     if(DriveConstants.AUTO_SHIFT_ENABLED && !izRotation){
+    if(DriveConstants.AUTO_SHIFT_ENABLED && !isTurning){
       //if either motor exceeds the velocity threshold then shift into high gear
       if(Math.abs(lvelocity) > DriveConstants.UPSHIFT_THRESHOLD
       || Math.abs(rvelocity) > DriveConstants.UPSHIFT_THRESHOLD){
@@ -196,6 +162,6 @@ public class DriveSubsystem extends SubsystemBase {
       && Math.abs(rvelocity) < DriveConstants.DOWNSHIFT_THRESHOLD){
         downShift();
       }
-    } */
+    }
   }
 }

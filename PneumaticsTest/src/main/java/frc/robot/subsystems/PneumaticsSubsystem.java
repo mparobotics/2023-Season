@@ -18,8 +18,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class PneumaticsSubsystem extends SubsystemBase {
 
 //Compressor pcmCompressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
-Compressor phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
-DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 10, 13);
+Compressor phCompressor = new Compressor(16, PneumaticsModuleType.REVPH);
+DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1);
 
 
 
@@ -29,7 +29,7 @@ DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 1
  
 
     SmartDashboard.putBoolean("solenoidTrigger", false);
-  
+    boolean isEnabled = phCompressor.isEnabled();
     boolean pressureSwitch = phCompressor.getPressureSwitchValue();
     
 
@@ -38,12 +38,7 @@ DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 1
   @Override
   public void periodic() {
     double current = phCompressor.getCurrent();
-    boolean isEnabled = phCompressor.isEnabled();
-    if (isEnabled == false)
-    {
-      phCompressor.enableDigital();
-    }
-    SmartDashboard.putBoolean("compressor enabled", isEnabled);
+    
     SmartDashboard.putNumber("compressor current", current);
     // This method will be called once per scheduler run
   }
