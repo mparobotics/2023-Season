@@ -112,15 +112,14 @@ public class DriveSubsystem extends SubsystemBase {
         else{differentialDrive.arcadeDrive(xSpeed * DriveConstants.DRIVE_SPEED, zRotation * DriveConstants.TURNING_SPEED_LOW);}
   }}
 
-  public double driveTrainP() {
+  private double driveTrainP() {
     error = encoderL.getVelocity() - encoderR.getVelocity();
     //integral += error*.02;
-    //if error < 0, rvelocity > lvelocity; if error > 0, lvelocity > rvelocity
-    return DriveConstants.DRIVE_STRAIGHT_P * error;
+    return DriveConstants.DRIVE_STRAIGHT_P*error;
   }
 
   public void driveStraight(double xSpeed) {
-    differentialDrive.arcadeDrive(xSpeed, driveTrainP());
+    differentialDrive.arcadeDrive(xSpeed, -driveTrainP());
   }
   
   public void encoderReset() {
@@ -178,7 +177,6 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("HighGear?", inHighGear);
     SmartDashboard.putNumber("LeftWheelSpeeds", lvelocity);
     SmartDashboard.putNumber("RightWheelSpeeds", rvelocity);
-
 
     //* Automatic gear shifter - automatically shifts into high gear when the robot is driving fast enough and shifts into low gear when the robot slows down */
     //check if the robot is turning - if the speeds of the left and right motors are different
