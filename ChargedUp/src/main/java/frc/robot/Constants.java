@@ -43,11 +43,12 @@ public final class Constants
     public static final int SOLENOID_CHANNEL = 0;
   
     //gear shifter solenoids
-    public static final int LEFT_SOLENOID_CHANNEL = 4;
-    public static final int RIGHT_SOLENOID_CHANNEL = 5;
+    public static final int SHIFT_SOLENOID_CHANNEL = 9;
+   
 
     //driving speeds
-    public static final double TURNING_SPEED = 1;
+    public static final double TURNING_SPEED_LOW = -.5;
+    public static final double TURNING_SPEED_HIGH = -.3;
     public static final double DRIVE_SPEED = -1;
 
     //if the motor speed (RPMs) exceeds this value, then shift into high gear
@@ -57,7 +58,7 @@ public final class Constants
     //difference between motor speeds needs to be below this threshold (RPMs)
     public static final double TURN_THRESHOLD = 50;
     //if the robot should shift gears automatically
-    public static final boolean AUTO_SHIFT_ENABLED = true;
+    public static final boolean AUTO_SHIFT_ENABLED = false;
     
     //how many encoder rotations = 1 meter of robot travel
     public static final double ROTATIONS_TO_METERS = 8 * Math.PI * 0.0254; //8in wheel diameter * PI * 0.0254 inches/meter
@@ -77,6 +78,7 @@ public final class Constants
     public static final double Drive_Kp = 1.4948;
     public static final double Drive_KpTest = 0;
     public static final double Drive_Kd = 0.0;
+    public static final double DRIVE_STRAIGHT_P = 4;
     } 
     public final class OperatorConstants
     {

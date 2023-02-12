@@ -58,7 +58,7 @@ public class RobotContainer {
   //the pneumatics to control the arm
   private final DoubleSolenoidSubsystem m_doublesolenoidSubsystem = new DoubleSolenoidSubsystem(); //replicating a double solenoid subsystem
   
-  private final Compressor phCompressor = new Compressor(16, PneumaticsModuleType.REVPH);
+  private final Compressor phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
   
   // The robot's subsystems and commands are defined here...
   //Creating instance of IntakeSubsystem called m_intakeSubsystem
@@ -88,15 +88,17 @@ public class RobotContainer {
   
   
   
+  
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    phCompressor.enableDigital();
+
     m_chooser.setDefaultOption("Pick & Score", AutoSelectorConstants.Pick_and_Score);
     m_chooser.addOption("Leave", AutoSelectorConstants.Score_Low_and_Leave);
     m_chooser.addOption("Balance1" , AutoSelectorConstants.Balance);
     m_chooser.addOption("Example", AutoSelectorConstants.Example);
     SmartDashboard.putData("Auto choices", m_chooser);
     
-    phCompressor.enableDigital();
     // Configure the trigger bindings
     configureBindings();
 
@@ -117,9 +119,9 @@ public class RobotContainer {
     //new JoystickButton(xbox, XboxController.Button.kA.value).onTrue(new ShiftUp(m_driveSubsystem));
     //new JoystickButton(xbox, XboxController.Button.kB.value).onTrue(new ShiftDown(m_driveSubsystem));
     //A button shifts the gearbox into high gear
-    xbox.button(Button.kA.value).onTrue(m_driveSubsystem.ShiftUp());
+    xbox.button(Button.kRightBumper.value).onTrue(m_driveSubsystem.ShiftUp());
     //B button shifts the gearbox into low gear
-    xbox.button(Button.kB.value).onTrue(m_driveSubsystem.ShiftDown());
+    xbox.button(Button.kLeftBumper.value).onTrue(m_driveSubsystem.ShiftDown());
     
     
     m_driveSubsystem.setDefaultCommand(new ArcadeDrive(m_driveSubsystem, 
