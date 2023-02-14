@@ -47,7 +47,7 @@ public final class Constants
    
 
     //driving speeds
-    public static final double TURNING_SPEED_LOW = -.5;
+    public static final double TURNING_SPEED_LOW = -.7;
     public static final double TURNING_SPEED_HIGH = -.3;
     public static final double DRIVE_SPEED = -1;
 
@@ -78,7 +78,7 @@ public final class Constants
     public static final double Drive_Kp = 1.4948;
     public static final double Drive_KpTest = 0;
     public static final double Drive_Kd = 0.0;
-    public static final double DRIVE_STRAIGHT_P = 4;
+    public static final double DRIVE_STRAIGHT_P = 0.0007;
     } 
     public final class OperatorConstants
     {

@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -37,8 +38,10 @@ public class DriveSubsystem extends SubsystemBase {
   private final CANSparkMax motorBR = new CANSparkMax(DriveConstants.MOTOR_BR_ID, MotorType.kBrushless);
   private final CANSparkMax motorBL = new CANSparkMax(DriveConstants.MOTOR_BL_ID, MotorType.kBrushless);
   //encoders to measure driving speed
-  public RelativeEncoder encoderL = motorFL.getEncoder();
-  public RelativeEncoder encoderR = motorFR.getEncoder();
+  public final SparkMaxAlternateEncoder.Type kAltEncType = SparkMaxAlternateEncoder.Type.kQuadrature;
+  public final int kCPR = 8192;
+  public RelativeEncoder encoderL = motorFL.getAlternateEncoder(kAltEncType, kCPR);
+  public RelativeEncoder encoderR = motorFR.getAlternateEncoder(kAltEncType, kCPR);
 
   //create motor controller groups
   private final MotorControllerGroup SCG_R = new MotorControllerGroup(motorFR, motorBR);
@@ -46,8 +49,10 @@ public class DriveSubsystem extends SubsystemBase {
 
   //differential drive to control the motors
   private final DifferentialDrive differentialDrive = new DifferentialDrive(motorFL, motorFR);
-// error for driving straight
+  // error for driving straight
   public double error;
+
+
 
   //solenoids to control gear shifting
   private Solenoid shiftSolenoid = new Solenoid(PneumaticsModuleType.REVPH, DriveConstants.SHIFT_SOLENOID_CHANNEL);
@@ -67,6 +72,7 @@ public class DriveSubsystem extends SubsystemBase {
     //dont invert right motors
     motorFR.setInverted(false);
     motorBR.setInverted(false);
+    encoderR.setInverted(true);
 
     motorFR.setSmartCurrentLimit(30, 60);
     motorBR.setSmartCurrentLimit(30, 60);
@@ -122,7 +128,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void driveStraight(double xSpeed) {
-    differentialDrive.arcadeDrive(xSpeed, -driveTrainP());
+    differentialDrive.arcadeDrive(-xSpeed, driveTrainP());
   }
   
   public void encoderReset() {
@@ -180,6 +186,8 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("HighGear?", inHighGear);
     SmartDashboard.putNumber("LeftWheelSpeeds", encoderL.getVelocity());
     SmartDashboard.putNumber("RightWheelSpeeds", encoderR.getVelocity());
+    SmartDashboard.putNumber("LeftEncoder", encoderL.getPosition());
+    SmartDashboard.putNumber("RightEncoder", encoderR.getPosition());
 
     //* Automatic gear shifter - automatically shifts into high gear when the robot is driving fast enough and shifts into low gear when the robot slows down */
     //check if the robot is turning - if the speeds of the left and right motors are different
