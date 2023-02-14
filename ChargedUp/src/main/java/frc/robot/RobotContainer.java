@@ -56,7 +56,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   //the pneumatics to control the arm
   private final DoubleSolenoidSubsystem m_doublesolenoidSubsystem = new DoubleSolenoidSubsystem(); //replicating a double solenoid subsystem
-
+  
+  private final Compressor phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
+  
   // The robot's subsystems and commands are defined here...
   //Creating instance of IntakeSubsystem called m_intakeSubsystem
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
@@ -83,8 +85,6 @@ public class RobotContainer {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   
-    
-  private final Compressor phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
   
   
   
@@ -118,9 +118,9 @@ public class RobotContainer {
     //new JoystickButton(xbox, XboxController.Button.kA.value).onTrue(new ShiftUp(m_driveSubsystem));
     //new JoystickButton(xbox, XboxController.Button.kB.value).onTrue(new ShiftDown(m_driveSubsystem));
     //A button shifts the gearbox into high gear
-    xbox.button(Button.kA.value).onTrue(m_driveSubsystem.ShiftUp());
+    xbox.button(Button.kRightBumper.value).onTrue(m_driveSubsystem.ShiftUp());
     //B button shifts the gearbox into low gear
-    xbox.button(Button.kB.value).onTrue(m_driveSubsystem.ShiftDown());
+    xbox.button(Button.kLeftBumper.value).onTrue(m_driveSubsystem.ShiftDown());
     
     
     m_driveSubsystem.setDefaultCommand(new ArcadeDrive(m_driveSubsystem, 

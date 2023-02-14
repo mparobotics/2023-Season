@@ -26,6 +26,9 @@ public class IntakeSubsystem extends SubsystemBase
   intakeMotorR.setInverted(true);
   intakeMotorL.setInverted(false);
 
+  intakeMotorL.setSmartCurrentLimit(5, 60);
+  intakeMotorR.setSmartCurrentLimit(5, 60);
+
   intakeMotorL.setIdleMode(IdleMode.kBrake);
   intakeMotorR.setIdleMode(IdleMode.kBrake);
   }
