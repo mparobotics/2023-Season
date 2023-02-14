@@ -65,7 +65,7 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
   //xbox controller
-  private CommandXboxController xbox = new CommandXboxController(Constants.OperatorConstants.XBOX_CONTROLLER_PORT);
+  private CommandXboxController xbox = new CommandXboxController(Constants.OperatorConstants.XBOX_CONTROLLER_ID);
   private CommandJoystick box = new CommandJoystick(OperatorConstants.BOX_ID);
 
   //the drive subsystem
