@@ -96,7 +96,6 @@ public class RobotContainer {
     m_chooser.addOption("Balance" , AutoSelectorConstants.Balance);
     m_chooser.addOption("Leave", AutoSelectorConstants.Leave);
     SmartDashboard.putData("Auto choices", m_chooser);
-    
     // Configure the trigger bindings
     configureBindings();
 
@@ -176,7 +175,7 @@ public class RobotContainer {
   private Command runIntaking(double seconds){
     return new AutoIntake(m_intakeSubsystem, IntakeConstants.INTAKE_SPEED).withTimeout(seconds);
   }
-  private Command runScoring(double seconds){
+  private Command runOuttaking(double seconds){
     return new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(seconds);
   }
   private Command runShooting(double seconds){
@@ -186,14 +185,13 @@ public class RobotContainer {
     return m_doublesolenoidSubsystem.groundintake();
   }
   private Command setArmRetracted(){
-    return m_doublesolenoidSubsystem.groundintake();
+    return m_doublesolenoidSubsystem.retract();
   }
-  private Command setArmShooting(){
-    return m_doublesolenoidSubsystem.groundintake();
+  private Command setArmShoot(){
+    return m_doublesolenoidSubsystem.shoot();
   }
-  private Command setArmIntaking(){
-    return m_doublesolenoidSubsystem.groundintake();
-  }
+
+
   private Command stopRobot(){
     return m_driveSubsystem.setVolts(0, 0);
   }
@@ -236,14 +234,14 @@ public class RobotContainer {
       case AutoSelectorConstants.Pick_and_Score:
         return new SequentialCommandGroup(
           setArmGround(), //Arm moves to groundintake position
-          runScoring(2), //Starts outtaking for 2 seconds (for pre-loaded cargo)
+          runOuttaking(2), //Starts outtaking for 2 seconds (for pre-loaded cargo)
           setArmRetracted(), //Arm moves to retract position
           followTrajectory(Trajectory_pickandscore1), //Runs "Trajectory_pickandscore1" file
           stopRobot(), //stops robot
           Commands.parallel(runIntaking(3), //Starts intaking for 3 seconds
             followTrajectory(Trajectory_pickandscore2)),//Runs "Trajectory_pickandscore2" as soon as robot starts intaking 
           setArmGround(), //Arm moves to groundintake position
-          runScoring(2), //Starts outtaking for 2 seconds
+          runOuttaking(2), //Starts outtaking for 2 seconds
           stopRobot()); //stop robot
       
       case AutoSelectorConstants.Leave:
@@ -254,7 +252,7 @@ public class RobotContainer {
       case AutoSelectorConstants.Balance:
         return new SequentialCommandGroup(
           setArmGround(), 
-          runScoring(2), 
+          runOuttaking(2), 
           setArmRetracted(),
           followTrajectory(Trajectory_leave));
       
