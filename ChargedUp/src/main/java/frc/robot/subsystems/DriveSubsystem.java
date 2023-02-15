@@ -51,7 +51,7 @@ public class DriveSubsystem extends SubsystemBase {
 
 
 
-  //solenoids to control gear shifting
+  //solenoid to control gear shifting
   private Solenoid shiftSolenoid = new Solenoid(PneumaticsModuleType.REVPH, DriveConstants.SHIFT_SOLENOID_CHANNEL);
   public Boolean inHighGear = false;
   
@@ -103,19 +103,19 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   // sets the driving speed of the robot 
-  public void setDriveSpeedArcade(double xSpeed, double zRotation){
+  public void setDriveSpeedArcade(double forwardSpeed, double turnSpeed){
     //set the driving speed based on a forward speed and turning speed - controlled in ArcadeDrive.java
-    if (Math.abs(xSpeed) < .1) {xSpeed = 0;}//deadzones
-    if (Math.abs(zRotation) < .1) {zRotation = 0;}//deadzones
-    if (zRotation == 0){
-      driveStraight(xSpeed);
+    if (Math.abs(forwardSpeed) < .1) {forwardSpeed = 0;}//deadzones
+    if (Math.abs(turnSpeed) < .1) {turnSpeed = 0;}//deadzones
+    if (turnSpeed == 0){
+      driveStraight(forwardSpeed);
     }
     else{
       if (inHighGear){
-        differentialDrive.arcadeDrive(xSpeed * DriveConstants.DRIVE_SPEED, zRotation * DriveConstants.TURNING_SPEED_HIGH);
+        differentialDrive.arcadeDrive(forwardSpeed * DriveConstants.DRIVE_SPEED, turnSpeed * DriveConstants.TURNING_SPEED_HIGH);
       }
        else{
-        differentialDrive.arcadeDrive(xSpeed * DriveConstants.DRIVE_SPEED, zRotation * DriveConstants.TURNING_SPEED_LOW);
+        differentialDrive.arcadeDrive(forwardSpeed * DriveConstants.DRIVE_SPEED, turnSpeed * DriveConstants.TURNING_SPEED_LOW);
       }
   }
   }
@@ -126,8 +126,8 @@ public class DriveSubsystem extends SubsystemBase {
     return DriveConstants.DRIVE_STRAIGHT_P*error;
   }
 
-  public void driveStraight(double xSpeed) {
-    differentialDrive.arcadeDrive(-xSpeed, driveTrainP());
+  public void driveStraight(double forwardSpeed) {
+    differentialDrive.arcadeDrive(-forwardSpeed, driveTrainP());
   }
   
   public void encoderReset() {

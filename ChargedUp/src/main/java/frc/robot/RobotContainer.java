@@ -92,6 +92,8 @@ public class RobotContainer {
   public RobotContainer() {
     phCompressor.enableDigital();
 
+    m_chooser.setDefaultOption("Trajectory Test", AutoSelectorConstants.Test_Auto);
+
     m_chooser.setDefaultOption("Pick & Score", AutoSelectorConstants.Pick_and_Score);
     m_chooser.addOption("Score Low &Leave", AutoSelectorConstants.Score_Low_and_Leave);
     m_chooser.addOption("Balance1" , AutoSelectorConstants.Balance);
@@ -217,10 +219,11 @@ public class RobotContainer {
     leftController = new PIDController(DriveConstants.DRIVE_P_GAIN, 0, 0);
     rightController = new PIDController(DriveConstants.DRIVE_P_GAIN, 0, 0);
     
-    //the loaction of a JSON file of the test path
+    //the loaction of a JSON trajectory file
     String Trajectory_pickandscore1 = "pathplanner/generatedJSON/1,2,3 - Pick Up & Score (1).wpilib.json";
     String Trajectory_pickandscore2 = "pathplanner/generatedJSON/1,2,3 - Pick Up & Score (2).wpilib.json";
     String Trajectory_leave = "pathplanner/generatedJSON/1,2,3 - Leave.wpilib.json";
+    String Test_Auto = "pathplanner/generatedJSON/Test Auto.json";
     
     //display values in the table
     leftMeasurement.setNumber(m_driveSubsystem.getWheelSpeeds().leftMetersPerSecond);
@@ -258,7 +261,13 @@ public class RobotContainer {
           setArmGround(), 
           runScoring(2), 
           setArmRetracted(),
-          followTrajectory(Trajectory_leave));  
+          followTrajectory(Trajectory_leave));
+      
+      case AutoSelectorConstants.Test_Auto:
+        return new SequentialCommandGroup(
+          followTrajectory(Test_Auto)
+        );
+          
     } 
 
       return null;
