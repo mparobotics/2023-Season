@@ -6,12 +6,6 @@ package frc.robot.subsystems;
 
 
 
-<<<<<<< Updated upstream
-=======
-import org.opencv.core.Mat.Tuple2;
-
-import com.ctre.phoenix.motorcontrol.NeutralMode;
->>>>>>> Stashed changes
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -91,11 +85,11 @@ public class DriveSubsystem extends SubsystemBase {
     motorBR.follow(motorFR);
     motorBL.follow(motorFL);
     //invert left motors
-    motorFL.setInverted(true);
-    motorBL.setInverted(true);
+    motorFL.setInverted(false);
+    motorBL.setInverted(false);
     //dont invert right motors
-    motorFR.setInverted(false);
-    motorBR.setInverted(false);
+    motorFR.setInverted(true);
+    motorBR.setInverted(true);
     encoderR.setInverted(true);
 
     motorFR.setSmartCurrentLimit(30, 60);
@@ -148,11 +142,11 @@ public class DriveSubsystem extends SubsystemBase {
   private double driveTrainP() {
     error = encoderL.getVelocity() - encoderR.getVelocity();
     //integral += error*.02;
-    return DriveConstants.DRIVE_STRAIGHT_P*error;
+    return DriveConstants.DRIVE_STRAIGHT_P * error;
   }
 
   public void driveStraight(double xSpeed) {
-    differentialDrive.arcadeDrive(-xSpeed, driveTrainP());
+    differentialDrive.arcadeDrive(xSpeed, -driveTrainP());
   }
   
   public void encoderReset() {

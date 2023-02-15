@@ -47,9 +47,9 @@ public final class Constants
    
 
     //driving speeds
-    public static final double TURNING_SPEED_LOW = -.7;
-    public static final double TURNING_SPEED_HIGH = -.3;
-    public static final double DRIVE_SPEED = -1;
+    public static final double TURNING_SPEED_LOW = .7;
+    public static final double TURNING_SPEED_HIGH = .3;
+    public static final double DRIVE_SPEED = 1;
 
     //if the motor speed (RPMs) exceeds this value, then shift into high gear
     public static final double UPSHIFT_THRESHOLD = 5000;
