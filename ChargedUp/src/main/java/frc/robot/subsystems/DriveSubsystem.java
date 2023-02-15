@@ -16,11 +16,8 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -58,11 +55,12 @@ public class DriveSubsystem extends SubsystemBase {
 
 
 
-  //solenoids to control gear shifting
+  //solenoid to control gear shifting
   private Solenoid shiftSolenoid = new Solenoid(PneumaticsModuleType.REVPH, DriveConstants.SHIFT_SOLENOID_CHANNEL);
   public Boolean inHighGear = false;
   
   public WPI_Pigeon2 pigeon = new WPI_Pigeon2(0);
+
   //odometry object 
   private final DifferentialDriveOdometry m_odometry;
   /** Creates a new DriveSubsystem. */
@@ -122,22 +120,23 @@ public class DriveSubsystem extends SubsystemBase {
 
   }
 
-   /** sets the driving speed of the robot ]
-    * @param xSpeed  (Double) - the speed to drive forward
-    * @param zRotation  (Double) - the speed to drive forward
-   */
-  public void setDriveSpeedArcade(double xSpeed, double zRotation){
-    //set the driving speed based on a forward speed and turning speed - controlled in ArcadeDrive.jave
-    if (Math.abs(xSpeed) < .1) {xSpeed = 0;}//deadzones
-    if (Math.abs(zRotation) < .1) {zRotation = 0;}//deadzones
-    if (zRotation == 0 ){
-      driveStraight(xSpeed);}
-
-      else{
-    
-        if (inHighGear){differentialDrive.arcadeDrive(xSpeed * DriveConstants.DRIVE_SPEED, zRotation * DriveConstants.TURNING_SPEED_HIGH);}
-        else{differentialDrive.arcadeDrive(xSpeed * DriveConstants.DRIVE_SPEED, zRotation * DriveConstants.TURNING_SPEED_LOW);}
-  }}
+  // sets the driving speed of the robot 
+  public void setDriveSpeedArcade(double forwardSpeed, double turnSpeed){
+    //set the driving speed based on a forward speed and turning speed - controlled in ArcadeDrive.java
+    if (Math.abs(forwardSpeed) < .1) {forwardSpeed = 0;}//deadzones
+    if (Math.abs(turnSpeed) < .1) {turnSpeed = 0;}//deadzones
+    if (turnSpeed == 0){
+      driveStraight(forwardSpeed);
+    }
+    else{
+      if (inHighGear){
+        differentialDrive.arcadeDrive(forwardSpeed * DriveConstants.DRIVE_SPEED, turnSpeed * DriveConstants.TURNING_SPEED_HIGH);
+      }
+       else{
+        differentialDrive.arcadeDrive(forwardSpeed * DriveConstants.DRIVE_SPEED, turnSpeed * DriveConstants.TURNING_SPEED_LOW);
+      }
+  }
+  }
 
   private double driveTrainP() {
     error = encoderL.getVelocity() - encoderR.getVelocity();
@@ -145,8 +144,8 @@ public class DriveSubsystem extends SubsystemBase {
     return DriveConstants.DRIVE_STRAIGHT_P * error;
   }
 
-  public void driveStraight(double xSpeed) {
-    differentialDrive.arcadeDrive(xSpeed, -driveTrainP());
+  public void driveStraight(double forwardSpeed) {
+    differentialDrive.arcadeDrive(forwardSpeed, -driveTrainP());
   }
   
   public void encoderReset() {
@@ -165,6 +164,9 @@ public class DriveSubsystem extends SubsystemBase {
     SCG_L.setVoltage(leftVolts);
     SCG_R.setVoltage(rightVolts);
     differentialDrive.feed();
+  }
+  public CommandBase setVolts(double left, double right){
+    return runOnce(() -> tankDriveVolts(left, right));
   }
   public CommandBase ShiftUp(){
     return runOnce(() -> upShift());
@@ -185,11 +187,11 @@ public class DriveSubsystem extends SubsystemBase {
     double min_command = .01;
     if (pitch_error > 2.0)
     {
-            position_adjust = balance_kp * pitch_error - min_command;
+      position_adjust = balance_kp * pitch_error - min_command;
     }
     else if (pitch_error < 2.0)
     {
-            position_adjust = balance_kp * pitch_error + min_command;
+      position_adjust = balance_kp * pitch_error + min_command;
     }
     differentialDrive.arcadeDrive(position_adjust, 0);
   }
@@ -216,19 +218,22 @@ public class DriveSubsystem extends SubsystemBase {
 
     //* Automatic gear shifter - automatically shifts into high gear when the robot is driving fast enough and shifts into low gear when the robot slows down */
     //check if the robot is turning - if the speeds of the left and right motors are different
-    //boolean izRotation = Math.abs(lvelocity - rvelocity) < DriveConstants.TURN_THRESHOLD;
+    boolean isTurning = Math.abs(lvelocity - rvelocity) < DriveConstants.TURN_THRESHOLD;
     //check if automatic shifitng is enabling and the robot IS NOT turning
-/*     if(DriveConstants.AUTO_SHIFT_ENABLED && !izRotation){
-      //if either motor exceeds the velocity threshold then shift into high gear
-      if(Math.abs(lvelocity) > DriveConstants.UPSHIFT_THRESHOLD
-      || Math.abs(rvelocity) > DriveConstants.UPSHIFT_THRESHOLD){
-        upShift();
+    if(DriveConstants.AUTO_SHIFT_ENABLED){
+      if(!isTurning){
+        //if either motor exceeds the velocity threshold then shift into high gear
+        if(Math.abs(lvelocity) > DriveConstants.UPSHIFT_THRESHOLD
+        || Math.abs(rvelocity) > DriveConstants.UPSHIFT_THRESHOLD){
+          upShift();
+        }
+        //if both motors' speeds are below the downshift threshold then shift down
+        if(Math.abs(lvelocity) < DriveConstants.DOWNSHIFT_THRESHOLD
+        && Math.abs(rvelocity) < DriveConstants.DOWNSHIFT_THRESHOLD){
+          downShift();
+        }
       }
-      //if both motors' speeds are below the downshift threshold then shift down
-      if(Math.abs(lvelocity) < DriveConstants.DOWNSHIFT_THRESHOLD
-      && Math.abs(rvelocity) < DriveConstants.DOWNSHIFT_THRESHOLD){
-        downShift();
-      }
-    } */
+     
+    } 
   }
 }
