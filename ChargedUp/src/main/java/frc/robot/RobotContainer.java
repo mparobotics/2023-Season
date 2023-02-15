@@ -75,7 +75,7 @@ public class RobotContainer {
 
   //moving the drive kinematics from Constants to DriveSubsystem fixed the static issue
   private  DifferentialDriveKinematics DRIVE_KINEMATICS =
-            new DifferentialDriveKinematics(DriveConstants.TRACK_WIDTH_METERS);
+       new DifferentialDriveKinematics(DriveConstants.TRACK_WIDTH_METERS);
   
   //individual pid controllers for the left and right sides of the robot
   PIDController leftController; 
@@ -91,9 +91,12 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     phCompressor.enableDigital();
-    m_chooser.setDefaultOption("Pick & Score", AutoSelectorConstants.Pick_and_Score);
-    m_chooser.addOption("Test Auto", AutoSelectorConstants.Test_Auto);
-    m_chooser.addOption("Balance" , AutoSelectorConstants.Balance);
+
+    m_chooser.setDefaultOption("Simple Test Trajectory", AutoSelectorConstants.Test_Auto_1);
+    m_chooser.addOption("Curve Test Trajectory", AutoSelectorConstants.Test_Auto_1);
+    m_chooser.addOption("Pick & Score", AutoSelectorConstants.Pick_and_Score);
+    m_chooser.addOption("Score Low &Leave", AutoSelectorConstants.Score_Low_and_Leave);
+    m_chooser.addOption("Balance1" , AutoSelectorConstants.Balance);
     m_chooser.addOption("Leave", AutoSelectorConstants.Leave);
     SmartDashboard.putData("Auto choices", m_chooser);
     // Configure the trigger bindings
@@ -134,7 +137,7 @@ public class RobotContainer {
 
   /**
    takes a location of the JSON file as an input
-   generates a ramsete command from the file
+   and generates a ramsete command from the file
    */
   private RamseteCommand followTrajectory(String filePath){
     //trajectory object
@@ -256,7 +259,7 @@ public class RobotContainer {
           setArmRetracted(),
           followTrajectory(Trajectory_leave));
       
-      case AutoSelectorConstants.Test_Auto:
+      case AutoSelectorConstants.Test_Auto_1:
         return new SequentialCommandGroup(
           followTrajectory(Test_Auto)
         );
