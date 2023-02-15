@@ -6,10 +6,17 @@ package frc.robot.subsystems;
 
 
 
+<<<<<<< Updated upstream
+=======
+import org.opencv.core.Mat.Tuple2;
+
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+>>>>>>> Stashed changes
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAlternateEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -43,6 +50,9 @@ public class DriveSubsystem extends SubsystemBase {
   public RelativeEncoder encoderL = motorFL.getAlternateEncoder(kAltEncType, kCPR);
   public RelativeEncoder encoderR = motorFR.getAlternateEncoder(kAltEncType, kCPR);
 
+  
+  //setting ramp
+
   //create motor controller groups
   private final MotorControllerGroup SCG_R = new MotorControllerGroup(motorFR, motorBR);
   private final MotorControllerGroup SCG_L = new MotorControllerGroup(motorFL, motorBL);
@@ -63,7 +73,21 @@ public class DriveSubsystem extends SubsystemBase {
   private final DifferentialDriveOdometry m_odometry;
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
+    setBrake();
     //back motors follow front motors
+    motorFR.setOpenLoopRampRate(.2); // 0.5 seconds from neutral to full output (during open-loop control)
+    //falconFR.configClosedloopRamp(0.1); // 0 disables ramping (during closed-loop control)
+  
+    motorFL.setOpenLoopRampRate(0.2); // 0.5 seconds from neutral to full output (during open-loop control)
+    //falconFL.configClosedloopRamp(0.1); // 0 disables ramping (during closed-loop control)
+  
+    motorBL.setOpenLoopRampRate(0.2); // 0.5 seconds from neutral to full output (during open-loop control)
+    //falconBL.configClosedloopRamp(0.1); // 0 disables ramping (during closed-loop control)
+  
+    motorBR.setOpenLoopRampRate(0.2); // 0.5 seconds from neutral to full output (during open-loop control)
+    //falconBR.configClosedloopRamp(0.1); // 0 disables ramping (during closed-loop control)
+  
+  
     motorBR.follow(motorFR);
     motorBL.follow(motorFL);
     //invert left motors
@@ -174,6 +198,13 @@ public class DriveSubsystem extends SubsystemBase {
             position_adjust = balance_kp * pitch_error + min_command;
     }
     differentialDrive.arcadeDrive(position_adjust, 0);
+  }
+  public void setBrake() {
+    //setting coast or brake mode, can also be done in Phoenix tuner
+    motorFR.setIdleMode(IdleMode.kBrake);
+    motorBR.setIdleMode(IdleMode.kBrake);
+    motorFL.setIdleMode(IdleMode.kBrake);
+    motorBL.setIdleMode(IdleMode.kBrake);
   }
   @Override
   public void periodic() {
