@@ -216,6 +216,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("RightEncoder", encoderR.getPosition());
     SmartDashboard.putNumber("Trajectory Angle", pigeon.getAngle());
 
+    
     //* Automatic gear shifter - automatically shifts into high gear when the robot is driving fast enough and shifts into low gear when the robot slows down */
     //check if the robot is turning - if the speeds of the left and right motors are different
     boolean isTurning = Math.abs(lvelocity - rvelocity) < DriveConstants.TURN_THRESHOLD;
@@ -234,4 +235,5 @@ public class DriveSubsystem extends SubsystemBase {
      
     } 
   }
+  
 }

@@ -88,13 +88,14 @@ public final class Constants
 
   public final class AutoSelectorConstants
   {
-    public static final String Test_Auto = "0";
+    public static final String Test_Auto_1 = "0";
+    public static final String Test_Auto_2 = "1";
 
-    public static final String Pick_and_Score = "1";
-    public static final String Score_Low_and_Leave = "2";
-    public static final String Score_High_and_Leave = "3";
-    public static final String Balance = "4";
-    public static final String Leave = "5";
+    public static final String Pick_and_Score = "2";
+    public static final String Score_Low_and_Leave = "3";
+    public static final String Score_High_and_Leave = "4";
+    public static final String Balance = "5";
+    public static final String Leave = "6";
      
   }
   public final static class LEDConstants{
