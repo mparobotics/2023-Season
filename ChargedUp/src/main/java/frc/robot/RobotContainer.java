@@ -238,9 +238,8 @@ public class RobotContainer {
           runOuttaking(AutoSelectorConstants.Auto_Outtake_Seconds), //Starts outtaking for 2 seconds (for pre-loaded cargo)
           setArmRetract(), //Arm moves to retract position
           makeRamseteCommand(Trajectory_pickandscore1), //Runs "Trajectory_pickandscore1" file
-          stopRobot(), //stops robot
-          runIntaking (AutoSelectorConstants.Auto_Intake_Seconds), //Starts intaking for 3 seconds
-          Commands.parallel(makeRamseteCommand(Trajectory_pickandscore2)), //Runs "Trajectory_pickandscore2" as soon as robot starts intaking
+          stopRobot(), //stops robot //Starts intaking for 3 seconds
+          Commands.parallel(runIntaking(AutoSelectorConstants.Auto_Intake_Seconds), makeRamseteCommand(Trajectory_pickandscore2)), //Runs "Trajectory_pickandscore2" as soon as robot starts intaking
           setArmGround(), //Arm moves to groundintake position
           runOuttaking(AutoSelectorConstants.Auto_Outtake_Seconds), //Starts outtaking for 2 seconds
           stopRobot()); //stop robot
@@ -251,8 +250,7 @@ public class RobotContainer {
           setArmRetract(), //Arm moves to retract position
           makeRamseteCommand(Trajectory_pickandscore1), //Runs "Trajectory_pickandscore1" file
           stopRobot(), //stops robot
-          runIntaking (AutoSelectorConstants.Auto_Intake_Seconds), //Starts intaking for 3 seconds
-          Commands.parallel(makeRamseteCommand(Trajectory_pickandscore2)), //Runs "Trajectory_pickandscore2" as soon as robot starts intaking
+          Commands.parallel(runIntaking(AutoSelectorConstants.Auto_Intake_Seconds), makeRamseteCommand(Trajectory_pickandscore2)), //Runs "Trajectory_pickandscore2" as soon as robot starts intaking
           setArmShoot(), //Arm moves to groundintake position
           runShooting(AutoSelectorConstants.Auto_Shoot_Seconds), //Starts outtaking for 2 seconds
           stopRobot()); //stop robot
@@ -263,8 +261,7 @@ public class RobotContainer {
             setArmRetract(), //Arm moves to retract position
             makeRamseteCommand(Trajectory_pickandscore1), //Runs "Trajectory_pickandscore1" file
             stopRobot(), //stops robot
-            runIntaking (AutoSelectorConstants.Auto_Intake_Seconds), //Starts intaking for 3 seconds
-            Commands.parallel(makeRamseteCommand(Trajectory_pickandscore2)), //Runs "Trajectory_pickandscore2" as soon as robot starts intaking
+            Commands.parallel(runIntaking(AutoSelectorConstants.Auto_Intake_Seconds), makeRamseteCommand(Trajectory_pickandscore2)), //Runs "Trajectory_pickandscore2" as soon as robot starts intaking
             setArmGround(), //Arm moves to groundintake position
             runOuttaking(AutoSelectorConstants.Auto_Outtake_Seconds), //Starts outtaking for 2 seconds
             stopRobot()); //stop robot
@@ -275,8 +272,7 @@ public class RobotContainer {
             setArmRetract(), //Arm moves to retract position
             makeRamseteCommand(Trajectory_pickandscore1), //Runs "Trajectory_pickandscore1" file
             stopRobot(), //stops robot
-            runIntaking (AutoSelectorConstants.Auto_Intake_Seconds), //Starts intaking for 3 seconds
-            Commands.parallel(makeRamseteCommand(Trajectory_pickandscore2)), //Runs "Trajectory_pickandscore2" as soon as robot starts intaking
+            Commands.parallel(runIntaking(AutoSelectorConstants.Auto_Intake_Seconds), makeRamseteCommand(Trajectory_pickandscore2)), //Runs "Trajectory_pickandscore2" as soon as robot starts intaking
             setArmShoot(), //Arm moves to groundintake position
             runShooting(AutoSelectorConstants.Auto_Shoot_Seconds), //Starts outtaking for 2 seconds
             stopRobot()); //stop robot
