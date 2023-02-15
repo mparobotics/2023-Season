@@ -62,7 +62,7 @@ public class DriveSubsystem extends SubsystemBase {
   private Solenoid shiftSolenoid = new Solenoid(PneumaticsModuleType.REVPH, DriveConstants.SHIFT_SOLENOID_CHANNEL);
   public Boolean inHighGear = false;
   
-  public WPI_Pigeon2 pigeon = new WPI_Pigeon2(0);
+  public WPI_Pigeon2 pigeon = new WPI_Pigeon2(DriveConstants.PIGEON_ID);
   //odometry object 
   private final DifferentialDriveOdometry m_odometry;
   /** Creates a new DriveSubsystem. */

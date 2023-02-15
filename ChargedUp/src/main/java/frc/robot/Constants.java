@@ -34,7 +34,7 @@ public final class Constants
     public static final int MOTOR_BL_ID = 10;
     public static final int MOTOR_BR_ID = 12;
   
-  
+    public static final int PIGEON_ID = 17;
 
 
     //pneumatics compressor
