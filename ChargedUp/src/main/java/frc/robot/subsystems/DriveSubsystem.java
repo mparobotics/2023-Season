@@ -214,6 +214,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("RightWheelSpeeds", encoderR.getVelocity());
     SmartDashboard.putNumber("LeftEncoder", encoderL.getPosition());
     SmartDashboard.putNumber("RightEncoder", encoderR.getPosition());
+    SmartDashboard.putNumber("Trajectory Angle", pigeon.getAngle());
 
     //* Automatic gear shifter - automatically shifts into high gear when the robot is driving fast enough and shifts into low gear when the robot slows down */
     //check if the robot is turning - if the speeds of the left and right motors are different
@@ -222,13 +223,11 @@ public class DriveSubsystem extends SubsystemBase {
     if(DriveConstants.AUTO_SHIFT_ENABLED){
       if(!isTurning){
         //if either motor exceeds the velocity threshold then shift into high gear
-        if(Math.abs(lvelocity) > DriveConstants.UPSHIFT_THRESHOLD
-        || Math.abs(rvelocity) > DriveConstants.UPSHIFT_THRESHOLD){
+        if(Math.abs(lvelocity) > DriveConstants.UPSHIFT_THRESHOLD || Math.abs(rvelocity) > DriveConstants.UPSHIFT_THRESHOLD){
           upShift();
         }
         //if both motors' speeds are below the downshift threshold then shift down
-        if(Math.abs(lvelocity) < DriveConstants.DOWNSHIFT_THRESHOLD
-        && Math.abs(rvelocity) < DriveConstants.DOWNSHIFT_THRESHOLD){
+        if(Math.abs(lvelocity) < DriveConstants.DOWNSHIFT_THRESHOLD && Math.abs(rvelocity) < DriveConstants.DOWNSHIFT_THRESHOLD){
           downShift();
         }
       }

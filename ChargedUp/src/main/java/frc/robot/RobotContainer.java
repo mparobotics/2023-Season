@@ -91,12 +91,9 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     phCompressor.enableDigital();
-
-    m_chooser.setDefaultOption("Trajectory Test", AutoSelectorConstants.Test_Auto);
-
     m_chooser.setDefaultOption("Pick & Score", AutoSelectorConstants.Pick_and_Score);
-    m_chooser.addOption("Score Low &Leave", AutoSelectorConstants.Score_Low_and_Leave);
-    m_chooser.addOption("Balance1" , AutoSelectorConstants.Balance);
+    m_chooser.addOption("Test Auto", AutoSelectorConstants.Test_Auto);
+    m_chooser.addOption("Balance" , AutoSelectorConstants.Balance);
     m_chooser.addOption("Leave", AutoSelectorConstants.Leave);
     SmartDashboard.putData("Auto choices", m_chooser);
     
@@ -243,10 +240,8 @@ public class RobotContainer {
           setArmRetracted(), //Arm moves to retract position
           followTrajectory(Trajectory_pickandscore1), //Runs "Trajectory_pickandscore1" file
           stopRobot(), //stops robot
-          Commands.parallel(
-            runIntaking(3), //Starts intaking for 3 seconds
-            followTrajectory(Trajectory_pickandscore2)//Runs "Trajectory_pickandscore2" as soon as robot starts intaking
-            ), 
+          Commands.parallel(runIntaking(3), //Starts intaking for 3 seconds
+            followTrajectory(Trajectory_pickandscore2)),//Runs "Trajectory_pickandscore2" as soon as robot starts intaking 
           setArmGround(), //Arm moves to groundintake position
           runScoring(2), //Starts outtaking for 2 seconds
           stopRobot()); //stop robot
