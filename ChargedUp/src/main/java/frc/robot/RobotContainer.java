@@ -240,12 +240,12 @@ public class RobotContainer {
     switch (m_autoSelected)
     {
       case AutoSelectorConstants.Balance:
-        return new SequentialCommandGroup(setArmGround(), runOuttaking(2), setArmRetract(), 
+        return new SequentialCommandGroup(setArmGround(), runOuttaking(2), setArmRetracted(), 
         AutoDrive(-6, -.5), AutoDrive(2, .5));
       
       case AutoSelectorConstants.Score_Low_and_Leave:
         return
-new SequentialCommandGroup(setArmGround(), runOuttaking(2), setArmRetract(), 
+new SequentialCommandGroup(setArmGround(), runOuttaking(2), setArmRetracted(), 
         AutoDrive(-6, -.5));
       //case AutoSelectorConstants.Score_High_and_Leave:
         //return new SequentialCommandGroup(m_doublesolenoidSubsystem.shoot(),

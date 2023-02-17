@@ -188,7 +188,7 @@ public class DriveSubsystem extends SubsystemBase {
     Double rightWheelMetersPerSecond = (1/60) * DriveConstants.ROTATIONS_TO_METERS * encoderL.getVelocity();
     return new DifferentialDriveWheelSpeeds(leftWheelMetersPerSecond, rightWheelMetersPerSecond);
   }
-  public void AutoBalance(){
+  public boolean AutoBalance(){
     double pitch_error = pigeon.getPitch();
     double balance_kp = .01;
     double position_adjust = 0.0;
@@ -196,12 +196,39 @@ public class DriveSubsystem extends SubsystemBase {
     if (pitch_error > 2.0)
     {
       position_adjust = balance_kp * pitch_error - min_command;
+      differentialDrive.arcadeDrive(position_adjust, 0);
+      return false;
     }
     else if (pitch_error < 2.0)
     {
       position_adjust = balance_kp * pitch_error + min_command;
+      differentialDrive.arcadeDrive(position_adjust, 0);
+      return false;
     }
-    differentialDrive.arcadeDrive(position_adjust, 0);
+    else{return true;}
+    
+  }
+
+  public boolean AutoTurn(double setpoint){
+    double yaw_error = pigeon.getYaw() - setpoint;
+    double turning_kp = .01;
+    double position_adjust = 0.0;
+    double min_command = .01;
+    if (yaw_error > 2.0)
+    {
+      position_adjust = turning_kp * yaw_error - min_command;
+      differentialDrive.arcadeDrive(0, position_adjust);
+      return false;
+    }
+    else if (yaw_error < 2.0)
+    {
+      position_adjust = turning_kp * yaw_error + min_command;
+      differentialDrive.arcadeDrive(0, position_adjust);
+      return false;
+    }
+
+    else{differentialDrive.arcadeDrive(0, 0);return true;}
+    
   }
   public void setBrake() {
     //setting coast or brake mode, can also be done in Phoenix tuner
