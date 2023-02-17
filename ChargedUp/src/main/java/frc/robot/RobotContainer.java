@@ -40,6 +40,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ArcadeDrive;
+import frc.robot.commands.AutoDriveBangBang;
 import frc.robot.commands.AutoIntake;
 import frc.robot.commands.Intake;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -184,6 +185,10 @@ public class RobotContainer {
   private Command runShooting(double seconds){
     return new AutoIntake(m_intakeSubsystem, IntakeConstants.SHOOTING_SPEED).withTimeout(seconds);
   }
+  private Command AutoDrive(double setpoint, double speed){
+    return new AutoDriveBangBang(m_driveSubsystem, setpoint, speed);
+  }
+
   private Command setArmGround(){
     return m_doublesolenoidSubsystem.groundintake();
   }
@@ -234,36 +239,21 @@ public class RobotContainer {
      System.out.println("Auto Selected: " + m_autoSelected);
     switch (m_autoSelected)
     {
-      case AutoSelectorConstants.Pick_and_Score:
-        return new SequentialCommandGroup(
-          setArmGround(), //Arm moves to groundintake position
-          runOuttaking(2), //Starts outtaking for 2 seconds (for pre-loaded cargo)
-          setArmRetracted(), //Arm moves to retract position
-          followTrajectory(Trajectory_pickandscore1), //Runs "Trajectory_pickandscore1" file
-          stopRobot(), //stops robot
-          Commands.parallel(runIntaking(3), //Starts intaking for 3 seconds
-            followTrajectory(Trajectory_pickandscore2)),//Runs "Trajectory_pickandscore2" as soon as robot starts intaking 
-          setArmGround(), //Arm moves to groundintake position
-          runOuttaking(2), //Starts outtaking for 2 seconds
-          stopRobot()); //stop robot
-      
-      case AutoSelectorConstants.Leave:
-        return new SequentialCommandGroup(
-          followTrajectory(Trajectory_leave), 
-          stopRobot());
-      
       case AutoSelectorConstants.Balance:
-        return new SequentialCommandGroup(
-          setArmGround(), 
-          runOuttaking(2), 
-          setArmRetracted(),
-          followTrajectory(Trajectory_leave));
+        return new SequentialCommandGroup(setArmGround(), runOuttaking(2), setArmRetract(), 
+        AutoDrive(-6, -.5), AutoDrive(2, .5));
       
-      case AutoSelectorConstants.Test_Auto_1:
-        return new SequentialCommandGroup(
-          followTrajectory(Test_Auto)
-        );
-          
+      case AutoSelectorConstants.Score_Low_and_Leave:
+        return
+new SequentialCommandGroup(setArmGround(), runOuttaking(2), setArmRetract(), 
+        AutoDrive(-6, -.5));
+      //case AutoSelectorConstants.Score_High_and_Leave:
+        //return new SequentialCommandGroup(m_doublesolenoidSubsystem.shoot(),
+        //new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2),
+        //makeRamseteCommand(Trajectory_score_low_and_leave),
+        //new TankDriveVolts(m_driveSubsystem));
+
+
     } 
 
       return null;

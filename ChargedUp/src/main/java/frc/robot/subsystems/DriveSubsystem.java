@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 
 
+import org.opencv.core.Mat.Tuple2;
+
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -150,6 +152,13 @@ public class DriveSubsystem extends SubsystemBase {
   public void encoderReset() {
     encoderL.setPosition(0);
     encoderR.setPosition(0);
+  }
+
+  public double getEncoderPositionL(){
+    return encoderL.getPosition();
+  }
+  public double getEncoderPositionR(){
+    return encoderL.getPosition();
   }
   public Pose2d getPose() {
     return m_odometry.getPoseMeters();
