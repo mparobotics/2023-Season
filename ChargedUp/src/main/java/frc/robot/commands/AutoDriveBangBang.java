@@ -27,7 +27,7 @@ public class AutoDriveBangBang extends CommandBase {
   public void initialize() {
     m_driveSubsystem.encoderReset();
     startEncoderL = m_driveSubsystem.getEncoderPositionL();
-    startEncoderR = m_driveSubsystem.getEncoderPositionL();
+    startEncoderR = m_driveSubsystem.getEncoderPositionR();
 
   }
 
@@ -41,11 +41,15 @@ public class AutoDriveBangBang extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_driveSubsystem.setDriveSpeedArcade(0, 0);
-  }
+  }                           
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (((m_driveSubsystem.getEncoderPositionL() - startEncoderL) + (m_driveSubsystem.getEncoderPositionR() - startEncoderR) / 2) >= m_setpoint);
+    if (m_setpoint > 0) {
+    return(m_driveSubsystem.getEncoderPositionL() - startEncoderL >= m_setpoint);}
+    else {return ((m_driveSubsystem.getEncoderPositionL() + startEncoderL) <= m_setpoint);
+
+    }
   }
 }

@@ -22,9 +22,9 @@ public final class Constants
     public static final int INTAKE_MOTOR_R_ID = 14;
     public static final int INTAKE_MOTOR_L_ID = 15;
     //intake speeds
-    public static final double INTAKE_SPEED = 1;
-    public static final double OUTTAKE_SPEED = -1;
-    public static final double SHOOTING_SPEED = -3;
+    public static final double INTAKE_SPEED = .25;
+    public static final double OUTTAKE_SPEED = -.3;
+    public static final double SHOOTING_SPEED = -1;
 
   }
 
@@ -45,12 +45,14 @@ public final class Constants
   
     //gear shifter solenoids
     public static final int SHIFT_SOLENOID_CHANNEL = 9;
+    public static final double MAX_DRIVE_SPEED = 4000;
    
 
     //driving speeds
-    public static final double TURNING_SPEED_LOW = .7;
-    public static final double TURNING_SPEED_HIGH = .3;
-    public static final double DRIVE_SPEED = 1;
+    public static final double TURNING_SPEED_LIMIT = -.5;
+    public static final double TURNING_SPEED_LOW = -.7;
+    public static final double TURNING_SPEED_HIGH = -.6;
+    public static final double DRIVE_SPEED = -1;
 
     //if the motor speed (RPMs) exceeds this value, then shift into high gear
     public static final double UPSHIFT_THRESHOLD = 5000;
@@ -96,6 +98,7 @@ public final class Constants
     public static final String Score_High_and_Leave = "4";
     public static final String Balance = "5";
     public static final String Leave = "6";
+    public static final String BalanceW0 = "7";
      
   }
   public final static class LEDConstants{

@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.DoubleSolenoidSubsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -42,7 +43,9 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutoDriveBangBang;
 import frc.robot.commands.AutoIntake;
+import frc.robot.commands.AutoTurn;
 import frc.robot.commands.Intake;
+import frc.robot.commands.NullCommand;
 import frc.robot.subsystems.IntakeSubsystem;
 
 /**
@@ -68,8 +71,9 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
   //xbox controller
-  private CommandXboxController xbox = new CommandXboxController(Constants.OperatorConstants.XBOX_CONTROLLER_ID);
-  private CommandJoystick box = new CommandJoystick(OperatorConstants.BOX_ID);
+  private CommandXboxController xbox = new CommandXboxController(0);
+  private CommandXboxController helms = new CommandXboxController(2);
+  private CommandJoystick box = new CommandJoystick(1);
 
   //the drive subsystem
   private DriveSubsystem m_driveSubsystem = new DriveSubsystem();
@@ -92,14 +96,15 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     phCompressor.enableDigital();
-
+    
     m_chooser.setDefaultOption("Simple Test Trajectory", AutoSelectorConstants.Test_Auto_1);
     m_chooser.addOption("Curve Test Trajectory", AutoSelectorConstants.Test_Auto_1);
     m_chooser.addOption("Pick & Score", AutoSelectorConstants.Pick_and_Score);
     m_chooser.addOption("Score Low &Leave", AutoSelectorConstants.Score_Low_and_Leave);
-    m_chooser.addOption("Balance1" , AutoSelectorConstants.Balance);
+    m_chooser.addOption("Balance" , AutoSelectorConstants.Balance);
+    m_chooser.addOption("Balance Week 0", AutoSelectorConstants.BalanceW0);
     m_chooser.addOption("Leave", AutoSelectorConstants.Leave);
-    SmartDashboard.putData("Auto choices", m_chooser);
+    SmartDashboard.putData("Auto Chooser", m_chooser);
     // Configure the trigger bindings
     configureBindings();
 
@@ -123,17 +128,26 @@ public class RobotContainer {
     xbox.button(Button.kRightBumper.value).onTrue(m_driveSubsystem.ShiftUp());
     //B button shifts the gearbox into low gear
     xbox.button(Button.kLeftBumper.value).onTrue(m_driveSubsystem.ShiftDown());
+    //xbox.button(Button.kLeftStick.value).whileTrue(new AutoTurn(m_driveSubsystem, 0));
+    //xbox.button(Button.kRightStick.value).whileTrue(new AutoTurn(m_driveSubsystem, -180));
+    xbox.button(Button.kA.value).whileTrue(m_doublesolenoidSubsystem.chuteintake()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
+    xbox.button(Button.kB.value).whileTrue(m_doublesolenoidSubsystem.groundintake()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
+    xbox.button(Button.kX.value).whileTrue(m_doublesolenoidSubsystem.shoot());
+    xbox.button(Button.kY.value).whileTrue(m_doublesolenoidSubsystem.retract());
     
     
     m_driveSubsystem.setDefaultCommand(new ArcadeDrive(m_driveSubsystem, 
     () -> xbox.getLeftY(), () -> xbox.getRightX()));
+
     
     box.button(1).whileTrue(m_doublesolenoidSubsystem.retract()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
-    box.button(2).whileTrue(m_doublesolenoidSubsystem.shoot()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
-    box.button(3).whileTrue(m_doublesolenoidSubsystem.groundintake());
-    box.button(4).whileTrue(m_doublesolenoidSubsystem.chuteintake()); 
-    box.button(5).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.INTAKE_SPEED));
-    box.button(6).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.SHOOTING_SPEED));
+    box.button(2).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.SHOOTING_SPEED));
+    box.button(3).whileTrue(m_doublesolenoidSubsystem.chuteintake());
+    box.button(4).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED));
+    box.button(5).whileTrue(m_doublesolenoidSubsystem.groundintake());
+    box.button(6).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.INTAKE_SPEED));
+
+    helms.button(Button.kB.value).onTrue(m_driveSubsystem.gyroReset());
   }
 
   /**
@@ -189,9 +203,18 @@ public class RobotContainer {
     return new AutoDriveBangBang(m_driveSubsystem, setpoint, speed);
   }
 
+  private Command AutoDrive1(double setpoint, double speed){
+    return new AutoDriveBangBang(m_driveSubsystem, setpoint, speed);
+  }
+
   private Command setArmGround(){
     return m_doublesolenoidSubsystem.groundintake();
   }
+
+  private Command encoderReset(){
+    return m_driveSubsystem.encoderResetCommand();
+  }
+
   private Command setArmRetracted(){
     return m_doublesolenoidSubsystem.retract();
   }
@@ -203,6 +226,7 @@ public class RobotContainer {
   private Command stopRobot(){
     return m_driveSubsystem.setVolts(0, 0);
   }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -240,13 +264,18 @@ public class RobotContainer {
     switch (m_autoSelected)
     {
       case AutoSelectorConstants.Balance:
-        return new SequentialCommandGroup(setArmGround(), runOuttaking(2), setArmRetracted(), 
-        AutoDrive(-6, -.5), AutoDrive(2, .5));
+        return new SequentialCommandGroup(setArmGround(), new NullCommand().withTimeout(1), runOuttaking(2), 
+        new NullCommand().withTimeout(1), setArmRetracted(), 
+        AutoDrive(-150, -.5), encoderReset(), AutoDrive1(70, .5));
+
+        case AutoSelectorConstants.BalanceW0:
+        return new SequentialCommandGroup(runShooting(2), encoderReset(),
+        new NullCommand().withTimeout(1), 
+        AutoDrive(150, .5), encoderReset(), AutoDrive1(-70, -.5));
       
       case AutoSelectorConstants.Score_Low_and_Leave:
-        return
-new SequentialCommandGroup(setArmGround(), runOuttaking(2), setArmRetracted(), 
-        AutoDrive(-6, -.5));
+        return new SequentialCommandGroup(setArmGround(), runOuttaking(2), setArmRetracted(), 
+        AutoDrive(-50, -.5));
       //case AutoSelectorConstants.Score_High_and_Leave:
         //return new SequentialCommandGroup(m_doublesolenoidSubsystem.shoot(),
         //new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2),
@@ -255,7 +284,7 @@ new SequentialCommandGroup(setArmGround(), runOuttaking(2), setArmRetracted(),
 
 
     } 
-
+     
       return null;
     
     

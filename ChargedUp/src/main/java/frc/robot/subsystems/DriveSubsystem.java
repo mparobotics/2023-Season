@@ -38,11 +38,11 @@ public class DriveSubsystem extends SubsystemBase {
   private final CANSparkMax motorBR = new CANSparkMax(DriveConstants.MOTOR_BR_ID, MotorType.kBrushless);
   private final CANSparkMax motorBL = new CANSparkMax(DriveConstants.MOTOR_BL_ID, MotorType.kBrushless);
   //encoders to measure driving speed
-  public final SparkMaxAlternateEncoder.Type kAltEncType = SparkMaxAlternateEncoder.Type.kQuadrature;
-  public final int kCPR = 8192;
-  public RelativeEncoder encoderL = motorFL.getAlternateEncoder(kAltEncType, kCPR);
-  public RelativeEncoder encoderR = motorFR.getAlternateEncoder(kAltEncType, kCPR);
-
+  //public final SparkMaxAlternateEncoder.Type kAltEncType = SparkMaxAlternateEncoder.Type.kQuadrature;
+  //public final int kCPR = 8192;
+  public RelativeEncoder encoderL = motorFL.getEncoder();
+  public RelativeEncoder encoderR = motorFR.getEncoder();
+  
   
   //setting ramp
 
@@ -84,12 +84,12 @@ public class DriveSubsystem extends SubsystemBase {
     motorBR.follow(motorFR);
     motorBL.follow(motorFL);
     //invert left motors
-    motorFL.setInverted(false);
-    motorBL.setInverted(false);
+    motorFL.setInverted(true);
+    motorBL.setInverted(true);
     //dont invert right motors
-    motorFR.setInverted(true);
-    motorBR.setInverted(true);
-    encoderR.setInverted(true);
+    motorFR.setInverted(false);
+    motorBR.setInverted(false);
+  
 
     motorFR.setSmartCurrentLimit(30, 60);
     motorBR.setSmartCurrentLimit(30, 60);
@@ -127,14 +127,21 @@ public class DriveSubsystem extends SubsystemBase {
     if (Math.abs(forwardSpeed) < .1) {forwardSpeed = 0;}//deadzones
     if (Math.abs(turnSpeed) < .1) {turnSpeed = 0;}//deadzones
     if (turnSpeed == 0){
-      driveStraight(forwardSpeed);
+      //driveStraight(forwardSpeed);
+      differentialDrive.arcadeDrive(forwardSpeed * DriveConstants.DRIVE_SPEED, 0);
     }
     else{
       if (inHighGear){
         differentialDrive.arcadeDrive(forwardSpeed * DriveConstants.DRIVE_SPEED, turnSpeed * DriveConstants.TURNING_SPEED_HIGH);
       }
        else{
+        if (Math.abs(encoderL.getVelocity()) >= DriveConstants.MAX_DRIVE_SPEED || Math.abs(encoderR.getVelocity()) >= DriveConstants.MAX_DRIVE_SPEED)
+        {
+          differentialDrive.arcadeDrive(forwardSpeed * DriveConstants.DRIVE_SPEED, turnSpeed * DriveConstants.TURNING_SPEED_LIMIT);
+        }
+        else{
         differentialDrive.arcadeDrive(forwardSpeed * DriveConstants.DRIVE_SPEED, turnSpeed * DriveConstants.TURNING_SPEED_LOW);
+        }
       }
   }
   }
@@ -237,6 +244,23 @@ public class DriveSubsystem extends SubsystemBase {
     motorFL.setIdleMode(IdleMode.kBrake);
     motorBL.setIdleMode(IdleMode.kBrake);
   }
+
+  public CommandBase gyroReset() //if reverseSolenoid is called, returns a command to set doublesolenoid reverse at port 1
+  {
+    return runOnce(
+      () -> {
+          pigeon.reset();
+      });
+  }
+
+  public CommandBase encoderResetCommand() //if reverseSolenoid is called, returns a command to set doublesolenoid reverse at port 1
+  {
+    return runOnce(
+      () -> {
+          encoderL.setPosition(0);
+          encoderR.setPosition(0);
+      });
+  }
   @Override
   public void periodic() {
     //Automatic gear shifting
@@ -250,14 +274,14 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("RightWheelSpeeds", encoderR.getVelocity());
     SmartDashboard.putNumber("LeftEncoder", encoderL.getPosition());
     SmartDashboard.putNumber("RightEncoder", encoderR.getPosition());
-    SmartDashboard.putNumber("Trajectory Angle", pigeon.getAngle());
+    SmartDashboard.putNumber("Pigeon Angle", pigeon.getAngle());
 
     
     //* Automatic gear shifter - automatically shifts into high gear when the robot is driving fast enough and shifts into low gear when the robot slows down */
     //check if the robot is turning - if the speeds of the left and right motors are different
     boolean isTurning = Math.abs(lvelocity - rvelocity) < DriveConstants.TURN_THRESHOLD;
     //check if automatic shifitng is enabling and the robot IS NOT turning
-    if(DriveConstants.AUTO_SHIFT_ENABLED){
+/*     if(DriveConstants.AUTO_SHIFT_ENABLED){
       if(!isTurning){
         //if either motor exceeds the velocity threshold then shift into high gear
         if(Math.abs(lvelocity) > DriveConstants.UPSHIFT_THRESHOLD || Math.abs(rvelocity) > DriveConstants.UPSHIFT_THRESHOLD){
@@ -267,9 +291,9 @@ public class DriveSubsystem extends SubsystemBase {
         if(Math.abs(lvelocity) < DriveConstants.DOWNSHIFT_THRESHOLD && Math.abs(rvelocity) < DriveConstants.DOWNSHIFT_THRESHOLD){
           downShift();
         }
-      }
+      } */
      
-    } 
+    
   }
   
 }

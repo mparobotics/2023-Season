@@ -35,15 +35,15 @@ public final class Constants {
     //box ID
     public static final int BOX_ID = 1;
     //drive motor IDs
-    public static final int MOTOR_FL_ID = 34;
-    public static final int MOTOR_BL_ID = 18;
-    public static final int MOTOR_FR_ID = 33;
-    public static final int MOTOR_BR_ID = 06;
+    public static final int MOTOR_FL_ID = 9;
+    public static final int MOTOR_BL_ID = 3;
+    public static final int MOTOR_FR_ID = 8;
+    public static final int MOTOR_BR_ID = 7;
     //elevator motor ID
     public static final int ELEVATORMOTOR_ID = 53;
     public static final int ELEVATORMOTOR2_ID = 54;
     //driving speed
-    public static final double DRIVE_SPEED = 0.7;
+    public static final double DRIVE_SPEED = -0.9;
     public static final double TURN_SPEED = 0.55;
     //elevator speeds
     public static final double ELEVATOR_UP_SPEED = 0.75;

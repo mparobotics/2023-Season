@@ -52,6 +52,8 @@ public class DoubleSolenoidSubsystem extends SubsystemBase {
       });
   }
 
+
+
   public CommandBase shoot()
   {
     System.out.println("Shooting!");
