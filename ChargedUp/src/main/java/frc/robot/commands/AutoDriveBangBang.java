@@ -37,17 +37,28 @@ public class AutoDriveBangBang extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //absolute value hell. Only the algebra gods can wrap their heads around this one but it works on my calculator
-    //so like it should work? someone should check it tho
+    //we want to find how much more displacement is needed to get to our total amount of displacement when making this formula
+    //displacement is the absolute value of a distance traveled.
+    //if i travel either 1 or -1 units, the displacement is still 1
+    //we can further define displacement as the distance from the starting point
+    //for example, if I start at 3 and end at -2, my displacement is 5. How would we calculate that?
+    //We can take where we end up (-2), and subtract 3, getting -5, which is vector of our travel (vectors have magnitude and direction)
+    //but we only want the magnitude of that because we want to know how much further we have left to travel, 
+    //so we use absolute value
+      
+    //we also only want the absolute value of the setpoint as that would be the total distance needed to be travled.
+
+    //by subtracting how much we want to be displaced with how much we have been displaced already, we are left with how much
+    //we still need to be displaced. For example, if I start at 3 and want to move  -5 units (to -2), and am at 1,
+    //we would get distanceFromSetpoint = |-5| - |1 - 3| = 3. 
     distanceFromSetpoint = (Math.abs(m_setpoint) - Math.abs(m_driveSubsystem.getEncoderPositionL() - startEncoderL));
     
-    if (distanceFromSetpoint > 20) {
-      m_speed = .65;
+    if (distanceFromSetpoint < 20) {
+      //we still have to give our value a magnitude again to travel in the correct direction, thus the inversion here.
+      if (m_setpoint > 0) {m_speed = AutoDriveKp * distanceFromSetpoint;}
+      else {m_speed = -AutoDriveKp * distanceFromSetpoint;}
     }
-    else{
-    m_speed = AutoDriveKp * distanceFromSetpoint;}
-
-    m_driveSubsystem.driveStraight(m_speed);
+    m_driveSubsystem.driveStraight(m_speed);    
   }
 
   // Called once the command ends or is interrupted.
