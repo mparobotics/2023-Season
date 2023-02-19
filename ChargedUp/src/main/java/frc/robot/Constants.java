@@ -98,7 +98,7 @@ public final class Constants
     public static final String Score_High_and_Leave = "4";
     public static final String Balance = "5";
     public static final String Leave = "6";
-    public static final String BalanceW0 = "7";
+    public static final String Balance2Cube= "7";
      
   }
   public final static class LEDConstants{

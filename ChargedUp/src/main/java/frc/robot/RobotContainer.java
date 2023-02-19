@@ -41,8 +41,10 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ArcadeDrive;
+import frc.robot.commands.AutoDriveBalance;
 import frc.robot.commands.AutoDriveBangBang;
 import frc.robot.commands.AutoIntake;
+import frc.robot.commands.AutoIntakeInstant;
 import frc.robot.commands.AutoTurn;
 import frc.robot.commands.Intake;
 import frc.robot.commands.NullCommand;
@@ -102,7 +104,7 @@ public class RobotContainer {
     m_chooser.addOption("Pick & Score", AutoSelectorConstants.Pick_and_Score);
     m_chooser.addOption("Score Low &Leave", AutoSelectorConstants.Score_Low_and_Leave);
     m_chooser.addOption("Balance" , AutoSelectorConstants.Balance);
-    m_chooser.addOption("Balance Week 0", AutoSelectorConstants.BalanceW0);
+    m_chooser.addOption("Balance 2 Peices", AutoSelectorConstants.Balance2Cube);
     m_chooser.addOption("Leave", AutoSelectorConstants.Leave);
     SmartDashboard.putData("Auto Chooser", m_chooser);
     // Configure the trigger bindings
@@ -207,6 +209,10 @@ public class RobotContainer {
     return new AutoDriveBangBang(m_driveSubsystem, setpoint, speed);
   }
 
+  private Command autoDriveBalance(){
+    return new AutoDriveBalance(m_driveSubsystem);
+  }
+
   private Command setArmGround(){
     return m_doublesolenoidSubsystem.groundintake();
   }
@@ -222,6 +228,9 @@ public class RobotContainer {
     return m_doublesolenoidSubsystem.shoot();
   }
 
+private Command autoIntakeInstant(double speed){
+  return new AutoIntakeInstant(m_intakeSubsystem, speed);
+}
 
   private Command stopRobot(){
     return m_driveSubsystem.setVolts(0, 0);
@@ -263,19 +272,18 @@ public class RobotContainer {
      System.out.println("Auto Selected: " + m_autoSelected);
     switch (m_autoSelected)
     {
-      case AutoSelectorConstants.Balance:
-        return new SequentialCommandGroup(setArmGround(), new NullCommand().withTimeout(1), runOuttaking(2), 
-        new NullCommand().withTimeout(1), setArmRetracted(), 
-        AutoDrive(-150, -.5), encoderReset(), AutoDrive1(70, .5));
-
-        case AutoSelectorConstants.BalanceW0:
+        case AutoSelectorConstants.Balance:
         return new SequentialCommandGroup(runShooting(2), encoderReset(),
         new NullCommand().withTimeout(1), 
-        AutoDrive(150, .5), encoderReset(), AutoDrive1(-70, -.5));
+        AutoDrive(150, .5), encoderReset(), AutoDrive1(-70, -.5), autoDriveBalance());
+
+        case AutoSelectorConstants.Balance2Cube:
+        return new SequentialCommandGroup(runShooting(2), encoderReset(),
+        AutoDrive(100, .5), setArmGround(), autoIntakeInstant(IntakeConstants.INTAKE_SPEED), 
+        AutoDrive(80, .5), autoIntakeInstant(0), setArmRetracted(), encoderReset(), AutoDrive1(-70, -.5),
+        autoIntakeInstant(IntakeConstants.SHOOTING_SPEED), (autoDriveBalance()), new NullCommand().withTimeout(1), autoIntakeInstant(0));
       
-      case AutoSelectorConstants.Score_Low_and_Leave:
-        return new SequentialCommandGroup(setArmGround(), runOuttaking(2), setArmRetracted(), 
-        AutoDrive(-50, -.5));
+      
       //case AutoSelectorConstants.Score_High_and_Leave:
         //return new SequentialCommandGroup(m_doublesolenoidSubsystem.shoot(),
         //new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2),

@@ -41,7 +41,7 @@ public class IntakeSubsystem extends SubsystemBase
   }
   
   //setting speed of motors for intake
-  public void intakeForward(double speed)
+  public void set(double speed)
   {
       /* one-time action goes here*/
       intakeMotorL.set(speed);

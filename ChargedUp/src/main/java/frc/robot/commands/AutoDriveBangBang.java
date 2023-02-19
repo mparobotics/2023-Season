@@ -13,6 +13,8 @@ public class AutoDriveBangBang extends CommandBase {
   private double startEncoderL;
   private double startEncoderR;
   private double m_speed;
+  private double distanceFromSetpoint;
+  private double AutoDriveKp = .02;
   /** Creates a new AutoDriveBangBang. */
   public AutoDriveBangBang(DriveSubsystem driveSub, double setpoint, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -28,12 +30,23 @@ public class AutoDriveBangBang extends CommandBase {
     m_driveSubsystem.encoderReset();
     startEncoderL = m_driveSubsystem.getEncoderPositionL();
     startEncoderR = m_driveSubsystem.getEncoderPositionR();
+    distanceFromSetpoint = (Math.abs(m_setpoint) - Math.abs(m_driveSubsystem.getEncoderPositionL() - startEncoderL));
 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    //absolute value hell. Only the algebra gods can wrap their heads around this one but it works on my calculator
+    //so like it should work? someone should check it tho
+    distanceFromSetpoint = (Math.abs(m_setpoint) - Math.abs(m_driveSubsystem.getEncoderPositionL() - startEncoderL));
+    
+    if (distanceFromSetpoint > 20) {
+      m_speed = .65;
+    }
+    else{
+    m_speed = AutoDriveKp * distanceFromSetpoint;}
+
     m_driveSubsystem.driveStraight(m_speed);
   }
 
@@ -46,10 +59,6 @@ public class AutoDriveBangBang extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_setpoint > 0) {
-    return(m_driveSubsystem.getEncoderPositionL() - startEncoderL >= m_setpoint);}
-    else {return ((m_driveSubsystem.getEncoderPositionL() + startEncoderL) <= m_setpoint);
-
-    }
+    return distanceFromSetpoint < 5;
   }
 }
