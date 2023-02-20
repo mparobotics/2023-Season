@@ -196,23 +196,25 @@ public class DriveSubsystem extends SubsystemBase {
     return new DifferentialDriveWheelSpeeds(leftWheelMetersPerSecond, rightWheelMetersPerSecond);
   }
   public boolean AutoBalance(){
-    double pitch_error = pigeon.getPitch();
-    double balance_kp = .01;
+    double roll_error = Math.toDegrees(pigeon.getRoll());//the angle of the robot
+    double balance_kp = -.01;//Variable muliplied by roll_error
     double position_adjust = 0.0;
-    double min_command = .01;
-    if (pitch_error > 2.0)
+    double min_command = 0;//adds a minimum input to the motors to overcome friction if the position adjust isn't enough
+    if (roll_error > 2.0)
     {
-      position_adjust = balance_kp * pitch_error - min_command;
+      position_adjust = balance_kp * roll_error + min_command;//equation that figures out how fast it should go to adjust
+      differentialDrive.arcadeDrive(position_adjust, 0);//makes the robot move
+      return false;
+    }
+    else if (roll_error < -2.0)
+    {
+      position_adjust = balance_kp * roll_error - min_command;
       differentialDrive.arcadeDrive(position_adjust, 0);
       return false;
     }
-    else if (pitch_error < 2.0)
-    {
-      position_adjust = balance_kp * pitch_error + min_command;
-      differentialDrive.arcadeDrive(position_adjust, 0);
-      return false;
-    }
-    else{return true;}
+    else{
+      differentialDrive.arcadeDrive(0, 0);//stops the robot
+      return true;}
     
   }
 
@@ -274,7 +276,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("RightWheelSpeeds", encoderR.getVelocity());
     SmartDashboard.putNumber("LeftEncoder", encoderL.getPosition());
     SmartDashboard.putNumber("RightEncoder", encoderR.getPosition());
-    SmartDashboard.putNumber("Pigeon Angle", pigeon.getAngle());
+    SmartDashboard.putNumber("Pigeon Roll", pigeon.getRoll());
 
     
     //* Automatic gear shifter - automatically shifts into high gear when the robot is driving fast enough and shifts into low gear when the robot slows down */

@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -14,12 +15,13 @@ public class AutoDriveBangBang extends CommandBase {
   private double startEncoderR;
   private double m_speed;
   private double distanceFromSetpoint;
-  private double AutoDriveKp = .02;
+  private double AutoDriveKp = .04;
   /** Creates a new AutoDriveBangBang. */
   public AutoDriveBangBang(DriveSubsystem driveSub, double setpoint, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_driveSubsystem = driveSub;
     m_setpoint = setpoint;
+    
     m_speed = speed;
     addRequirements(driveSub);
   }
@@ -31,6 +33,7 @@ public class AutoDriveBangBang extends CommandBase {
     startEncoderL = m_driveSubsystem.getEncoderPositionL();
     startEncoderR = m_driveSubsystem.getEncoderPositionR();
     distanceFromSetpoint = (Math.abs(m_setpoint) - Math.abs(m_driveSubsystem.getEncoderPositionL() - startEncoderL));
+    SmartDashboard.putNumber("AutoSetpoint", m_setpoint);
 
   }
 
@@ -52,12 +55,13 @@ public class AutoDriveBangBang extends CommandBase {
     //we still need to be displaced. For example, if I start at 3 and want to move  -5 units (to -2), and am at 1,
     //we would get distanceFromSetpoint = |-5| - |1 - 3| = 3. 
     distanceFromSetpoint = (Math.abs(m_setpoint) - Math.abs(m_driveSubsystem.getEncoderPositionL() - startEncoderL));
-    
+    SmartDashboard.putNumber("DistanceFromSetpoint", distanceFromSetpoint);
     if (distanceFromSetpoint < 20) {
       //we still have to give our value a magnitude again to travel in the correct direction, thus the inversion here.
-      if (m_setpoint > 0) {m_speed = AutoDriveKp * distanceFromSetpoint;}
-      else {m_speed = -AutoDriveKp * distanceFromSetpoint;}
+      if (m_setpoint > 0) {m_speed = AutoDriveKp * distanceFromSetpoint + .1;}
+      else {m_speed = -AutoDriveKp * distanceFromSetpoint - .1;}
     }
+
     m_driveSubsystem.driveStraight(m_speed);    
   }
 
@@ -70,6 +74,6 @@ public class AutoDriveBangBang extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return distanceFromSetpoint < 5;
+    return distanceFromSetpoint < 2;
   }
 }

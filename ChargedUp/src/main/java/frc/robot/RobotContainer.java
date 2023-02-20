@@ -279,8 +279,8 @@ private Command autoIntakeInstant(double speed){
 
         case AutoSelectorConstants.Balance2Cube:
         return new SequentialCommandGroup(runShooting(2), encoderReset(),
-        AutoDrive(100, .5), setArmGround(), autoIntakeInstant(IntakeConstants.INTAKE_SPEED), 
-        AutoDrive(80, .5), autoIntakeInstant(0), setArmRetracted(), encoderReset(), AutoDrive1(-70, -.5),
+        setArmGround(), autoIntakeInstant(IntakeConstants.INTAKE_SPEED), AutoDrive(187, .6),  
+        autoIntakeInstant(0), setArmRetracted(), encoderReset(), AutoDrive1(-100, -.6),
         autoIntakeInstant(IntakeConstants.SHOOTING_SPEED), (autoDriveBalance()), new NullCommand().withTimeout(1), autoIntakeInstant(0));
       
       
