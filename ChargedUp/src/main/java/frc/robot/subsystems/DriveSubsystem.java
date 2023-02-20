@@ -197,16 +197,16 @@ public class DriveSubsystem extends SubsystemBase {
   }
   public boolean AutoBalance(){
     double roll_error = Math.toDegrees(pigeon.getRoll());//the angle of the robot
-    double balance_kp = -.01;//Variable muliplied by roll_error
+    double balance_kp = .001;//Variable muliplied by roll_error
     double position_adjust = 0.0;
     double min_command = 0;//adds a minimum input to the motors to overcome friction if the position adjust isn't enough
-    if (roll_error > 2.0)
+    if (roll_error > 6.0)
     {
       position_adjust = balance_kp * roll_error + min_command;//equation that figures out how fast it should go to adjust
       differentialDrive.arcadeDrive(position_adjust, 0);//makes the robot move
       return false;
     }
-    else if (roll_error < -2.0)
+    else if (roll_error < -6.0)
     {
       position_adjust = balance_kp * roll_error - min_command;
       differentialDrive.arcadeDrive(position_adjust, 0);
