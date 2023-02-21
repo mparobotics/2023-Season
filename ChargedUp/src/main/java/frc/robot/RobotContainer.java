@@ -290,8 +290,9 @@ private Command autoIntakeInstant(double speed){
         autoIntakeInstant(0), setArmGround());
       
         case TwoCubeNoBalance:
+        //add two cube auto here
+        return new SequentialCommandGroup();
         
-        return new SequentialCommandGroup(encoderReset(), AutoDrive(5,1));
       //case Score_High_and_Leave:
         //return new SequentialCommandGroup(m_doublesolenoidSubsystem.shoot(),
         //new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2),
