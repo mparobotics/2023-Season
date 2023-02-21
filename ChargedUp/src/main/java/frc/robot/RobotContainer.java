@@ -99,13 +99,13 @@ public class RobotContainer {
   public RobotContainer() {
     phCompressor.enableDigital();
     
-    m_chooser.setDefaultOption("Simple Test Trajectory", AutoSelectorConstants.Test_Auto_1);
-    m_chooser.addOption("Curve Test Trajectory", AutoSelectorConstants.Test_Auto_1);
+    //m_chooser.setDefaultOption("Simple Test Trajectory", AutoSelectorConstants.Test_Auto_1);
+    //m_chooser.addOption("Curve Test Trajectory", AutoSelectorConstants.Test_Auto_1);
     m_chooser.addOption("Pick & Score", AutoSelectorConstants.Pick_and_Score);
-    m_chooser.addOption("Score Low &Leave", AutoSelectorConstants.Score_Low_and_Leave);
-    m_chooser.addOption("Balance" , AutoSelectorConstants.Balance);
+   // m_chooser.addOption("Score Low &Leave", AutoSelectorConstants.Score_Low_and_Leave);
+    //m_chooser.addOption("Balance" , AutoSelectorConstants.Balance);
     m_chooser.addOption("Balance 2 Peices", AutoSelectorConstants.Balance2Cube);
-    m_chooser.addOption("Leave", AutoSelectorConstants.Leave);
+    //m_chooser.addOption("Leave", AutoSelectorConstants.Leave);
     SmartDashboard.putData("Auto Chooser", m_chooser);
     // Configure the trigger bindings
     configureBindings();
@@ -272,16 +272,19 @@ private Command autoIntakeInstant(double speed){
      System.out.println("Auto Selected: " + m_autoSelected);
     switch (m_autoSelected)
     {
-        case AutoSelectorConstants.Balance:
-        return new SequentialCommandGroup(runShooting(2), encoderReset(),
-        new NullCommand().withTimeout(1), 
-        AutoDrive(150, .5), encoderReset(), AutoDrive1(-70, -.5), autoDriveBalance());
+        case AutoSelectorConstants.Pick_and_Score:
+        //set against grid
+        return new SequentialCommandGroup(runShooting(1), setArmGround(), encoderReset(),
+        AutoDrive(190, .6), setArmRetracted(), encoderReset(), AutoDrive1(-150, -.6),
+        runShooting(1), encoderReset(), setArmGround(), AutoDrive(150, .6));
 
         case AutoSelectorConstants.Balance2Cube:
-        return new SequentialCommandGroup(runShooting(2), encoderReset(),
-        setArmGround(), autoIntakeInstant(IntakeConstants.INTAKE_SPEED), AutoDrive(187, .6),  
-        autoIntakeInstant(0), setArmRetracted(), encoderReset(), AutoDrive1(-120, -.6),
-        autoIntakeInstant(IntakeConstants.SHOOTING_SPEED), (autoDriveBalance()), new NullCommand().withTimeout(1), autoIntakeInstant(0));
+        //set against charging station
+        return new SequentialCommandGroup(runShooting(1), encoderReset(),
+        setArmGround(), autoIntakeInstant(IntakeConstants.INTAKE_SPEED), AutoDrive(193, .6),  
+        autoIntakeInstant(0), setArmRetracted(), encoderReset(), AutoDrive1(-122, -.6),
+        autoIntakeInstant(IntakeConstants.SHOOTING_SPEED), (autoDriveBalance()), new NullCommand().withTimeout(1),
+        autoIntakeInstant(0), setArmGround());
       
       
       //case AutoSelectorConstants.Score_High_and_Leave:
