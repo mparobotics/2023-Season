@@ -32,7 +32,7 @@ public class AutoDriveBangBang extends CommandBase {
     m_driveSubsystem.encoderReset();
     startEncoderL = m_driveSubsystem.getEncoderPositionL();
     startEncoderR = m_driveSubsystem.getEncoderPositionR();
-    distanceFromSetpoint = (Math.abs(m_setpoint) - Math.abs(m_driveSubsystem.getEncoderPositionL() - startEncoderL));
+    distanceFromSetpoint =  startEncoderL + m_setpoint - m_driveSubsystem.getEncoderPositionL();
     SmartDashboard.putNumber("AutoSetpoint", m_setpoint);
 
   }
@@ -54,14 +54,17 @@ public class AutoDriveBangBang extends CommandBase {
     //by subtracting how much we want to be displaced with how much we have been displaced already, we are left with how much
     //we still need to be displaced. For example, if I start at 3 and want to move  -5 units (to -2), and am at 1,
     //we would get distanceFromSetpoint = |-5| - |1 - 3| = 3. 
-    distanceFromSetpoint = (Math.abs(m_setpoint) - Math.abs(m_driveSubsystem.getEncoderPositionL() - startEncoderL));
+    distanceFromSetpoint = m_setpoint + startEncoderL - m_driveSubsystem.getEncoderPositionL();
     SmartDashboard.putNumber("DistanceFromSetpoint", distanceFromSetpoint);
-    if (distanceFromSetpoint < 20) {
+    if (Math.abs(distanceFromSetpoint) < 20) {
       //we still have to give our value a magnitude again to travel in the correct direction, thus the inversion here.
-      if (m_setpoint > 0) {m_speed = AutoDriveKp * distanceFromSetpoint + .1;}
-      else {m_speed = -AutoDriveKp * distanceFromSetpoint - .1;}
+      double correction = (distanceFromSetpoint > 0)? .1: -.1;
+      m_speed = AutoDriveKp * distanceFromSetpoint + correction;
+    
     }
 
+
+    
     m_driveSubsystem.driveStraight(m_speed);    
   }
 
