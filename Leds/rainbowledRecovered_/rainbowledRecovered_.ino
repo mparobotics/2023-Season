@@ -2,9 +2,22 @@
 #include "FastLED.h"
 #define NUM_LEDS 80
 CRGB leds[NUM_LEDS];
+int color = 1;
 void setup() { 
   pinMode(11, OUTPUT);
-  FastLED.addLeds<WS2801, RGB>(leds, NUM_LEDS); }
+  FastLED.addLeds<WS2801, RGB>(leds, NUM_LEDS); 
+  for(int i = 0; i < NUM_LEDS; i++) {
+      
+    
+  
+    leds[i] = CRGB(0,0,0);  
+      
+         
+  }
+
+    FastLED.show();
+}
+
 void loop() {
     digitalWrite(11, HIGH);
   
@@ -13,13 +26,35 @@ void loop() {
 
     //}
 
-     for(int j = 0; j < 256; j++) {
+     for(int j = 0; j < 256 * NUM_LEDS; j++) {
    for(int i = 0; i < NUM_LEDS; i++) {
-      leds[i] = Scroll((i * 256 / NUM_LEDS + j) % 256);      
+      
+      //leds[i] = Scroll((i * 256 / NUM_LEDS + j) % 256);  
+      int length = NUM_LEDS/2;
+      if(color == 0){
+        leds[i] = CRGB(0,0,127 + ((i-j) % length)*128/length);   
+      }
+      else if(color == 1){
+        leds[i] = CRGB(127 + ((NUM_LEDS-i-j) % length)*128/length,0,0);  
+      }
+      else{
+        CRGB purple = CRGB(50,0,255);
+        CRGB yellow = CRGB(255,255,0);
+        int border1 =  j % NUM_LEDS;
+        int border2 = (j + NUM_LEDS/2) % NUM_LEDS;
+
+        if( (i < border1|| i > border2) && (border2 > border1) || (i > border2 && i < border1 && border2 < border1)){
+          leds[i] = purple;
+        }
+        else{
+          leds[i] = yellow;
+        }
+      }
+         
     } 
 
     FastLED.show();
-    delay(100);    
+    delay(25);    
   } 
 
 }
