@@ -36,7 +36,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.Constants.AutoSelectorConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
@@ -92,20 +91,22 @@ public class RobotContainer {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   
-  
+  //these auto selector strings can be anything as long as they are unique
+  private final String Pick_and_Score = "1";
+  private final String Balance2Cube= "2";
+  private final String TwoCubeNoBalance = "3";
   
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     phCompressor.enableDigital();
     
-    //m_chooser.setDefaultOption("Simple Test Trajectory", AutoSelectorConstants.Test_Auto_1);
-    //m_chooser.addOption("Curve Test Trajectory", AutoSelectorConstants.Test_Auto_1);
-    m_chooser.addOption("Pick & Score", AutoSelectorConstants.Pick_and_Score);
-   // m_chooser.addOption("Score Low &Leave", AutoSelectorConstants.Score_Low_and_Leave);
-    //m_chooser.addOption("Balance" , AutoSelectorConstants.Balance);
-    m_chooser.addOption("Balance 2 Peices", AutoSelectorConstants.Balance2Cube);
-    //m_chooser.addOption("Leave", AutoSelectorConstants.Leave);
+    
+    m_chooser.setDefaultOption("Pick & Score", Pick_and_Score);
+    m_chooser.addOption("Score 2 Cubes", TwoCubeNoBalance);
+    m_chooser.addOption("Score 2 Cubes & Balance", Balance2Cube);
+    
+
     SmartDashboard.putData("Auto Chooser", m_chooser);
     // Configure the trigger bindings
     configureBindings();
@@ -272,13 +273,15 @@ private Command autoIntakeInstant(double speed){
      System.out.println("Auto Selected: " + m_autoSelected);
     switch (m_autoSelected)
     {
-        case AutoSelectorConstants.Pick_and_Score:
+      //why do we always encoder reset before driving?
+      //can we make the encoderReset() a part of AutoDrive1() or will that break something?
+        case Pick_and_Score:
         //set against grid
         return new SequentialCommandGroup(runShooting(1), setArmGround(), encoderReset(),
         AutoDrive(190, .6), setArmRetracted(), encoderReset(), AutoDrive1(-150, -.6),
         runShooting(1), encoderReset(), setArmGround(), AutoDrive(150, .6));
 
-        case AutoSelectorConstants.Balance2Cube:
+        case Balance2Cube:
         //set against charging station
         return new SequentialCommandGroup(runShooting(1), encoderReset(),
         setArmGround(), autoIntakeInstant(IntakeConstants.INTAKE_SPEED), AutoDrive(193, .6),  
@@ -286,8 +289,11 @@ private Command autoIntakeInstant(double speed){
         autoIntakeInstant(IntakeConstants.SHOOTING_SPEED), (autoDriveBalance()), new NullCommand().withTimeout(1),
         autoIntakeInstant(0), setArmGround());
       
-      
-      //case AutoSelectorConstants.Score_High_and_Leave:
+        case TwoCubeNoBalance:
+        //add two cube auto here
+        return new SequentialCommandGroup();
+        
+      //case Score_High_and_Leave:
         //return new SequentialCommandGroup(m_doublesolenoidSubsystem.shoot(),
         //new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2),
         //makeRamseteCommand(Trajectory_score_low_and_leave),
