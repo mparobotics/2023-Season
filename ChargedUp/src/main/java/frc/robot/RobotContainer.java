@@ -282,7 +282,7 @@ private Command autoIntakeInstant(double speed){
         //set against charging station
         return new SequentialCommandGroup(runShooting(1), encoderReset(),
         setArmGround(), autoIntakeInstant(IntakeConstants.INTAKE_SPEED), AutoDrive(193, .6),  
-        autoIntakeInstant(0), setArmRetracted(), encoderReset(), AutoDrive1(-122, -.6),
+        autoIntakeInstant(0), setArmRetracted(), encoderReset(), AutoDrive1(-134, -.6),
         autoIntakeInstant(IntakeConstants.SHOOTING_SPEED), (autoDriveBalance()), new NullCommand().withTimeout(1),
         autoIntakeInstant(0), setArmGround());
       

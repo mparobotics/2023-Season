@@ -60,7 +60,10 @@ public class AutoDriveBangBang extends CommandBase {
       //we still have to give our value a magnitude again to travel in the correct direction, thus the inversion here.
       if (m_setpoint > 0) {m_speed = AutoDriveKp * distanceFromSetpoint + .1;}
       else {m_speed = -AutoDriveKp * distanceFromSetpoint - .1;}
+      if (m_speed > .6) {m_speed = .6;}
+      if (m_speed < -.6) {m_speed = -.6;}
     }
+  
 
     m_driveSubsystem.driveStraight(m_speed);    
   }
