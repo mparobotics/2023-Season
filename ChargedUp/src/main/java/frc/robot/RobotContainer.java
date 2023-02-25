@@ -38,7 +38,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutoDriveBalance;
 import frc.robot.commands.AutoDriveBangBang;

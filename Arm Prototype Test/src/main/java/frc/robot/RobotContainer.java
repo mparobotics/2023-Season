@@ -48,7 +48,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new  (m_driverController, Button.kB.value).whileTrue(new MoveArm(m_ArmMovement, .15));
+    new JoystickButton(m_driverController, Button.kB.value).whileTrue(new MoveArm(m_ArmMovement, .15));
     new JoystickButton(m_driverController, Button.kA.value).whileTrue(new MoveArm(m_ArmMovement, -.15));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.

@@ -6,12 +6,12 @@ package frc.robot.subsystems;
 
 
 
-import org.opencv.core.Mat.Tuple2;
+
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAlternateEncoder;
+
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -280,10 +280,11 @@ public class DriveSubsystem extends SubsystemBase {
 
     
     //* Automatic gear shifter - automatically shifts into high gear when the robot is driving fast enough and shifts into low gear when the robot slows down */
+    /* 
     //check if the robot is turning - if the speeds of the left and right motors are different
     boolean isTurning = Math.abs(lvelocity - rvelocity) < DriveConstants.TURN_THRESHOLD;
     //check if automatic shifitng is enabling and the robot IS NOT turning
-/*     if(DriveConstants.AUTO_SHIFT_ENABLED){
+    if(DriveConstants.AUTO_SHIFT_ENABLED){
       if(!isTurning){
         //if either motor exceeds the velocity threshold then shift into high gear
         if(Math.abs(lvelocity) > DriveConstants.UPSHIFT_THRESHOLD || Math.abs(rvelocity) > DriveConstants.UPSHIFT_THRESHOLD){
