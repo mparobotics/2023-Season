@@ -16,6 +16,7 @@ public class AutoDriveBangBang extends CommandBase {
   private double m_speed;
   private double distanceFromSetpoint;
   private double AutoDriveKp = .04;
+  private double AutoDirveMinCommand = .1;
   /** Creates a new AutoDriveBangBang. */
   public AutoDriveBangBang(DriveSubsystem driveSub, double setpoint, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -58,8 +59,8 @@ public class AutoDriveBangBang extends CommandBase {
     SmartDashboard.putNumber("DistanceFromSetpoint", distanceFromSetpoint);
     if (distanceFromSetpoint < 20) {
       //we still have to give our value a magnitude again to travel in the correct direction, thus the inversion here.
-      if (m_setpoint > 0) {m_speed = AutoDriveKp * distanceFromSetpoint + .1;}
-      else {m_speed = -AutoDriveKp * distanceFromSetpoint - .1;}
+      if (m_setpoint > 0) {m_speed = AutoDriveKp * distanceFromSetpoint + AutoDirveMinCommand;}
+      else {m_speed = -AutoDriveKp * distanceFromSetpoint - AutoDirveMinCommand;}
       if (m_speed > .6) {m_speed = .6;}
       if (m_speed < -.6) {m_speed = -.6;}
     }
