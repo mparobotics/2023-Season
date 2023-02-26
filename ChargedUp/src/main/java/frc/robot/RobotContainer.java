@@ -4,11 +4,6 @@
 
 package frc.robot;
 
-
-
-
-
-
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -94,7 +89,9 @@ public class RobotContainer {
   //these auto selector strings can be anything as long as they are unique
   private final String Pick_and_Score = "1";
   private final String Balance2Cube= "2";
-  private final String TwoCubeNoBalance = "3";
+  private final String TwoPiecesNoBalance = "3";
+  private final String DoNothing = "4";
+  private final String JustShoot = "5";
   
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -102,9 +99,10 @@ public class RobotContainer {
     phCompressor.enableDigital();
     
     
-    m_chooser.setDefaultOption("Pick & Score", Pick_and_Score);
-    m_chooser.addOption("Score 2 Cubes", TwoCubeNoBalance);
+    m_chooser.addOption("Score 2 Pieces", TwoPiecesNoBalance);
     m_chooser.addOption("Score 2 Cubes & Balance", Balance2Cube);
+    m_chooser.addOption("Do Nothing", DoNothing);
+    m_chooser.setDefaultOption("Just Shoot", JustShoot);
     
 
     SmartDashboard.putData("Auto Chooser", m_chooser);
@@ -257,10 +255,10 @@ private Command autoIntakeInstant(double speed){
     rightController = new PIDController(DriveConstants.DRIVE_P_GAIN, 0, 0);
     
     //the loaction of a JSON trajectory file
-    String Trajectory_pickandscore1 = "pathplanner/generatedJSON/1,2,3 - Pick Up & Score (1).wpilib.json";
+/*     String Trajectory_pickandscore1 = "pathplanner/generatedJSON/1,2,3 - Pick Up & Score (1).wpilib.json";
     String Trajectory_pickandscore2 = "pathplanner/generatedJSON/1,2,3 - Pick Up & Score (2).wpilib.json";
     String Trajectory_leave = "pathplanner/generatedJSON/1,2,3 - Leave.wpilib.json";
-    String Test_Auto = "pathplanner/generatedJSON/Test Auto.json";
+    String Test_Auto = "pathplanner/generatedJSON/Test Auto.json"; */
     
     //display values in the table
     leftMeasurement.setNumber(m_driveSubsystem.getWheelSpeeds().leftMetersPerSecond);
@@ -271,39 +269,35 @@ private Command autoIntakeInstant(double speed){
     
      m_autoSelected = m_chooser.getSelected();
      System.out.println("Auto Selected: " + m_autoSelected);
-    switch (m_autoSelected)
-    {
-      //why do we always encoder reset before driving?
-      //can we make the encoderReset() a part of AutoDrive1() or will that break something?
-        case Pick_and_Score:
-        //set against grid
-        return new SequentialCommandGroup(runShooting(1), setArmGround(), encoderReset(),
-        AutoDrive(190, .6), setArmRetracted(), encoderReset(), AutoDrive1(-150, -.6),
-        runShooting(1), encoderReset(), setArmGround(), AutoDrive(150, .6));
+    
+    if (m_autoSelected != null){
+      switch (m_autoSelected)
+      {
+        //why do we always encoder reset before driving?
+        //can we make the encoderReset() a part of AutoDrive1() or will that break something?
+          case TwoPiecesNoBalance:
+          //set against grid
+            return new SequentialCommandGroup(runShooting(1), setArmGround(), encoderReset(),
+            AutoDrive(190, .6), setArmRetracted(), encoderReset(), AutoDrive1(-150, -.6),
+            runShooting(1), encoderReset(), setArmGround(), AutoDrive(150, .6));
 
-        case Balance2Cube:
-        //set against charging station
-        return new SequentialCommandGroup(runShooting(1), encoderReset(),
-        setArmGround(), autoIntakeInstant(IntakeConstants.INTAKE_SPEED), AutoDrive(193, .6),  
-        autoIntakeInstant(0), setArmRetracted(), encoderReset(), AutoDrive1(-134, -.6),
-        autoIntakeInstant(IntakeConstants.SHOOTING_SPEED), (autoDriveBalance()), new NullCommand().withTimeout(1),
-        autoIntakeInstant(0), setArmGround());
+          case Balance2Cube:
+          //set against charging station
+            return new SequentialCommandGroup(runShooting(1), encoderReset(),
+            setArmGround(), autoIntakeInstant(IntakeConstants.INTAKE_SPEED), AutoDrive(193, .6),  
+            autoIntakeInstant(0), setArmRetracted(), encoderReset(), AutoDrive1(-134, -.6),
+            autoIntakeInstant(IntakeConstants.SHOOTING_SPEED), (autoDriveBalance()), new NullCommand().withTimeout(1),
+            autoIntakeInstant(0), setArmGround());
       
-        case TwoCubeNoBalance:
-        //add two cube auto here
-        return new SequentialCommandGroup();
-        
-      //case Score_High_and_Leave:
-        //return new SequentialCommandGroup(m_doublesolenoidSubsystem.shoot(),
-        //new AutoIntake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED).withTimeout(2),
-        //makeRamseteCommand(Trajectory_score_low_and_leave),
-        //new TankDriveVolts(m_driveSubsystem));
+        case DoNothing:
+          return null;
 
-
+        case JustShoot:
+          return runShooting(2);}
     } 
      
-      return null;
-    
+      else {return null;}
+    return null;
     
 
 
