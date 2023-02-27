@@ -88,7 +88,19 @@ public final class Constants
     public static final int BOX_ID = 1;
   }
 
-  
+  public final class AutoSelectorConstants
+  {
+    public static final String Test_Auto_1 = "0";
+    public static final String Test_Auto_2 = "1";
+
+    public static final String Pick_and_Score = "2";
+    public static final String Score_Low_and_Leave = "3";
+    public static final String Score_High_and_Leave = "4";
+    public static final String Balance = "5";
+    public static final String Leave = "6";
+    public static final String Balance2Cube= "7";
+     
+  }
   public final static class LEDConstants{
     public static final int LED_ID = 0;
     public static final int LED_COUNT = 60;

@@ -29,7 +29,7 @@ public class AutoDriveBangBang extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //m_driveSubsystem.encoderReset();
+    m_driveSubsystem.encoderReset();
     startEncoderL = m_driveSubsystem.getEncoderPositionL();
     startEncoderR = m_driveSubsystem.getEncoderPositionR();
     distanceFromSetpoint = (Math.abs(m_setpoint) - Math.abs(m_driveSubsystem.getEncoderPositionL() - startEncoderL));
@@ -65,8 +65,6 @@ public class AutoDriveBangBang extends CommandBase {
     }
   
 
-
-    
     m_driveSubsystem.driveStraight(m_speed);    
   }
 
