@@ -197,7 +197,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
   public boolean AutoBalance(){
     double roll_error = Math.toDegrees(pigeon.getRoll());//the angle of the robot
-    double balance_kp = .0005;//Variable muliplied by roll_error
+    double balance_kp = .001;//Variable muliplied by roll_error
     double position_adjust = 0.0;
     double min_command = 0;//adds a minimum input to the motors to overcome friction if the position adjust isn't enough
     if (roll_error > 6.0)
