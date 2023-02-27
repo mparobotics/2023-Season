@@ -270,7 +270,7 @@ private Command autoIntakeInstant(double speed){
      m_autoSelected = m_chooser.getSelected();
      System.out.println("Auto Selected: " + m_autoSelected);
     
-    if (m_autoSelected != null){
+    //if (m_autoSelected != null){
       switch (m_autoSelected)
       {
         //why do we always encoder reset before driving?
@@ -293,10 +293,11 @@ private Command autoIntakeInstant(double speed){
           return null;
 
         case JustShoot:
-          return runShooting(2);}
-    } 
+          return runShooting(2);
+        }
+    //} 
      
-      else {return null;}
+    //else {return null;}
     return null;
     
 
