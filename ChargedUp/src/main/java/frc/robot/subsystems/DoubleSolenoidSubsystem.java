@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 public class DoubleSolenoidSubsystem extends SubsystemBase {                                                  
   /** Creates a new DoubleSolenoidSubsystem. */
-  DoubleSolenoid doubleSolenoidAR = new DoubleSolenoid(PneumaticsModuleType.REVPH, 8,15); // makes a new double solenoid class at 1(retracts) and 0(forward)
-  DoubleSolenoid doubleSolenoidBR = new DoubleSolenoid(PneumaticsModuleType.REVPH, 10, 13);
+  DoubleSolenoid doubleSolenoidShort = new DoubleSolenoid(PneumaticsModuleType.REVPH, 5, 4); // makes a new double solenoid class at 1(retracts) and 0(forward)
+  DoubleSolenoid doubleSolenoidLong = new DoubleSolenoid(PneumaticsModuleType.REVPH, 7, 3);
 
 
   public DoubleSolenoidSubsystem() {
@@ -37,8 +37,8 @@ public class DoubleSolenoidSubsystem extends SubsystemBase {
     System.out.println("Retracting!");
     return runOnce(
       () -> {
-        doubleSolenoidAR.set(Value.kReverse); //O
-        doubleSolenoidBR.set(Value.kReverse); //O
+        doubleSolenoidShort.set(Value.kReverse); //O
+        doubleSolenoidLong.set(Value.kReverse); //O
       });
   }
   
@@ -47,8 +47,8 @@ public class DoubleSolenoidSubsystem extends SubsystemBase {
     System.out.println("Chute Intake!");
     return runOnce(
       () -> {
-        doubleSolenoidAR.set(Value.kForward); //X
-        doubleSolenoidBR.set(Value.kReverse); //O
+        doubleSolenoidShort.set(Value.kForward); //X
+        doubleSolenoidLong.set(Value.kReverse); //O
       });
   }
 
@@ -59,8 +59,8 @@ public class DoubleSolenoidSubsystem extends SubsystemBase {
     System.out.println("Shooting!");
     return runOnce(
       () -> {
-        doubleSolenoidAR.set(Value.kReverse); //O
-        doubleSolenoidBR.set(Value.kForward); //X
+        doubleSolenoidShort.set(Value.kReverse); //O
+        doubleSolenoidLong.set(Value.kForward); //X
       });
   }
 
@@ -69,8 +69,8 @@ public class DoubleSolenoidSubsystem extends SubsystemBase {
     System.out.println("GroundIntake!");
     return runOnce(
       () -> {
-        doubleSolenoidAR.set(Value.kForward); //X
-        doubleSolenoidBR.set(Value.kForward); //X
+        doubleSolenoidShort.set(Value.kForward); //X
+        doubleSolenoidLong.set(Value.kForward); //X
       });
   }
 }

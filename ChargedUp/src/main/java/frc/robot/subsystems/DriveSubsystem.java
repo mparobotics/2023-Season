@@ -18,8 +18,10 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -58,7 +60,7 @@ public class DriveSubsystem extends SubsystemBase {
 
 
   //solenoid to control gear shifting
-  private Solenoid shiftSolenoid = new Solenoid(PneumaticsModuleType.REVPH, DriveConstants.SHIFT_SOLENOID_CHANNEL);
+  private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 6, 2);
   public Boolean inHighGear = false;
   
   public WPI_Pigeon2 pigeon = new WPI_Pigeon2(DriveConstants.PIGEON_ID);
@@ -109,14 +111,14 @@ public class DriveSubsystem extends SubsystemBase {
   /** shifts the gearbox into high gear */
   public void upShift(){
     //shift into high gear by extending both solenoids
-    shiftSolenoid.set(true);
+    shiftSolenoid.set(Value.kForward);
     inHighGear = true;
 
   }
   /** shifts the gearbox into low gear */
   public void downShift(){
     //shift into low gear by retracting both solenoids
-    shiftSolenoid.set(false);
+    shiftSolenoid.set(Value.kReverse);
     inHighGear = false;
 
   }
