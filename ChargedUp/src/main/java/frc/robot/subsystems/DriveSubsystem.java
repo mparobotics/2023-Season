@@ -60,7 +60,7 @@ public class DriveSubsystem extends SubsystemBase {
 
 
   //solenoid to control gear shifting
-  private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 6, 2);
+private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 2, 6              );
   public Boolean inHighGear = false;
   
   public WPI_Pigeon2 pigeon = new WPI_Pigeon2(DriveConstants.PIGEON_ID);

@@ -277,9 +277,10 @@ private Command autoIntakeInstant(double speed){
         //can we make the encoderReset() a part of AutoDrive1() or will that break something?
           case TwoPiecesNoBalance:
           //set against grid
-            return new SequentialCommandGroup(runShooting(1), setArmGround(), encoderReset(),
-            AutoDrive(190, .6), setArmRetracted(), encoderReset(), AutoDrive1(-150, -.6),
-            runShooting(1), encoderReset(), setArmGround(), AutoDrive(150, .6));
+            return new SequentialCommandGroup(runShooting(.5),autoIntakeInstant(IntakeConstants.INTAKE_SPEED),
+            setArmGround(), encoderReset(),
+            AutoDrive(190, .75), setArmRetracted(), encoderReset(), AutoDrive1(-150, -.75),
+            runShooting(.7), encoderReset(), setArmGround(), AutoDrive(150, .8));
 
           case Balance2Cube:
           //set against charging station

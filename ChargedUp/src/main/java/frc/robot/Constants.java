@@ -22,7 +22,7 @@ public final class Constants
     public static final int INTAKE_MOTOR_R_ID = 14;
     public static final int INTAKE_MOTOR_L_ID = 15;
     //intake speeds
-    public static final double INTAKE_SPEED = .25;
+    public static final double INTAKE_SPEED = .35;
     public static final double OUTTAKE_SPEED = -.3;
     public static final double SHOOTING_SPEED = -1;
 
@@ -49,7 +49,7 @@ public final class Constants
    
 
     //driving speeds
-    public static final double TURNING_SPEED_LIMIT = -.5;
+    public static final double TURNING_SPEED_LIMIT = -.55;
     public static final double TURNING_SPEED_LOW = -.7;
     public static final double TURNING_SPEED_HIGH = -.6;
     public static final double DRIVE_SPEED = -1;

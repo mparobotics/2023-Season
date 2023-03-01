@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 public class DoubleSolenoidSubsystem extends SubsystemBase {                                                  
   /** Creates a new DoubleSolenoidSubsystem. */
-  DoubleSolenoid doubleSolenoidShort = new DoubleSolenoid(PneumaticsModuleType.REVPH, 5, 4); // makes a new double solenoid class at 1(retracts) and 0(forward)
+  DoubleSolenoid doubleSolenoidShort = new DoubleSolenoid(PneumaticsModuleType.REVPH, 4, 5); // makes a new double solenoid class at 1(retracts) and 0(forward)
   DoubleSolenoid doubleSolenoidLong = new DoubleSolenoid(PneumaticsModuleType.REVPH, 7, 3);
 
 
