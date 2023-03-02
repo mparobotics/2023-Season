@@ -200,6 +200,10 @@ public class RobotContainer {
   private Command runShooting(double seconds){
     return new AutoIntake(m_intakeSubsystem, IntakeConstants.SHOOTING_SPEED).withTimeout(seconds);
   }
+
+  private Command runShootingSlow(double seconds){
+    return new AutoIntake(m_intakeSubsystem, -.8).withTimeout(seconds);
+  }
   private Command AutoDrive(double setpoint, double speed){
     return new AutoDriveBangBang(m_driveSubsystem, setpoint, speed);
   }
@@ -277,14 +281,14 @@ private Command autoIntakeInstant(double speed){
         //can we make the encoderReset() a part of AutoDrive1() or will that break something?
           case TwoPiecesNoBalance:
           //set against grid
-            return new SequentialCommandGroup(runShooting(.5),autoIntakeInstant(IntakeConstants.INTAKE_SPEED),
+            return new SequentialCommandGroup(m_driveSubsystem.ShiftDown(),runShooting(.5),autoIntakeInstant(IntakeConstants.INTAKE_SPEED),
             setArmGround(), encoderReset(),
             AutoDrive(190, .75), setArmRetracted(), encoderReset(), AutoDrive1(-150, -.75),
             runShooting(.7), encoderReset(), setArmGround(), AutoDrive(150, .8));
 
           case Balance2Cube:
           //set against charging station
-            return new SequentialCommandGroup(runShooting(1), encoderReset(),
+            return new SequentialCommandGroup(m_driveSubsystem.ShiftDown(),runShooting(1), encoderReset(),
             setArmGround(), autoIntakeInstant(IntakeConstants.INTAKE_SPEED), AutoDrive(193, .6),  
             autoIntakeInstant(0), setArmRetracted(), encoderReset(), AutoDrive1(-134, -.6),
             autoIntakeInstant(IntakeConstants.SHOOTING_SPEED), (autoDriveBalance()), new NullCommand().withTimeout(1),

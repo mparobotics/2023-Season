@@ -136,14 +136,18 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
       if (inHighGear){
         differentialDrive.arcadeDrive(forwardSpeed * DriveConstants.DRIVE_SPEED, turnSpeed * DriveConstants.TURNING_SPEED_HIGH);
       }
+      
        else{
+        differentialDrive.arcadeDrive(forwardSpeed * DriveConstants.DRIVE_SPEED, turnSpeed * DriveConstants.TURNING_SPEED_LOW);
+        /* 
         if (Math.abs(encoderL.getVelocity()) >= DriveConstants.MAX_DRIVE_SPEED || Math.abs(encoderR.getVelocity()) >= DriveConstants.MAX_DRIVE_SPEED)
         {
           differentialDrive.arcadeDrive(forwardSpeed * DriveConstants.DRIVE_SPEED, turnSpeed * DriveConstants.TURNING_SPEED_LIMIT);
         }
         else{
-        differentialDrive.arcadeDrive(forwardSpeed * DriveConstants.DRIVE_SPEED, turnSpeed * DriveConstants.TURNING_SPEED_LOW);
+       
         }
+        */
       }
   }
   }
