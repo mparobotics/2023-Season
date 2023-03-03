@@ -159,7 +159,7 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
   }
 
   public void driveStraight(double forwardSpeed) {
-    differentialDrive.arcadeDrive(forwardSpeed, -driveTrainP());
+    differentialDrive.arcadeDrive(forwardSpeed, 0);
   }
   
   public void encoderReset() {
@@ -209,6 +209,9 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
     if (roll_error > 6.0)
     {
       position_adjust = balance_kp * roll_error + min_command;//equation that figures out how fast it should go to adjust
+      //position_adjust = Math.max(Math.min(position_adjust,.15), -.15);  this gets the same thing done in one line
+      if (position_adjust > .15){position_adjust = .15;}
+      if (position_adjust < -.15){position_adjust = -.15;}
       differentialDrive.arcadeDrive(position_adjust, 0);//makes the robot move
       return false;
     }
@@ -216,6 +219,8 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
     {
       position_adjust = balance_kp * roll_error - min_command;
       differentialDrive.arcadeDrive(position_adjust, 0);
+      if (position_adjust > .15){position_adjust = .15;}
+      if (position_adjust < -.15){position_adjust = -.15;}
       return false;
     }
     else{

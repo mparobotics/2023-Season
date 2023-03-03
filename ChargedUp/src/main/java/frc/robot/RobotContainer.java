@@ -283,14 +283,14 @@ private Command autoIntakeInstant(double speed){
           //set against grid
             return new SequentialCommandGroup(m_driveSubsystem.ShiftDown(),runShooting(.5),autoIntakeInstant(IntakeConstants.INTAKE_SPEED),
             setArmGround(), encoderReset(),
-            AutoDrive(190, .75), setArmRetracted(), encoderReset(), AutoDrive1(-150, -.75),
-            runShooting(.7), encoderReset(), setArmGround(), AutoDrive(150, .8));
+            AutoDrive(220, .75), setArmRetracted(), encoderReset(), AutoDrive1(-200, -.75),
+            runShooting(.7), encoderReset(), setArmGround(), AutoDrive(180, .8));
 
           case Balance2Cube:
           //set against charging station
             return new SequentialCommandGroup(m_driveSubsystem.ShiftDown(),runShooting(1), encoderReset(),
-            setArmGround(), autoIntakeInstant(IntakeConstants.INTAKE_SPEED), AutoDrive(193, .6),  
-            autoIntakeInstant(0), setArmRetracted(), encoderReset(), AutoDrive1(-134, -.6),
+            setArmGround(), autoIntakeInstant(IntakeConstants.INTAKE_SPEED), AutoDrive(200, .6),  
+            autoIntakeInstant(0), setArmRetracted(), encoderReset(), AutoDrive1(-141, -.6),
             autoIntakeInstant(IntakeConstants.SHOOTING_SPEED), (autoDriveBalance()), new NullCommand().withTimeout(1),
             autoIntakeInstant(0), setArmGround());
       
