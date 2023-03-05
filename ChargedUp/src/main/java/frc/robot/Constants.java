@@ -22,7 +22,7 @@ public final class Constants
     public static final int INTAKE_MOTOR_R_ID = 14;
     public static final int INTAKE_MOTOR_L_ID = 15;
     //intake speeds
-    public static final double INTAKE_SPEED = .35;
+    public static final double INTAKE_SPEED = .263; //.35
     public static final double OUTTAKE_SPEED = -.3;
     public static final double SHOOTING_SPEED = -1;
 
@@ -53,6 +53,7 @@ public final class Constants
     public static final double TURNING_SPEED_LOW = -.7;
     public static final double TURNING_SPEED_HIGH = -.5;
     public static final double DRIVE_SPEED = -1;
+    public static final double DRIVE_SPEED_HIGH = -1;
 
     //if the motor speed (RPMs) exceeds this value, then shift into high gear
     public static final double UPSHIFT_THRESHOLD = 5000;

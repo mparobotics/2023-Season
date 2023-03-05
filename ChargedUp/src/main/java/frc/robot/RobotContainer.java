@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -131,8 +132,8 @@ public class RobotContainer {
     xbox.button(Button.kLeftBumper.value).onTrue(m_driveSubsystem.ShiftDown());
     //xbox.button(Button.kLeftStick.value).whileTrue(new AutoTurn(m_driveSubsystem, 0));
     //xbox.button(Button.kRightStick.value).whileTrue(new AutoTurn(m_driveSubsystem, -180));
-    xbox.button(Button.kA.value).whileTrue(m_doublesolenoidSubsystem.chuteintake()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
-    xbox.button(Button.kB.value).whileTrue(m_doublesolenoidSubsystem.groundintake()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
+    xbox.button(Button.kA.value).whileTrue(m_driveSubsystem.setBrakeCommand()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
+    xbox.button(Button.kB.value).whileTrue(m_driveSubsystem.setCoastCommand()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
     xbox.button(Button.kX.value).whileTrue(m_doublesolenoidSubsystem.shoot());
     xbox.button(Button.kY.value).whileTrue(m_doublesolenoidSubsystem.retract());
     
@@ -140,7 +141,8 @@ public class RobotContainer {
     m_driveSubsystem.setDefaultCommand(new ArcadeDrive(m_driveSubsystem, 
     () -> xbox.getLeftY(), () -> xbox.getRightX()));
 
-    
+    xbox.axisGreaterThan(Axis.kRightTrigger.value, 0.5).onTrue(m_driveSubsystem.setBrakeCommand());
+    xbox.axisGreaterThan(Axis.kRightTrigger.value, 0.5).onFalse(m_driveSubsystem.setCoastCommand());
     box.button(1).whileTrue(m_doublesolenoidSubsystem.retract()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
     box.button(2).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.SHOOTING_SPEED));
     box.button(3).whileTrue(m_doublesolenoidSubsystem.chuteintake());
@@ -210,6 +212,9 @@ public class RobotContainer {
 
   private Command AutoDrive1(double setpoint, double speed){
     return new AutoDriveBangBang(m_driveSubsystem, setpoint, speed);
+  }
+  public Command SetCoast(){
+    return m_driveSubsystem.setCoastCommand();
   }
 
   private Command autoDriveBalance(){
@@ -281,18 +286,18 @@ private Command autoIntakeInstant(double speed){
         //can we make the encoderReset() a part of AutoDrive1() or will that break something?
           case TwoPiecesNoBalance:
           //set against grid
-            return new SequentialCommandGroup(m_driveSubsystem.ShiftDown(),runShooting(.5),autoIntakeInstant(IntakeConstants.INTAKE_SPEED),
+            return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftDown(),runShooting(.5),autoIntakeInstant(IntakeConstants.INTAKE_SPEED),
             setArmGround(), encoderReset(),
             AutoDrive(220, .75), setArmRetracted(), encoderReset(), AutoDrive1(-200, -.75),
             runShooting(.7), encoderReset(), setArmGround(), AutoDrive(180, .8));
 
           case Balance2Cube:
           //set against charging station
-            return new SequentialCommandGroup(m_driveSubsystem.ShiftDown(),runShooting(1), encoderReset(),
+            return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftDown(),runShooting(1), encoderReset(),
             setArmGround(), autoIntakeInstant(IntakeConstants.INTAKE_SPEED), AutoDrive(200, .6),  
             autoIntakeInstant(0), setArmRetracted(), encoderReset(), AutoDrive1(-141, -.6),
             autoIntakeInstant(IntakeConstants.SHOOTING_SPEED), (autoDriveBalance()), new NullCommand().withTimeout(1),
-            autoIntakeInstant(0), setArmGround());
+            autoIntakeInstant(0));
       
         case DoNothing:
           return null;

@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 
 
+import javax.swing.text.AbstractDocument.BranchElement;
+
 import org.opencv.core.Mat.Tuple2;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
@@ -63,6 +65,7 @@ public class DriveSubsystem extends SubsystemBase {
 private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 2, 6              );
   public Boolean inHighGear = false;
   
+  public Boolean BrakeMode = true;
   public WPI_Pigeon2 pigeon = new WPI_Pigeon2(DriveConstants.PIGEON_ID);
   //odometry object 
   private final DifferentialDriveOdometry m_odometry;
@@ -134,7 +137,7 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
     }
     else{
       if (inHighGear){
-        differentialDrive.arcadeDrive(forwardSpeed * DriveConstants.DRIVE_SPEED, turnSpeed * DriveConstants.TURNING_SPEED_HIGH);
+        differentialDrive.arcadeDrive(forwardSpeed * DriveConstants.DRIVE_SPEED_HIGH, turnSpeed * DriveConstants.TURNING_SPEED_HIGH);
       }
       
        else{
@@ -210,8 +213,8 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
     {
       position_adjust = balance_kp * roll_error + min_command;//equation that figures out how fast it should go to adjust
       //position_adjust = Math.max(Math.min(position_adjust,.15), -.15);  this gets the same thing done in one line
-      if (position_adjust > .15){position_adjust = .15;}
-      if (position_adjust < -.15){position_adjust = -.15;}
+      if (position_adjust > .3){position_adjust = .3;}
+      if (position_adjust < -.5){position_adjust = -.5;}
       differentialDrive.arcadeDrive(position_adjust, 0);//makes the robot move
       return false;
     }
@@ -219,8 +222,8 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
     {
       position_adjust = balance_kp * roll_error - min_command;
       differentialDrive.arcadeDrive(position_adjust, 0);
-      if (position_adjust > .15){position_adjust = .15;}
-      if (position_adjust < -.15){position_adjust = -.15;}
+      if (position_adjust > .3){position_adjust = .3;}
+      if (position_adjust < -.3){position_adjust = -.3;}
       return false;
     }
     else{
@@ -256,7 +259,34 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
     motorBR.setIdleMode(IdleMode.kBrake);
     motorFL.setIdleMode(IdleMode.kBrake);
     motorBL.setIdleMode(IdleMode.kBrake);
+    BrakeMode = true;
   }
+  public CommandBase setBrakeCommand() //if reverseSolenoid is called, returns a command to set doublesolenoid reverse at port 1
+  {
+    return runOnce(
+      () -> {
+        motorFR.setIdleMode(IdleMode.kBrake);
+        motorBR.setIdleMode(IdleMode.kBrake);
+        motorFL.setIdleMode(IdleMode.kBrake);
+        motorBL.setIdleMode(IdleMode.kBrake);
+        BrakeMode = true;
+
+      });
+  }
+
+  public CommandBase setCoastCommand() //if reverseSolenoid is called, returns a command to set doublesolenoid reverse at port 1
+  {
+    return runOnce(
+      () -> {
+        motorFR.setIdleMode(IdleMode.kCoast);
+        motorBR.setIdleMode(IdleMode.kCoast);
+        motorFL.setIdleMode(IdleMode.kCoast);
+        motorBL.setIdleMode(IdleMode.kCoast);
+        BrakeMode = false;
+      });
+  }
+  
+  
 
   public CommandBase gyroReset() //if reverseSolenoid is called, returns a command to set doublesolenoid reverse at port 1
   {
@@ -283,6 +313,7 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
     double rvelocity = encoderR.getVelocity();
 
     SmartDashboard.putBoolean("HighGear?", inHighGear);
+    SmartDashboard.putBoolean("Breaking?", BrakeMode);
     SmartDashboard.putNumber("LeftWheelSpeeds", encoderL.getVelocity());
     SmartDashboard.putNumber("RightWheelSpeeds", encoderR.getVelocity());
     SmartDashboard.putNumber("LeftEncoder", encoderL.getPosition());
