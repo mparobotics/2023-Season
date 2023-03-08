@@ -17,7 +17,10 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -68,9 +71,10 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
   //xbox controller
-  private CommandXboxController xbox = new CommandXboxController(0);
-  private CommandXboxController helms = new CommandXboxController(2);
-  private CommandJoystick box = new CommandJoystick(1);
+  private CommandJoystick flightStickL = new CommandJoystick(0);
+  private CommandJoystick flightStickR = new CommandJoystick(1);
+  private CommandXboxController helms = new CommandXboxController(3);
+  private CommandJoystick box = new CommandJoystick(2);
 
   //the drive subsystem
   private DriveSubsystem m_driveSubsystem = new DriveSubsystem();
@@ -123,26 +127,29 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+
     
     //new JoystickButton(xbox, XboxController.Button.kA.value).onTrue(new ShiftUp(m_driveSubsystem));
     //new JoystickButton(xbox, XboxController.Button.kB.value).onTrue(new ShiftDown(m_driveSubsystem));
     //A button shifts the gearbox into high gear
-    xbox.button(Button.kRightBumper.value).onTrue(m_driveSubsystem.ShiftUp());
+    flightStickL.button(0).onTrue(m_driveSubsystem.ShiftUp());
     //B button shifts the gearbox into low gear
-    xbox.button(Button.kLeftBumper.value).onTrue(m_driveSubsystem.ShiftDown());
+    flightStickR.button(0).onTrue(m_driveSubsystem.ShiftDown());
     //xbox.button(Button.kLeftStick.value).whileTrue(new AutoTurn(m_driveSubsystem, 0));
     //xbox.button(Button.kRightStick.value).whileTrue(new AutoTurn(m_driveSubsystem, -180));
-    xbox.button(Button.kA.value).whileTrue(m_driveSubsystem.setBrakeCommand()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
-    xbox.button(Button.kB.value).whileTrue(m_driveSubsystem.setCoastCommand()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
-    xbox.button(Button.kX.value).whileTrue(m_doublesolenoidSubsystem.shoot());
-    xbox.button(Button.kY.value).whileTrue(m_doublesolenoidSubsystem.retract());
+    //xbox.button(Button.kA.value).whileTrue(m_driveSubsystem.setBrakeCommand()); // deprecated due to accidental presses
+    //xbox.button(Button.kB.value).whileTrue(m_driveSubsystem.setCoastCommand()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
+    //xbox.button(Button.kX.value).whileTrue(m_doublesolenoidSubsystem.shoot());
+   // xbox.button(Button.kY.value).whileTrue(m_doublesolenoidSubsystem.retract());
     
     
     m_driveSubsystem.setDefaultCommand(new ArcadeDrive(m_driveSubsystem, 
-    () -> xbox.getLeftY(), () -> xbox.getRightX()));
+    () -> flightStickL.getY(), () -> flightStickR.getX()));
 
-    xbox.axisGreaterThan(Axis.kRightTrigger.value, 0.5).onTrue(m_driveSubsystem.setBrakeCommand());
-    xbox.axisGreaterThan(Axis.kRightTrigger.value, 0.5).onFalse(m_driveSubsystem.setCoastCommand());
+    //xbox.axisGreaterThan(Axis.kRightTrigger.value, 0.5).onTrue(m_driveSubsystem.setBrakeCommand());
+    //xbox.axisGreaterThan(Axis.kRightTrigger.value, 0.5).onFalse(m_driveSubsystem.setCoastCommand());
+    flightStickR.button(1).onTrue(m_driveSubsystem.setBrakeCommand());
+    flightStickR.button(1).onFalse(m_driveSubsystem.setCoastCommand());
     box.button(1).whileTrue(m_doublesolenoidSubsystem.retract()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
     box.button(2).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.SHOOTING_SPEED));
     box.button(3).whileTrue(m_doublesolenoidSubsystem.chuteintake());

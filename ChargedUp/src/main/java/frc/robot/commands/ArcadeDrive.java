@@ -6,7 +6,9 @@ package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class ArcadeDrive extends CommandBase {
@@ -14,6 +16,8 @@ public class ArcadeDrive extends CommandBase {
   private DriveSubsystem m_driveSubsystem;
   private DoubleSupplier m_sForward;
   private DoubleSupplier m_sTurning;
+  private final SlewRateLimiter RateLimiter = new SlewRateLimiter(DriveConstants.ACCELERATION_RATE_LIMIT);
+ 
   public ArcadeDrive(DriveSubsystem driveSub, DoubleSupplier sForward, DoubleSupplier sTurning) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_sForward = sForward;

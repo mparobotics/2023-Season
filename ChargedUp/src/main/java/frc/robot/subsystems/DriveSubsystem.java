@@ -6,14 +6,13 @@ package frc.robot.subsystems;
 
 
 
-import javax.swing.text.AbstractDocument.BranchElement;
 
-import org.opencv.core.Mat.Tuple2;
+
+import java.util.function.BooleanSupplier;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -22,19 +21,20 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 
 
 
 public class DriveSubsystem extends SubsystemBase {
+  private RobotContainer m_robotContainer;
   
   //drive base motors
   private final CANSparkMax motorFR = new CANSparkMax(DriveConstants.MOTOR_FR_ID, MotorType.kBrushless);
@@ -71,7 +71,7 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
   private final DifferentialDriveOdometry m_odometry;
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
-    setBrake();
+    
     //back motors follow front motors
     motorFR.setOpenLoopRampRate(.2); // 0.5 seconds from neutral to full output (during open-loop control)
     //falconFR.configClosedloopRamp(0.1); // 0 disables ramping (during closed-loop control)
@@ -116,6 +116,7 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
     //shift into high gear by extending both solenoids
     shiftSolenoid.set(Value.kForward);
     inHighGear = true;
+    setCoast();
 
   }
   /** shifts the gearbox into low gear */
@@ -136,22 +137,22 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
       differentialDrive.arcadeDrive(forwardSpeed * DriveConstants.DRIVE_SPEED, 0);
     }
     else{
-      if (inHighGear){
-        differentialDrive.arcadeDrive(forwardSpeed * DriveConstants.DRIVE_SPEED_HIGH, turnSpeed * DriveConstants.TURNING_SPEED_HIGH);
-      }
+      if (Math.abs(encoderL.getVelocity()) >= DriveConstants.MAX_DRIVE_SPEED || Math.abs(encoderR.getVelocity()) >= DriveConstants.MAX_DRIVE_SPEED)
+        {
+        differentialDrive.arcadeDrive(forwardSpeed * DriveConstants.DRIVE_SPEED, turnSpeed * DriveConstants.TURNING_SPEED_LIMIT);
+        }
+      else{
+        if (inHighGear){
+          differentialDrive.arcadeDrive(forwardSpeed * DriveConstants.DRIVE_SPEED_HIGH, turnSpeed * DriveConstants.TURNING_SPEED_HIGH);
+        }
       
        else{
         differentialDrive.arcadeDrive(forwardSpeed * DriveConstants.DRIVE_SPEED, turnSpeed * DriveConstants.TURNING_SPEED_LOW);
-        /* 
-        if (Math.abs(encoderL.getVelocity()) >= DriveConstants.MAX_DRIVE_SPEED || Math.abs(encoderR.getVelocity()) >= DriveConstants.MAX_DRIVE_SPEED)
-        {
-          differentialDrive.arcadeDrive(forwardSpeed * DriveConstants.DRIVE_SPEED, turnSpeed * DriveConstants.TURNING_SPEED_LIMIT);
-        }
-        else{
-       
-        }
-        */
+        
+
+
       }
+    }
   }
   }
 
@@ -254,11 +255,19 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
     
   }
   public void setBrake() {
-    //setting coast or brake mode, can also be done in Phoenix tuner
+    //setting coast or brake mode, can also be done in Rev tuner
     motorFR.setIdleMode(IdleMode.kBrake);
     motorBR.setIdleMode(IdleMode.kBrake);
     motorFL.setIdleMode(IdleMode.kBrake);
     motorBL.setIdleMode(IdleMode.kBrake);
+    BrakeMode = true;
+  }
+  public void setCoast() {
+    //setting coast or brake mode, can also be done in Rev tuner
+    motorFR.setIdleMode(IdleMode.kCoast);
+    motorBR.setIdleMode(IdleMode.kCoast);
+    motorFL.setIdleMode(IdleMode.kCoast);
+    motorBL.setIdleMode(IdleMode.kCoast);
     BrakeMode = true;
   }
   public CommandBase setBrakeCommand() //if reverseSolenoid is called, returns a command to set doublesolenoid reverse at port 1
@@ -320,7 +329,7 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
     SmartDashboard.putNumber("RightEncoder", encoderR.getPosition());
     SmartDashboard.putNumber("Pigeon Roll", pigeon.getRoll());
 
-    
+   
     //* Automatic gear shifter - automatically shifts into high gear when the robot is driving fast enough and shifts into low gear when the robot slows down */
     //check if the robot is turning - if the speeds of the left and right motors are different
     boolean isTurning = Math.abs(lvelocity - rvelocity) < DriveConstants.TURN_THRESHOLD;
