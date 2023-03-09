@@ -63,6 +63,7 @@ public class DriveSubsystem extends SubsystemBase {
   //slew rate limiters adjust the ammount an input can change by in one second
   //for example, a slew rate limite of .5 would only let the joystick value
   //change by .5 over a second, making slowdowns more gradual
+  //this is useful in preventing tippy robot syndrome
   private final SlewRateLimiter slewRateLimiter = new SlewRateLimiter(1);
   //solenoid to control gear shifting
 private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 2, 6              );
