@@ -73,7 +73,7 @@ public class RobotContainer {
   //xbox controller
   private CommandJoystick flightStickL = new CommandJoystick(0);
   private CommandJoystick flightStickR = new CommandJoystick(1);
-  private CommandXboxController helms = new CommandXboxController(3);
+
   private CommandJoystick box = new CommandJoystick(2);
 
   //the drive subsystem
@@ -132,9 +132,9 @@ public class RobotContainer {
     //new JoystickButton(xbox, XboxController.Button.kA.value).onTrue(new ShiftUp(m_driveSubsystem));
     //new JoystickButton(xbox, XboxController.Button.kB.value).onTrue(new ShiftDown(m_driveSubsystem));
     //A button shifts the gearbox into high gear
-    flightStickL.button(0).onTrue(m_driveSubsystem.ShiftUp());
+    flightStickL.button(1).onTrue(m_driveSubsystem.ShiftDown());
     //B button shifts the gearbox into low gear
-    flightStickR.button(0).onTrue(m_driveSubsystem.ShiftDown());
+    flightStickR.button(1).onTrue(m_driveSubsystem.ShiftUp());
     //xbox.button(Button.kLeftStick.value).whileTrue(new AutoTurn(m_driveSubsystem, 0));
     //xbox.button(Button.kRightStick.value).whileTrue(new AutoTurn(m_driveSubsystem, -180));
     //xbox.button(Button.kA.value).whileTrue(m_driveSubsystem.setBrakeCommand()); // deprecated due to accidental presses
@@ -148,16 +148,16 @@ public class RobotContainer {
 
     //xbox.axisGreaterThan(Axis.kRightTrigger.value, 0.5).onTrue(m_driveSubsystem.setBrakeCommand());
     //xbox.axisGreaterThan(Axis.kRightTrigger.value, 0.5).onFalse(m_driveSubsystem.setCoastCommand());
-    flightStickR.button(1).onTrue(m_driveSubsystem.setBrakeCommand());
-    flightStickR.button(1).onFalse(m_driveSubsystem.setCoastCommand());
-    box.button(1).whileTrue(m_doublesolenoidSubsystem.retract()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
-    box.button(2).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.SHOOTING_SPEED));
-    box.button(3).whileTrue(m_doublesolenoidSubsystem.chuteintake());
-    box.button(4).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED));
-    box.button(5).whileTrue(m_doublesolenoidSubsystem.groundintake());
-    box.button(6).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.INTAKE_SPEED));
+    flightStickR.button(2).onTrue(m_driveSubsystem.setBrakeCommand());
+    flightStickR.button(2).onFalse(m_driveSubsystem.setCoastCommand());
+    box.button(3).whileTrue(m_doublesolenoidSubsystem.retract()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
+    box.button(10).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.SHOOTING_SPEED));
+    box.button(2).whileTrue(m_doublesolenoidSubsystem.chuteintake());
+    box.button(8).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.OUTTAKE_SPEED));
+    box.button(1).whileTrue(m_doublesolenoidSubsystem.groundintake());
+    box.button(7).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.INTAKE_SPEED));
 
-    helms.button(Button.kB.value).onTrue(m_driveSubsystem.gyroReset());
+    //helms.button(Button.kB.value).onTrue(m_driveSubsystem.gyroReset());
   }
 
   /**

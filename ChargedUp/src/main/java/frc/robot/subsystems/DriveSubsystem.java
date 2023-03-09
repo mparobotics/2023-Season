@@ -16,6 +16,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
@@ -60,30 +61,33 @@ public class DriveSubsystem extends SubsystemBase {
   public double error;
 
 
-
+  private final SlewRateLimiter slewRateLimiter = new SlewRateLimiter(1);
   //solenoid to control gear shifting
 private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 2, 6              );
   public Boolean inHighGear = false;
   
   public Boolean BrakeMode = true;
   public WPI_Pigeon2 pigeon = new WPI_Pigeon2(DriveConstants.PIGEON_ID);
+  
   //odometry object 
   private final DifferentialDriveOdometry m_odometry;
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     
     //back motors follow front motors
-    motorFR.setOpenLoopRampRate(.2); // 0.5 seconds from neutral to full output (during open-loop control)
+    motorFR.setOpenLoopRampRate(0); // 0.5 seconds from neutral to full output (during open-loop control)
     //falconFR.configClosedloopRamp(0.1); // 0 disables ramping (during closed-loop control)
   
-    motorFL.setOpenLoopRampRate(0.2); // 0.5 seconds from neutral to full output (during open-loop control)
+    motorFL.setOpenLoopRampRate(0); // 0.5 seconds from neutral to full output (during open-loop control)
     //falconFL.configClosedloopRamp(0.1); // 0 disables ramping (during closed-loop control)
   
-    motorBL.setOpenLoopRampRate(0.2); // 0.5 seconds from neutral to full output (during open-loop control)
+    motorBL.setOpenLoopRampRate(0); // 0.5 seconds from neutral to full output (during open-loop control)
     //falconBL.configClosedloopRamp(0.1); // 0 disables ramping (during closed-loop control)
   
-    motorBR.setOpenLoopRampRate(0.2); // 0.5 seconds from neutral to full output (during open-loop control)
+    motorBR.setOpenLoopRampRate(0); // 0.5 seconds from neutral to full output (during open-loop control)
     //falconBR.configClosedloopRamp(0.1); // 0 disables ramping (during closed-loop control)
+    
+
   
   
     motorBR.follow(motorFR);
@@ -122,32 +126,36 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
   /** shifts the gearbox into low gear */
   public void downShift(){
     //shift into low gear by retracting both solenoids
+    if (Math.abs(encoderL.getVelocity()) <= 3000 || Math.abs(encoderR.getVelocity()) <= 3000){
     shiftSolenoid.set(Value.kReverse);
     inHighGear = false;
+  }
+    
 
   }
 
   // sets the driving speed of the robot 
   public void setDriveSpeedArcade(double forwardSpeed, double turnSpeed){
+    
     //set the driving speed based on a forward speed and turning speed - controlled in ArcadeDrive.java
     if (Math.abs(forwardSpeed) < .1) {forwardSpeed = 0;}//deadzones
     if (Math.abs(turnSpeed) < .1) {turnSpeed = 0;}//deadzones
     if (turnSpeed == 0){
       //driveStraight(forwardSpeed);
-      differentialDrive.arcadeDrive(forwardSpeed * DriveConstants.DRIVE_SPEED, 0);
+      differentialDrive.arcadeDrive(slewRateLimiter.calculate(forwardSpeed) * DriveConstants.DRIVE_SPEED, 0);
     }
     else{
       if (Math.abs(encoderL.getVelocity()) >= DriveConstants.MAX_DRIVE_SPEED || Math.abs(encoderR.getVelocity()) >= DriveConstants.MAX_DRIVE_SPEED)
         {
-        differentialDrive.arcadeDrive(forwardSpeed * DriveConstants.DRIVE_SPEED, turnSpeed * DriveConstants.TURNING_SPEED_LIMIT);
+        differentialDrive.arcadeDrive(slewRateLimiter.calculate(forwardSpeed) * DriveConstants.DRIVE_SPEED, turnSpeed * DriveConstants.TURNING_SPEED_LIMIT);
         }
       else{
         if (inHighGear){
-          differentialDrive.arcadeDrive(forwardSpeed * DriveConstants.DRIVE_SPEED_HIGH, turnSpeed * DriveConstants.TURNING_SPEED_HIGH);
+          differentialDrive.arcadeDrive(slewRateLimiter.calculate(forwardSpeed) * DriveConstants.DRIVE_SPEED_HIGH, turnSpeed * DriveConstants.TURNING_SPEED_HIGH);
         }
       
        else{
-        differentialDrive.arcadeDrive(forwardSpeed * DriveConstants.DRIVE_SPEED, turnSpeed * DriveConstants.TURNING_SPEED_LOW);
+        differentialDrive.arcadeDrive(slewRateLimiter.calculate(forwardSpeed) * DriveConstants.DRIVE_SPEED, turnSpeed * DriveConstants.TURNING_SPEED_LOW);
         
 
 
@@ -197,6 +205,7 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
     return runOnce(() -> upShift());
   }
   public CommandBase ShiftDown(){
+    
     return runOnce(() -> downShift());
   }
   public DifferentialDriveWheelSpeeds getWheelSpeeds(){
@@ -268,7 +277,7 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
     motorBR.setIdleMode(IdleMode.kCoast);
     motorFL.setIdleMode(IdleMode.kCoast);
     motorBL.setIdleMode(IdleMode.kCoast);
-    BrakeMode = true;
+    BrakeMode = false;
   }
   public CommandBase setBrakeCommand() //if reverseSolenoid is called, returns a command to set doublesolenoid reverse at port 1
   {
