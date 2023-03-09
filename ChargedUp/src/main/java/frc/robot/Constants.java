@@ -49,7 +49,7 @@ public final class Constants
    
 
     //driving speeds
-    public static final double TURNING_SPEED_LIMIT = -.55;
+    public static final double TURNING_SPEED_LIMIT = -.3;
     public static final double TURNING_SPEED_LOW = -.7;
     public static final double TURNING_SPEED_HIGH = -.5;
     public static final double DRIVE_SPEED = -1;
@@ -81,6 +81,9 @@ public final class Constants
     public static final double TRACK_WIDTH_METERS = 0.73253;
     //Porportional gain value for driving straight
     public static final double DRIVE_STRAIGHT_P = 0.0007;
+
+    public static final double ACCELERATION_RATE_LIMIT = 0;
+    public static final double DECCELERATION_RATE_LIMIT = .5;
   
     } 
   public final class OperatorConstants
