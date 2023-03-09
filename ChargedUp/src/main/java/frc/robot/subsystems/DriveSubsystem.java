@@ -78,16 +78,16 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
   public DriveSubsystem() {
     
     //back motors follow front motors
-    motorFR.setOpenLoopRampRate(0); // 0.5 seconds from neutral to full output (during open-loop control)
+    motorFR.setOpenLoopRampRate(0); // X seconds from neutral to full output (during open-loop control)
     //falconFR.configClosedloopRamp(0.1); // 0 disables ramping (during closed-loop control)
   
-    motorFL.setOpenLoopRampRate(0); // 0.5 seconds from neutral to full output (during open-loop control)
+    motorFL.setOpenLoopRampRate(0); // X seconds from neutral to full output (during open-loop control)
     //falconFL.configClosedloopRamp(0.1); // 0 disables ramping (during closed-loop control)
   
-    motorBL.setOpenLoopRampRate(0); // 0.5 seconds from neutral to full output (during open-loop control)
+    motorBL.setOpenLoopRampRate(0); // X seconds from neutral to full output (during open-loop control)
     //falconBL.configClosedloopRamp(0.1); // 0 disables ramping (during closed-loop control)
   
-    motorBR.setOpenLoopRampRate(0); // 0.5 seconds from neutral to full output (during open-loop control)
+    motorBR.setOpenLoopRampRate(0); // X seconds from neutral to full output (during open-loop control)
     //falconBR.configClosedloopRamp(0.1); // 0 disables ramping (during closed-loop control)
     
 
