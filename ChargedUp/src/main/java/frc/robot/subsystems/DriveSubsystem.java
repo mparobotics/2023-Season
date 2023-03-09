@@ -60,7 +60,9 @@ public class DriveSubsystem extends SubsystemBase {
   // error for driving straight
   public double error;
 
-
+  //slew rate limiters adjust the ammount an input can change by in one second
+  //for example, a slew rate limite of .5 would only let the joystick value
+  //change by .5 over a second, making slowdowns more gradual
   private final SlewRateLimiter slewRateLimiter = new SlewRateLimiter(1);
   //solenoid to control gear shifting
 private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 2, 6              );
@@ -126,7 +128,8 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
   /** shifts the gearbox into low gear */
   public void downShift(){
     //shift into low gear by retracting both solenoids
-    if (Math.abs(encoderL.getVelocity()) <= 3000 || Math.abs(encoderR.getVelocity()) <= 3000){
+    //only shifts if the magnitude of either motor velocity is less than 3,000
+    if ((Math.abs(encoderL.getVelocity()) <= 3000) || (Math.abs(encoderR.getVelocity()) <= 3000)){
     shiftSolenoid.set(Value.kReverse);
     inHighGear = false;
   }
@@ -145,7 +148,7 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
       differentialDrive.arcadeDrive(slewRateLimiter.calculate(forwardSpeed) * DriveConstants.DRIVE_SPEED, 0);
     }
     else{
-      if (Math.abs(encoderL.getVelocity()) >= DriveConstants.MAX_DRIVE_SPEED || Math.abs(encoderR.getVelocity()) >= DriveConstants.MAX_DRIVE_SPEED)
+      if ((Math.abs(encoderL.getVelocity()) >= DriveConstants.MAX_DRIVE_SPEED) || (Math.abs(encoderR.getVelocity()) >= DriveConstants.MAX_DRIVE_SPEED))
         {
         differentialDrive.arcadeDrive(slewRateLimiter.calculate(forwardSpeed) * DriveConstants.DRIVE_SPEED, turnSpeed * DriveConstants.TURNING_SPEED_LIMIT);
         }
