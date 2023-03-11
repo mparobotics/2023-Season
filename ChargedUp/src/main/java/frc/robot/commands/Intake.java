@@ -14,6 +14,7 @@ public class Intake extends CommandBase {
   public Intake(IntakeSubsystem intakeSubsystem, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_IntakeSubsystem = intakeSubsystem;
+    //m_speed = m_IntakeSubsystem.intakeTestSpeed;
     m_speed = speed;
     addRequirements(m_IntakeSubsystem);
   }
