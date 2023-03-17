@@ -297,31 +297,31 @@ private Command autoIntakeInstant(double speed){
         //can we make the encoderReset() a part of AutoDrive1() or will that break something?
           case TwoPiecesNoBalance:
           //set against grid
-            return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftDown(),runShooting(.5),autoIntakeInstant(IntakeConstants.INTAKE_SPEED),
+            return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftUp(),runShooting(.5),autoIntakeInstant(IntakeConstants.INTAKE_SPEED),
             setArmGround(), encoderReset(),
-            AutoDrive(220, .75), setArmRetracted(), encoderReset(), AutoDrive1(-200, -.75),
-            runShooting(.7), encoderReset(), setArmGround(), AutoDrive(180, .8));
+            AutoDrive(220 * DriveConstants.LOW_TO_HIGH, .5), setArmRetracted(), encoderReset(), AutoDrive1(-200 * DriveConstants.LOW_TO_HIGH, -.5),
+            runShooting(.7), encoderReset(), setArmGround(), AutoDrive(180 * DriveConstants.LOW_TO_HIGH, .5));
 
             case TwoPiecesHighNoBalance:
             //set against grid
-              return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftDown(),runIntaking(.2), runShooting(.5),autoIntakeInstant(IntakeConstants.INTAKE_SPEED),
-              setArmGround(), encoderReset(),
-              AutoDrive(220, .75), setArmRetracted(), encoderReset(), AutoDrive1(-200, -.75),
-              runShooting(.7), encoderReset(), setArmGround(), AutoDrive(180, .8));
+            return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftUp(),runIntaking(.2), runShooting(.5),autoIntakeInstant(IntakeConstants.INTAKE_SPEED),
+            setArmGround(), encoderReset(),
+            AutoDrive(220 * DriveConstants.LOW_TO_HIGH, .5), setArmRetracted(), encoderReset(), AutoDrive1(-200 * DriveConstants.LOW_TO_HIGH, -.5),
+            runShooting(.7), encoderReset(), setArmGround(), AutoDrive(180 * DriveConstants.LOW_TO_HIGH, .5));
 
           case Balance2Cube:
           //set against charging station
-            return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftDown(),runShooting(1), encoderReset(),
-            setArmGround(), autoIntakeInstant(IntakeConstants.INTAKE_SPEED), AutoDrive(200, .6),  
-            autoIntakeInstant(0), setArmRetracted(), encoderReset(), AutoDrive1(-141, -.6),
+            return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftUp(),runShooting(1), encoderReset(),
+            setArmGround(), autoIntakeInstant(IntakeConstants.INTAKE_SPEED), AutoDrive(200 * DriveConstants.LOW_TO_HIGH, .5),  
+            autoIntakeInstant(0), setArmRetracted(), encoderReset(), AutoDrive1(-141 * DriveConstants.LOW_TO_HIGH, -.5),
             autoIntakeInstant(IntakeConstants.SHOOTING_SPEED), (autoDriveBalance()), new NullCommand().withTimeout(1),
             autoIntakeInstant(0));
 
             case Balance1Cube:
             //set against charging station
-              return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftDown(),runIntaking(.3), runShooting(.6), encoderReset(),
-              setArmGround(), autoIntakeInstant(IntakeConstants.INTAKE_SPEED), AutoDrive(230, .6),  
-              autoIntakeInstant(0), setArmRetracted(), encoderReset(), AutoDrive1(-141, -.6),
+              return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftUp(),runIntaking(.3), runShooting(.6), encoderReset(),
+              setArmGround(), autoIntakeInstant(IntakeConstants.INTAKE_SPEED), AutoDrive(230 * DriveConstants.LOW_TO_HIGH, .5),  
+              autoIntakeInstant(0), setArmRetracted(), encoderReset(), AutoDrive1(-141  * DriveConstants.LOW_TO_HIGH, -.5),
               autoIntakeInstant(IntakeConstants.SHOOTING_SPEED), (autoDriveBalance()), new NullCommand().withTimeout(1),
               autoIntakeInstant(0));
       

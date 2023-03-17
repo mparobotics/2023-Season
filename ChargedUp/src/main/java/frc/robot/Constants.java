@@ -34,6 +34,8 @@ public final class Constants
     public static final int MOTOR_FR_ID = 13;
     public static final int MOTOR_BL_ID = 10;
     public static final int MOTOR_BR_ID = 12;
+
+    public static final double LOW_TO_HIGH = 0.3332;
   
     public static final int PIGEON_ID = 17;
 
