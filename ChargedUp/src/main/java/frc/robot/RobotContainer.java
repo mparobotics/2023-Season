@@ -151,7 +151,7 @@ public class RobotContainer {
     m_driveSubsystem.setDefaultCommand(new ArcadeDrive(m_driveSubsystem, 
     () -> flightStickL.getY(), () -> flightStickR.getX()));
 
-    //xbox.axisGreaterThan(Axis.kRightTrigger.value, 0.5).onTrue(m_driveSubsystem.setBrakeCommand());
+    box.axisGreaterThan(2, -0.5).onTrue(new Intake(m_intakeSubsystem, IntakeConstants.SHOOTING_SPEED));
     //xbox.axisGreaterThan(Axis.kRightTrigger.value, 0.5).onFalse(m_driveSubsystem.setCoastCommand());
     flightStickR.button(2).onTrue(m_driveSubsystem.setBrakeCommand());
     flightStickR.button(2).onFalse(m_driveSubsystem.setCoastCommand());
