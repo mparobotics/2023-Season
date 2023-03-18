@@ -64,7 +64,7 @@ public class DriveSubsystem extends SubsystemBase {
   //for example, a slew rate limite of .5 would only let the joystick value
   //change by .5 over a second, making slowdowns more gradual
   //this is useful in preventing tippy robot syndrome
-  private final SlewRateLimiter slewRateLimiter = new SlewRateLimiter(1);
+  private final SlewRateLimiter slewRateLimiter = new SlewRateLimiter(1.5);
   //solenoid to control gear shifting
 private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 2, 6              );
   public Boolean inHighGear = false;
@@ -220,9 +220,9 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
   }
   public boolean AutoBalance(){
     double roll_error = Math.toDegrees(pigeon.getRoll());//the angle of the robot
-    double balance_kp = .001;//Variable muliplied by roll_error
+    double balance_kp = .002;//Variable muliplied by roll_error
     double position_adjust = 0.0;
-    double min_command = 0;//adds a minimum input to the motors to overcome friction if the position adjust isn't enough
+    double min_command = 0.0;//adds a minimum input to the motors to overcome friction if the position adjust isn't enough
     if (roll_error > 6.0)
     {
       position_adjust = balance_kp * roll_error + min_command;//equation that figures out how fast it should go to adjust

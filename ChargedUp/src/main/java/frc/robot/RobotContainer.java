@@ -47,6 +47,7 @@ import frc.robot.commands.AutoTurn;
 import frc.robot.commands.Intake;
 import frc.robot.commands.NullCommand;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDsubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -66,7 +67,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   //Creating instance of IntakeSubsystem called m_intakeSubsystem
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
-
+  private final LEDsubsystem m_ledSubsystem = new LEDsubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
@@ -228,8 +229,21 @@ public class RobotContainer {
     return m_driveSubsystem.setCoastCommand();
   }
 
+  public Command SetBrake(){
+    return m_driveSubsystem.setBrakeCommand();
+  }
+
+
   private Command autoDriveBalance(){
     return new AutoDriveBalance(m_driveSubsystem);
+  }
+
+  public Command setLedCube(){
+    return m_ledSubsystem.Cube();
+  }
+
+  private Command setLedCone(){
+    return m_ledSubsystem.Cone();
   }
 
   private Command setArmGround(){
@@ -297,31 +311,31 @@ private Command autoIntakeInstant(double speed){
         //can we make the encoderReset() a part of AutoDrive1() or will that break something?
           case TwoPiecesNoBalance:
           //set against grid
-            return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftUp(),runShooting(.5),autoIntakeInstant(IntakeConstants.INTAKE_SPEED),
+            return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftUp(), m_driveSubsystem.setBrakeCommand(), runShooting(.5),autoIntakeInstant(IntakeConstants.INTAKE_SPEED),
             setArmGround(), encoderReset(),
-            AutoDrive(220 * DriveConstants.LOW_TO_HIGH, .5), setArmRetracted(), encoderReset(), AutoDrive1(-200 * DriveConstants.LOW_TO_HIGH, -.5),
+            AutoDrive(220 * DriveConstants.LOW_TO_HIGH, .4), setArmRetracted(), encoderReset(), AutoDrive1(-200 * DriveConstants.LOW_TO_HIGH, -.4),
             runShooting(.7), encoderReset(), setArmGround(), AutoDrive(180 * DriveConstants.LOW_TO_HIGH, .5));
 
             case TwoPiecesHighNoBalance:
             //set against grid
-            return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftUp(),runIntaking(.2), runShooting(.5),autoIntakeInstant(IntakeConstants.INTAKE_SPEED),
+            return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftUp(), m_driveSubsystem.setBrakeCommand(), runIntaking(.2), runShooting(.5),autoIntakeInstant(IntakeConstants.INTAKE_SPEED),
             setArmGround(), encoderReset(),
-            AutoDrive(220 * DriveConstants.LOW_TO_HIGH, .5), setArmRetracted(), encoderReset(), AutoDrive1(-200 * DriveConstants.LOW_TO_HIGH, -.5),
-            runShooting(.7), encoderReset(), setArmGround(), AutoDrive(180 * DriveConstants.LOW_TO_HIGH, .5));
+            AutoDrive(220 * DriveConstants.LOW_TO_HIGH, .4), setArmRetracted(), encoderReset(), AutoDrive1(-200 * DriveConstants.LOW_TO_HIGH, -.4),
+            runShooting(.7), encoderReset(), setArmGround(), AutoDrive(180 * DriveConstants.LOW_TO_HIGH, .4));
 
           case Balance2Cube:
           //set against charging station
-            return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftUp(),runShooting(1), encoderReset(),
-            setArmGround(), autoIntakeInstant(IntakeConstants.INTAKE_SPEED), AutoDrive(200 * DriveConstants.LOW_TO_HIGH, .5),  
-            autoIntakeInstant(0), setArmRetracted(), encoderReset(), AutoDrive1(-141 * DriveConstants.LOW_TO_HIGH, -.5),
+            return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftUp(),m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.setBrakeCommand(), runShooting(1), encoderReset(),
+            setArmGround(), autoIntakeInstant(IntakeConstants.INTAKE_SPEED), AutoDrive(200 * DriveConstants.LOW_TO_HIGH, .4),  
+            autoIntakeInstant(0), setArmRetracted(), encoderReset(), m_driveSubsystem.setBrakeCommand(), AutoDrive1(-145 * DriveConstants.LOW_TO_HIGH, -.4),
             autoIntakeInstant(IntakeConstants.SHOOTING_SPEED), (autoDriveBalance()), new NullCommand().withTimeout(1),
             autoIntakeInstant(0));
 
             case Balance1Cube:
             //set against charging station
-              return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftUp(),runIntaking(.3), runShooting(.6), encoderReset(),
-              setArmGround(), autoIntakeInstant(IntakeConstants.INTAKE_SPEED), AutoDrive(230 * DriveConstants.LOW_TO_HIGH, .5),  
-              autoIntakeInstant(0), setArmRetracted(), encoderReset(), AutoDrive1(-141  * DriveConstants.LOW_TO_HIGH, -.5),
+              return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftUp(), m_driveSubsystem.setBrakeCommand(), runIntaking(.3), runShooting(.6), encoderReset(),
+              setArmGround(), autoIntakeInstant(IntakeConstants.INTAKE_SPEED), AutoDrive(230 * DriveConstants.LOW_TO_HIGH, .4),  
+              autoIntakeInstant(0), setArmRetracted(), encoderReset(), m_driveSubsystem.setBrakeCommand(), AutoDrive1(-145  * DriveConstants.LOW_TO_HIGH, -.4),
               autoIntakeInstant(IntakeConstants.SHOOTING_SPEED), (autoDriveBalance()), new NullCommand().withTimeout(1),
               autoIntakeInstant(0));
       

@@ -15,7 +15,7 @@ public class AutoDriveBangBang extends CommandBase {
   private double startEncoderR;
   private double m_speed;
   private double distanceFromSetpoint;
-  private double AutoDriveKp = .04;
+  private double AutoDriveKp = .03;
   /** Creates a new AutoDriveBangBang. */
   public AutoDriveBangBang(DriveSubsystem driveSub, double setpoint, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -60,6 +60,7 @@ public class AutoDriveBangBang extends CommandBase {
       //we still have to give our value a magnitude again to travel in the correct direction, thus the inversion here.
       if (m_setpoint > 0) {m_speed = AutoDriveKp * distanceFromSetpoint + .1;}
       else {m_speed = -AutoDriveKp * distanceFromSetpoint - .1;}
+      
     }
 
     m_driveSubsystem.driveStraight(m_speed);    

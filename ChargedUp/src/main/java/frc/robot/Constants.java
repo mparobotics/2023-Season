@@ -108,8 +108,8 @@ public final class Constants
      
   }
   public final static class LEDConstants{
-    public static final int LED_ID = 0;
-    public static final int LED_COUNT = 60;
+    public static final int CANDLE_ID = 18;
+    public static final int LED_COUNT = 8;
 
     public static final int[] PURPLE_RGB = {188,0,255};
     public static final int[] YELLOW_RGB = {255,255,0};
