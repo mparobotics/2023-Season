@@ -24,7 +24,7 @@
 const int buttonPin = 2;     // the number of the pushbutton pin
 int buttonState = 0;         // variable for reading the pushbutton status
 int state = 0;
-//order = int[NUM_LEDS];
+int order[NUM_LEDS];
 float frames = 0;
 const float ratio = 255/60;
 CRGB leds[NUM_LEDS];
@@ -74,10 +74,26 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(buttonPin), button, CHANGE);
   for (int i = 0; i < NUM_LEDS; i++) {
     
-    leds[i] = CRGB(0, 0, 0);
-    //order[random(0,NUM_LEDS)] = i;
+    order[i] = i;  
   
   }
+  for (int i = 0; i < NUM_LEDS; i++) {
+    
+    leds[i] = CRGB(0, 0, 0);
+
+    
+
+  }
+  for(int i = 0; i < 1000; i++){    
+      int idx = random(NUM_LEDS);
+      
+      int idx2 = random(NUM_LEDS);
+      int holder = order[idx];
+      order[idx] = order[idx2];
+      order[idx2] = holder;  
+  }
+  
+   
   FastLED.show();
 }
 
@@ -156,8 +172,22 @@ void button() {
   last_interrupt_time = interrupt_time;
 }
 
+int t = 0;
 
 void loop() {
+  int f = int(frames) % 1000;
+  if(f  < 250){  
+    t = -1;
+  }
+  else if(f < 500){
+    t = (f-250);
+  }
+  else if(f < 750){
+    t = NUM_LEDS;
+  }
+  else{
+    t = 1000 - f;
+  }
   for (int i = 0; i < NUM_LEDS; i++) {
     pos = getLightPosition(i); 
     CRGB color = CRGB(0,0,0);
@@ -165,7 +195,7 @@ void loop() {
     
 
     
-
+    if(state == 0){
     int time = 400;
     float f = 0;
     float fi = float(int(frames) % time);
@@ -212,12 +242,23 @@ void loop() {
         color.b = 0; 
       }
     }
-
+    }
+    else if(state == 1){
     
+      if(order[i] <= t){
+        color.b = 100 * sin(float(pos.x + pos.y)/5 + (float(frames)/5)) + 155;
+      }
     
-
-    color.b = 100 * sin(float(pos.x + pos.y)/5 + (float(frames)/5)) + 155;
-    
+    }
+    else{
+      if(abs(order[i] - (int(frames) % NUM_LEDS)) < 10){
+        int b = 100 * sin(float(pos.x + pos.y)/5 + (float(frames)/5)) + 155;
+        color = CRGB(b,b,b);
+      }
+      else{
+        color = CRGB(150,150,0);
+      }      
+    }
     
     c2d centered;
     centered.x = pos.x - 34;
@@ -231,5 +272,6 @@ void loop() {
   FastLED.show();
 
   frames++;
+  frames = float(int(frames) % 10000);
   
 }
