@@ -16,6 +16,7 @@ public class AutoDriveBangBang extends CommandBase {
   private double m_speed;
   private double distanceFromSetpoint;
   private double AutoDriveKp = .03;
+  private double currentThreshold = 50;
   /** Creates a new AutoDriveBangBang. */
   public AutoDriveBangBang(DriveSubsystem driveSub, double setpoint, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -75,6 +76,6 @@ public class AutoDriveBangBang extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return distanceFromSetpoint < 2;
+    return distanceFromSetpoint < 2 || m_driveSubsystem.detectHighGear(currentThreshold);
   }
 }

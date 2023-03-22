@@ -65,6 +65,8 @@ public class DriveSubsystem extends SubsystemBase {
   //change by .5 over a second, making slowdowns more gradual
   //this is useful in preventing tippy robot syndrome
   private final SlewRateLimiter slewRateLimiter = new SlewRateLimiter(1.5);
+
+  private double highestCurrent = 0;
   //solenoid to control gear shifting
 private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 2, 6              );
   public Boolean inHighGear = false;
@@ -246,6 +248,11 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
     
   }
 
+  public boolean detectHighGear(double threshold){
+
+    //If the motor's current exceeds the current threshold, then assume we are in high gear, otherwise assume low gear
+    return motorFR.getOutputCurrent() > threshold;
+  }
   public boolean AutoTurn(double setpoint){
     double yaw_error = pigeon.getYaw() - setpoint;
     double turning_kp = .01;
@@ -341,6 +348,13 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
     SmartDashboard.putNumber("LeftEncoder", encoderL.getPosition());
     SmartDashboard.putNumber("RightEncoder", encoderR.getPosition());
     SmartDashboard.putNumber("Pigeon Roll", pigeon.getRoll());
+
+
+    highestCurrent = Math.max(highestCurrent, motorFR.getOutputCurrent());
+    SmartDashboard.putNumber("Motor Current", motorFR.getOutputCurrent());
+    SmartDashboard.putNumber("Max Motor Current", highestCurrent);
+   
+
 
    
     //* Automatic gear shifter - automatically shifts into high gear when the robot is driving fast enough and shifts into low gear when the robot slows down */
