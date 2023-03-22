@@ -67,8 +67,9 @@ public class DriveSubsystem extends SubsystemBase {
   private final SlewRateLimiter slewRateLimiter = new SlewRateLimiter(1.5);
 
   private double highestCurrent = 0;
+  
   //solenoid to control gear shifting
-private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 2, 6              );
+  private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 2, 6              );
   public Boolean inHighGear = false;
   
   public Boolean BrakeMode = true;
