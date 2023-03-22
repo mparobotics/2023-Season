@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class AutoDriveBangBang extends CommandBase {
+public class AutoDriveBangBangLow extends CommandBase {
   private DriveSubsystem m_driveSubsystem;
   private double m_setpoint;
   private double startEncoderL;
@@ -17,7 +17,7 @@ public class AutoDriveBangBang extends CommandBase {
   private double distanceFromSetpoint;
   private double AutoDriveKp = .032;
   /** Creates a new AutoDriveBangBang. */
-  public AutoDriveBangBang(DriveSubsystem driveSub, double setpoint, double speed) {
+  public AutoDriveBangBangLow(DriveSubsystem driveSub, double setpoint, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_driveSubsystem = driveSub;
     m_setpoint = setpoint;
@@ -29,6 +29,7 @@ public class AutoDriveBangBang extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_driveSubsystem.downShift();
     m_driveSubsystem.encoderReset();
     startEncoderL = m_driveSubsystem.getEncoderPositionL();
     startEncoderR = m_driveSubsystem.getEncoderPositionR();

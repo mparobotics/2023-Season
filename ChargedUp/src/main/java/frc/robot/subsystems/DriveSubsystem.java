@@ -169,13 +169,13 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
   }
 
   private double driveTrainP() {
-    error = encoderL.getVelocity() - encoderR.getVelocity();
+    error = encoderL.getPosition() - encoderR.getPosition();
     //integral += error*.02;
-    return DriveConstants.DRIVE_STRAIGHT_P * error;
+    return .2 * error;
   }
 
   public void driveStraight(double forwardSpeed) {
-    differentialDrive.arcadeDrive(forwardSpeed, 0);
+    differentialDrive.arcadeDrive(forwardSpeed, driveTrainP());
   }
   
   public void encoderReset() {
@@ -220,7 +220,7 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
   }
   public boolean AutoBalance(){
     double roll_error = Math.toDegrees(pigeon.getRoll());//the angle of the robot
-    double balance_kp = .002;//Variable muliplied by roll_error
+    double balance_kp = .0015;//Variable muliplied by roll_error
     double position_adjust = 0.0;
     double min_command = 0.0;//adds a minimum input to the motors to overcome friction if the position adjust isn't enough
     if (roll_error > 6.0)
