@@ -227,6 +227,10 @@ public class RobotContainer {
     return new AutoDriveBangBang(m_driveSubsystem, setpoint, speed);
   }
 
+  private Command AutoDriveStraight(double setpoint, double speed){
+    return new AutoDriveBangBangStraight(m_driveSubsystem, setpoint, speed);
+  }
+
   private Command AutoDriveLow(double setpoint, double speed){
     return new AutoDriveBangBangLow(m_driveSubsystem, setpoint, speed);
   }
@@ -339,16 +343,16 @@ private Command autoIntakeInstant(double speed){
           //set against grid
             return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftUp(), m_driveSubsystem.setBrakeCommand(), runShooting(.5),autoIntakeInstant(IntakeConstants.INTAKE_SPEED),
             setArmGround(), encoderReset(),
-            AutoDrive(220 * DriveConstants.LOW_TO_HIGH, .4), setArmRetracted(), encoderReset(), AutoDrive(-200 * DriveConstants.LOW_TO_HIGH, -.4),
-            runShooting(.7), encoderReset(), setArmGround(), AutoDrive(180 * DriveConstants.LOW_TO_HIGH, .5));
+            AutoDriveStraight(220 * DriveConstants.LOW_TO_HIGH, .4), setArmRetracted(), encoderReset(), AutoDriveStraight(-200 * DriveConstants.LOW_TO_HIGH, -.4),
+            runShooting(.7), encoderReset(), setArmGround(), AutoDriveStraight(180 * DriveConstants.LOW_TO_HIGH, .5));
 
             case TwoPiecesHighNoBalance:
             //set against grid
             return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftUp(), m_driveSubsystem.setBrakeCommand(),
             runIntaking(.5), runShooting(.5), autoIntakeInstant(IntakeConstants.INTAKE_SPEED),
             setArmGround(), nullCommand().withTimeout(.3), encoderReset(),
-            AutoDrive(220 * DriveConstants.LOW_TO_HIGH, .5), setArmRetracted(), encoderReset(), AutoDrive(-200 * DriveConstants.LOW_TO_HIGH, -.4),
-            runShooting(.7), encoderReset(), setArmGround(), AutoDrive(180 * DriveConstants.LOW_TO_HIGH, .4));
+            AutoDriveStraight(220 * DriveConstants.LOW_TO_HIGH, .5), setArmRetracted(), encoderReset(), AutoDriveStraight(-200 * DriveConstants.LOW_TO_HIGH, -.4),
+            runShooting(.7), encoderReset(), setArmGround(), AutoDriveStraight(180 * DriveConstants.LOW_TO_HIGH, .4));
 
           case Balance2Cube:
           //set against charging station
@@ -362,7 +366,7 @@ private Command autoIntakeInstant(double speed){
             //set against charging station
               return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftUp(), m_driveSubsystem.setBrakeCommand(),
               runIntaking(.7), runShooting(.6), autoIntakeInstant(0), encoderReset(),
-              AutoDrive(200 * DriveConstants.LOW_TO_HIGH, .5), downShift(), new NullCommand().withTimeout(2),  
+              AutoDriveStraight(200 * DriveConstants.LOW_TO_HIGH, .5), downShift(), new NullCommand().withTimeout(2),  
               encoderReset(), m_driveSubsystem.setBrakeCommand(), AutoDriveLow(-105, -.5),
               (autoDriveBalance()), new NullCommand().withTimeout(1),
               autoIntakeInstant(0));

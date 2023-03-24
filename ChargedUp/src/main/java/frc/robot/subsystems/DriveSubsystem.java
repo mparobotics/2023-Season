@@ -64,7 +64,7 @@ public class DriveSubsystem extends SubsystemBase {
   //for example, a slew rate limite of .5 would only let the joystick value
   //change by .5 over a second, making slowdowns more gradual
   //this is useful in preventing tippy robot syndrome
-  private final SlewRateLimiter slewRateLimiter = new SlewRateLimiter(1.5);
+  private final SlewRateLimiter slewRateLimiter = new SlewRateLimiter(1.7);
   //solenoid to control gear shifting
 private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 2, 6              );
   public Boolean inHighGear = false;
@@ -171,7 +171,7 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
   private double driveTrainP() {
     error = encoderL.getPosition() - encoderR.getPosition();
     //integral += error*.02;
-    return .2 * error;
+    return .1 * error;
   }
 
   public void driveStraight(double forwardSpeed) {
@@ -220,7 +220,7 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
   }
   public boolean AutoBalance(){
     double roll_error = Math.toDegrees(pigeon.getRoll());//the angle of the robot
-    double balance_kp = .0015;//Variable muliplied by roll_error
+    double balance_kp = .001;//Variable muliplied by roll_error
     double position_adjust = 0.0;
     double min_command = 0.0;//adds a minimum input to the motors to overcome friction if the position adjust isn't enough
     if (roll_error > 6.0)
@@ -228,7 +228,7 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
       position_adjust = balance_kp * roll_error + min_command;//equation that figures out how fast it should go to adjust
       //position_adjust = Math.max(Math.min(position_adjust,.15), -.15);  this gets the same thing done in one line
       if (position_adjust > .3){position_adjust = .3;}
-      if (position_adjust < -.5){position_adjust = -.5;}
+      if (position_adjust < -.3){position_adjust = -.3;}
       differentialDrive.arcadeDrive(position_adjust, 0);//makes the robot move
       return false;
     }
