@@ -43,10 +43,12 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutoDriveBalance;
 import frc.robot.commands.AutoDriveBangBang;
+import frc.robot.commands.AutoDriveBangBangLow;
 import frc.robot.commands.AutoDriveBangBangStraight;
 import frc.robot.commands.AutoIntake;
 import frc.robot.commands.AutoIntakeInstant;
 import frc.robot.commands.AutoTurn;
+import frc.robot.commands.DownShift;
 import frc.robot.commands.Intake;
 import frc.robot.commands.NullCommand;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -145,8 +147,8 @@ public class RobotContainer {
     flightStickR.button(1).onTrue(m_driveSubsystem.ShiftUp());
     //xbox.button(Button.kLeftStick.value).whileTrue(new AutoTurn(m_driveSubsystem, 0));
     //xbox.button(Button.kRightStick.value).whileTrue(new AutoTurn(m_driveSubsystem, -180));
-    flightStickL.button(2).whileTrue(m_driveSubsystem.setBrakeCommand()); // deprecated due to accidental presses
-    flightStickR.button(2).whileTrue(m_driveSubsystem.setCoastCommand()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
+    flightStickR.button(2).whileTrue(m_driveSubsystem.setBrakeCommand()); // deprecated due to accidental presses
+    flightStickL.button(2).whileTrue(m_driveSubsystem.setCoastCommand()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
     //xbox.button(Button.kX.value).whileTrue(m_doublesolenoidSubsystem.shoot());
    // xbox.button(Button.kY.value).whileTrue(m_doublesolenoidSubsystem.retract());
     
@@ -225,8 +227,8 @@ public class RobotContainer {
     return new AutoDriveBangBang(m_driveSubsystem, setpoint, speed);
   }
 
-  private Command AutoDriveStraight(double setpoint, double speed){
-    return new AutoDriveBangBangStraight(m_driveSubsystem, setpoint, speed);
+  private Command AutoDriveLow(double setpoint, double speed){
+    return new AutoDriveBangBangLow(m_driveSubsystem, setpoint, speed);
   }
 
   private ParallelCommandGroup AutoDriveWithIntakeDrop(double setpoint, double speed){
@@ -236,6 +238,11 @@ public class RobotContainer {
   private Command AutoDrive1(double setpoint, double speed){
     return new AutoDriveBangBang(m_driveSubsystem, setpoint, speed);
   }
+
+  private Command downShift(){
+    return new DownShift(m_driveSubsystem);
+  }
+
   public Command SetCoast(){
     return m_driveSubsystem.setCoastCommand();
   }
@@ -347,7 +354,7 @@ private Command autoIntakeInstant(double speed){
           //set against charging station
             return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftUp(),m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.setBrakeCommand(), runShooting(1), encoderReset(),
             autoIntakeInstant(IntakeConstants.INTAKE_SPEED), AutoDriveWithIntakeDrop(200 * DriveConstants.LOW_TO_HIGH, .5),  
-            autoIntakeInstant(0), setArmRetracted(), encoderReset(), m_driveSubsystem.setBrakeCommand(), AutoDrive1(-140 * DriveConstants.LOW_TO_HIGH, -.5),
+            autoIntakeInstant(0), setArmRetracted(), encoderReset(), m_driveSubsystem.setBrakeCommand(), downShift().withTimeout(2), AutoDriveLow(-140, -.5),
             autoIntakeInstant(IntakeConstants.SHOOTING_SPEED), (autoDriveBalance()), new NullCommand().withTimeout(1),
             autoIntakeInstant(0));
 
@@ -355,9 +362,9 @@ private Command autoIntakeInstant(double speed){
             //set against charging station
               return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftUp(), m_driveSubsystem.setBrakeCommand(),
               runIntaking(.7), runShooting(.6), autoIntakeInstant(0), encoderReset(),
-              AutoDrive(200 * DriveConstants.LOW_TO_HIGH, .5),  
-              encoderReset(), m_driveSubsystem.setBrakeCommand(), AutoDrive1(-105  * DriveConstants.LOW_TO_HIGH, -.5),
-              autoIntakeInstant(IntakeConstants.SHOOTING_SPEED), (autoDriveBalance()), new NullCommand().withTimeout(1),
+              AutoDrive(200 * DriveConstants.LOW_TO_HIGH, .5), downShift(), new NullCommand().withTimeout(2),  
+              encoderReset(), m_driveSubsystem.setBrakeCommand(), AutoDriveLow(-105, -.5),
+              (autoDriveBalance()), new NullCommand().withTimeout(1),
               autoIntakeInstant(0));
       
         case DoNothing:
