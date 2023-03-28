@@ -147,8 +147,8 @@ public class RobotContainer {
     flightStickR.button(1).onTrue(m_driveSubsystem.ShiftUp());
     //xbox.button(Button.kLeftStick.value).whileTrue(new AutoTurn(m_driveSubsystem, 0));
     //xbox.button(Button.kRightStick.value).whileTrue(new AutoTurn(m_driveSubsystem, -180));
-    flightStickR.button(2).whileTrue(m_driveSubsystem.setBrakeCommand()); // deprecated due to accidental presses
-    flightStickL.button(2).whileTrue(m_driveSubsystem.setCoastCommand()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
+    flightStickL.button(2).whileTrue(m_driveSubsystem.setBrakeCommand()); // deprecated due to accidental presses
+    flightStickR.button(2).whileTrue(m_driveSubsystem.setCoastCommand()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
     //xbox.button(Button.kX.value).whileTrue(m_doublesolenoidSubsystem.shoot());
    // xbox.button(Button.kY.value).whileTrue(m_doublesolenoidSubsystem.retract());
     
