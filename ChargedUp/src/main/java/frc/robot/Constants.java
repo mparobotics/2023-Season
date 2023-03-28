@@ -22,7 +22,7 @@ public final class Constants
     public static final int INTAKE_MOTOR_R_ID = 14;
     public static final int INTAKE_MOTOR_L_ID = 15;
     //intake speeds
-    public static final double INTAKE_SPEED = .4; //.35
+    public static final double INTAKE_SPEED = .3; //.35
     public static final double OUTTAKE_SPEED = -.3;
     public static final double SHOOTING_SPEED = -1;
 
@@ -34,6 +34,8 @@ public final class Constants
     public static final int MOTOR_FR_ID = 13;
     public static final int MOTOR_BL_ID = 10;
     public static final int MOTOR_BR_ID = 12;
+
+    public static final double LOW_TO_HIGH = 0.3332;
   
     public static final int PIGEON_ID = 17;
 
@@ -106,8 +108,8 @@ public final class Constants
      
   }
   public final static class LEDConstants{
-    public static final int LED_ID = 18;
-    public static final int LED_COUNT = 60;
+    public static final int CANDLE_ID = 18;
+    public static final int LED_COUNT = 8;
 
     public static final int[] PURPLE_RGB = {188,0,255};
     public static final int[] YELLOW_RGB = {255,255,0};

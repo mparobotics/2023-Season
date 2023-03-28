@@ -28,12 +28,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.DoubleSolenoidSubsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
@@ -41,12 +43,16 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutoDriveBalance;
 import frc.robot.commands.AutoDriveBangBang;
+import frc.robot.commands.AutoDriveBangBangLow;
+import frc.robot.commands.AutoDriveBangBangStraight;
 import frc.robot.commands.AutoIntake;
 import frc.robot.commands.AutoIntakeInstant;
 import frc.robot.commands.AutoTurn;
+import frc.robot.commands.DownShift;
 import frc.robot.commands.Intake;
 import frc.robot.commands.NullCommand;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDsubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -66,7 +72,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   //Creating instance of IntakeSubsystem called m_intakeSubsystem
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
-
+  private final LEDsubsystem m_ledSubsystem = new LEDsubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
@@ -97,6 +103,8 @@ public class RobotContainer {
   private final String TwoPiecesNoBalance = "3";
   private final String DoNothing = "4";
   private final String JustShoot = "5";
+  private final String TwoPiecesHighNoBalance = "6";
+  private final String Balance1Cube= "7";
   
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -105,7 +113,9 @@ public class RobotContainer {
     
     
     m_chooser.addOption("Score 2 Pieces", TwoPiecesNoBalance);
+    m_chooser.addOption("Score 1 High, and another, no balance", TwoPiecesHighNoBalance);
     m_chooser.addOption("Score 2 Cubes & Balance", Balance2Cube);
+    m_chooser.addOption("Score 1 Cube High & Balance", Balance1Cube);
     m_chooser.addOption("Do Nothing", DoNothing);
     m_chooser.setDefaultOption("Just Shoot", JustShoot);
     
@@ -137,8 +147,8 @@ public class RobotContainer {
     flightStickR.button(1).onTrue(m_driveSubsystem.ShiftUp());
     //xbox.button(Button.kLeftStick.value).whileTrue(new AutoTurn(m_driveSubsystem, 0));
     //xbox.button(Button.kRightStick.value).whileTrue(new AutoTurn(m_driveSubsystem, -180));
-    //xbox.button(Button.kA.value).whileTrue(m_driveSubsystem.setBrakeCommand()); // deprecated due to accidental presses
-    //xbox.button(Button.kB.value).whileTrue(m_driveSubsystem.setCoastCommand()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
+    flightStickL.button(2).whileTrue(m_driveSubsystem.setBrakeCommand()); // deprecated due to accidental presses
+    flightStickR.button(2).whileTrue(m_driveSubsystem.setCoastCommand()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
     //xbox.button(Button.kX.value).whileTrue(m_doublesolenoidSubsystem.shoot());
    // xbox.button(Button.kY.value).whileTrue(m_doublesolenoidSubsystem.retract());
     
@@ -146,10 +156,10 @@ public class RobotContainer {
     m_driveSubsystem.setDefaultCommand(new ArcadeDrive(m_driveSubsystem, 
     () -> flightStickL.getY(), () -> flightStickR.getX()));
 
-    //xbox.axisGreaterThan(Axis.kRightTrigger.value, 0.5).onTrue(m_driveSubsystem.setBrakeCommand());
+    box.axisGreaterThan(1, .5).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.SHOOTING_SPEED));
     //xbox.axisGreaterThan(Axis.kRightTrigger.value, 0.5).onFalse(m_driveSubsystem.setCoastCommand());
-    flightStickR.button(2).onTrue(m_driveSubsystem.setBrakeCommand());
-    flightStickR.button(2).onFalse(m_driveSubsystem.setCoastCommand());
+    //flightStickR.button(2).onTrue(m_driveSubsystem.setBrakeCommand());
+    //flightStickR.button(2).onFalse(m_driveSubsystem.setCoastCommand());
     box.button(3).whileTrue(m_doublesolenoidSubsystem.retract()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
     box.button(10).whileTrue(new Intake(m_intakeSubsystem, IntakeConstants.SHOOTING_SPEED));
     box.button(2).whileTrue(m_doublesolenoidSubsystem.chuteintake());
@@ -217,19 +227,57 @@ public class RobotContainer {
     return new AutoDriveBangBang(m_driveSubsystem, setpoint, speed);
   }
 
+  private Command AutoDriveStraight(double setpoint, double speed){
+    return new AutoDriveBangBangStraight(m_driveSubsystem, setpoint, speed);
+  }
+
+  private Command AutoDriveLow(double setpoint, double speed){
+    return new AutoDriveBangBangLow(m_driveSubsystem, setpoint, speed);
+  }
+
+  private ParallelCommandGroup AutoDriveWithIntakeDrop(double setpoint, double speed){
+    return new ParallelCommandGroup(AutoDrive(setpoint, speed), setArmGroundWithDelay()) ;
+  }
+
   private Command AutoDrive1(double setpoint, double speed){
     return new AutoDriveBangBang(m_driveSubsystem, setpoint, speed);
   }
+
+  private Command downShift(){
+    return new DownShift(m_driveSubsystem);
+  }
+
   public Command SetCoast(){
     return m_driveSubsystem.setCoastCommand();
   }
+
+  public Command SetBrake(){
+    return m_driveSubsystem.setBrakeCommand();
+  }
+
 
   private Command autoDriveBalance(){
     return new AutoDriveBalance(m_driveSubsystem);
   }
 
+  public Command setLedCube(){
+    return m_ledSubsystem.Cube();
+  }
+
+  private Command setLedCone(){
+    return m_ledSubsystem.Cone();
+  }
+
   private Command setArmGround(){
     return m_doublesolenoidSubsystem.groundintake();
+  }
+
+  private Command nullCommand(){
+    return new NullCommand();
+  }
+
+  private SequentialCommandGroup setArmGroundWithDelay(){
+    return new SequentialCommandGroup(nullCommand().withTimeout(3.5), setArmGround());
   }
 
   private Command encoderReset(){
@@ -293,18 +341,35 @@ private Command autoIntakeInstant(double speed){
         //can we make the encoderReset() a part of AutoDrive1() or will that break something?
           case TwoPiecesNoBalance:
           //set against grid
-            return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftDown(),runShooting(.5),autoIntakeInstant(IntakeConstants.INTAKE_SPEED),
+            return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftUp(), m_driveSubsystem.setBrakeCommand(), runShooting(.5),autoIntakeInstant(IntakeConstants.INTAKE_SPEED),
             setArmGround(), encoderReset(),
-            AutoDrive(220, .75), setArmRetracted(), encoderReset(), AutoDrive1(-200, -.75),
-            runShooting(.7), encoderReset(), setArmGround(), AutoDrive(180, .8));
+            AutoDriveStraight(220 * DriveConstants.LOW_TO_HIGH, .4), setArmRetracted(), encoderReset(), AutoDriveStraight(-200 * DriveConstants.LOW_TO_HIGH, -.4),
+            runShooting(.7), encoderReset(), setArmGround(), AutoDriveStraight(180 * DriveConstants.LOW_TO_HIGH, .5));
+
+            case TwoPiecesHighNoBalance:
+            //set against grid
+            return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftUp(), m_driveSubsystem.setBrakeCommand(),
+            runIntaking(.5), runShooting(.5), autoIntakeInstant(IntakeConstants.INTAKE_SPEED),
+            setArmGround(), nullCommand().withTimeout(.3), encoderReset(),
+            AutoDriveStraight(220 * DriveConstants.LOW_TO_HIGH, .5), setArmRetracted(), encoderReset(), AutoDriveStraight(-200 * DriveConstants.LOW_TO_HIGH, -.4),
+            runShooting(.7), encoderReset(), setArmGround(), AutoDriveStraight(180 * DriveConstants.LOW_TO_HIGH, .4));
 
           case Balance2Cube:
           //set against charging station
-            return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftDown(),runShooting(1), encoderReset(),
-            setArmGround(), autoIntakeInstant(IntakeConstants.INTAKE_SPEED), AutoDrive(200, .6),  
-            autoIntakeInstant(0), setArmRetracted(), encoderReset(), AutoDrive1(-141, -.6),
+            return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftUp(),m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.setBrakeCommand(), runShooting(1), encoderReset(),
+            autoIntakeInstant(IntakeConstants.INTAKE_SPEED), AutoDriveWithIntakeDrop(200 * DriveConstants.LOW_TO_HIGH, .5),  
+            autoIntakeInstant(0), setArmRetracted(), encoderReset(), m_driveSubsystem.setBrakeCommand(), downShift().withTimeout(2), AutoDriveLow(-140, -.5),
             autoIntakeInstant(IntakeConstants.SHOOTING_SPEED), (autoDriveBalance()), new NullCommand().withTimeout(1),
             autoIntakeInstant(0));
+
+            case Balance1Cube:
+            //set against charging station
+              return new SequentialCommandGroup(m_driveSubsystem.setBrakeCommand(), m_driveSubsystem.ShiftUp(), m_driveSubsystem.setBrakeCommand(),
+              runIntaking(.7), runShooting(.6), autoIntakeInstant(0), encoderReset(),
+              AutoDriveStraight(200 * DriveConstants.LOW_TO_HIGH, .5), downShift(), new NullCommand().withTimeout(2),  
+              encoderReset(), m_driveSubsystem.setBrakeCommand(), AutoDriveLow(-105, -.5),
+              (autoDriveBalance()), new NullCommand().withTimeout(1),
+              autoIntakeInstant(0));
       
         case DoNothing:
           return null;

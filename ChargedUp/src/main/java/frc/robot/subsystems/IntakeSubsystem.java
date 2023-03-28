@@ -24,10 +24,14 @@ public class IntakeSubsystem extends SubsystemBase
   private final CANSparkMax intakeMotorL = new CANSparkMax(IntakeConstants.INTAKE_MOTOR_L_ID, MotorType.kBrushless);
   public RelativeEncoder intakeEncoderL = intakeMotorL.getEncoder();
   public RelativeEncoder intakeEncoderR = intakeMotorR.getEncoder();
+  public double intakeTestSpeed = .5;
+  
 
   //Inverting left motor so wheels spin in same direction 
   public IntakeSubsystem()
   {
+  SmartDashboard.putNumber("Intake Speed", intakeTestSpeed);  
+  
   intakeMotorR.setInverted(true);
   intakeMotorL.setInverted(false);
 
@@ -53,5 +57,7 @@ public class IntakeSubsystem extends SubsystemBase
     SmartDashboard.putNumber("intakeMotor L", intakeEncoderL.getVelocity());
     SmartDashboard.putNumber("intakeMotor R", intakeEncoderR.getVelocity());
     // This method will be called once per scheduler run
+    double is = SmartDashboard.getNumber("Intake Speed", .5);
+    if((is != intakeTestSpeed)) { intakeTestSpeed = is; }
   }
 }
