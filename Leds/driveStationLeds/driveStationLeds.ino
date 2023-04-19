@@ -1,6 +1,8 @@
 
 #include "FastLED.h"
 #define NUM_LEDS 80
+#define buttonPin 2
+bool oldButton;
 CRGB leds[NUM_LEDS];
 //0: Blue pattern
 //1: Red pattern
@@ -10,7 +12,7 @@ CRGB leds[NUM_LEDS];
 int color = 4;
 int j = 0;
 void setup() { 
-  
+  pinMode(buttonPin, INPUT_PULLUP);
   FastLED.addLeds<WS2801, RGB>(leds, NUM_LEDS); 
   for(int i = 0; i < NUM_LEDS; i++) {
       
@@ -23,9 +25,17 @@ void setup() {
 
     FastLED.show();
 }
+void button(){
+  bool buttonstate = digitalRead(buttonPin);
+  if(buttonstate == HIGH && oldButton == LOW){
+    color = (color + 1) % 5;
+    Serial.println("button");
+  }
+  oldButton = buttonstate;
+}
 
 void loop() {
-   
+   button();
   
     //int colors[6] = {CRGB::Red, CRGB::Orange, CRGB::Yellow, CRGB::Green, CRGB::Blue, CRGB::Purple};
      CRGB hi[7] = {CRGB::Red, CRGB::Orange, CRGB::Yellow, CRGB::Green, CRGB::Blue, CRGB::Purple, CRGB::Red};
