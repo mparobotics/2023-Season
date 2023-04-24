@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -28,7 +28,7 @@ public final class Constants
 
   }
 
-  public final class DriveConstants
+  public static final class DriveConstants
   {
     public static final int MOTOR_FL_ID = 11;
     public static final int MOTOR_FR_ID = 13;
@@ -76,11 +76,13 @@ public final class Constants
     public static final double RAMSETE_B = 2;
     public static final double RAMSETE_ZETA = 0.7;
 
-    public static final double DRIVE_KS = 0.6057;
-    public static final double DRIVE_KV = 2.4263;
-    public static final double DRIVE_KA = 0.37369;
+    public static final double DRIVE_KS = -0.013089; //0.6057
+    public static final double DRIVE_KV = 1.0843; //2.4263
+    public static final double DRIVE_KA = 0.37968; //0.37369
     //the distance between the left and right sides of the robot (meters)
-    public static final double TRACK_WIDTH_METERS = 0.73253;
+    public static final double TRACK_WIDTH_METERS = 0.90859;
+    public static final DifferentialDriveKinematics kDriveKinematics =
+    new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
     //Porportional gain value for driving straight
     public static final double DRIVE_STRAIGHT_P = 0.0007;
 
@@ -114,4 +116,5 @@ public final class Constants
     public static final int[] PURPLE_RGB = {188,0,255};
     public static final int[] YELLOW_RGB = {255,255,0};
   } 
+  
 }

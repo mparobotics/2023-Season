@@ -17,9 +17,9 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
     public final class DriveConstants
   {
-    public static final int MOTOR_FL_ID = 11;
-    public static final int MOTOR_FR_ID = 13;
-    public static final int MOTOR_BL_ID = 10;
-    public static final int MOTOR_BR_ID = 12;}
+    public static final int MOTOR_FL_ID = 2;
+    public static final int MOTOR_FR_ID = 4;
+    public static final int MOTOR_BL_ID = 6;
+    public static final int MOTOR_BR_ID = 8;}
   }
 }

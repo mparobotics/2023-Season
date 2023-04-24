@@ -295,6 +295,7 @@ private Command autoIntakeInstant(double speed){
   return new AutoIntakeInstant(m_intakeSubsystem, speed);
 }
 
+
   private Command stopRobot(){
     return m_driveSubsystem.setVolts(0, 0);
   }
@@ -370,9 +371,41 @@ private Command autoIntakeInstant(double speed){
               encoderReset(), m_driveSubsystem.setBrakeCommand(), AutoDriveLow(-105, -.5),
               (autoDriveBalance()), new NullCommand().withTimeout(1),
               autoIntakeInstant(0));
+
+             
+                
       
         case DoNothing:
-          return null;
+          Trajectory trajectoryOne = new Trajectory();
+          String trajectoryFileOne = "pathplanner/generatedJSON/straight.wpilib.json";
+
+          try{
+            Path trajectoryPathOne = Filesystem.getDeployDirectory().toPath().resolve(trajectoryFileOne);
+            trajectoryOne = TrajectoryUtil.fromPathweaverJson(trajectoryPathOne);
+          } catch(IOException ex) {
+            DriverStation.reportError("Unable to open trajectory:" + trajectoryFileOne, ex.getStackTrace());
+          }
+
+
+          RamseteCommand ramseteCommandOne =
+            new RamseteCommand(
+            trajectoryOne,
+            m_driveSubsystem::getPose,
+            new RamseteController(DriveConstants.RAMSETE_B, DriveConstants.RAMSETE_ZETA),
+            new SimpleMotorFeedforward(
+            DriveConstants.DRIVE_KS,
+            DriveConstants.DRIVE_KV,
+            DriveConstants.DRIVE_KA),
+            DriveConstants.kDriveKinematics,
+            m_driveSubsystem::getWheelSpeeds,
+            leftController,
+            rightController,
+            // RamseteCommand passes volts to the callback
+            m_driveSubsystem::tankDriveVolts,
+            m_driveSubsystem);
+
+          return ramseteCommandOne.andThen(() -> m_driveSubsystem.tankDriveVolts(0, 0));
+          //return null;
 
         case JustShoot:
           return runShooting(2);
