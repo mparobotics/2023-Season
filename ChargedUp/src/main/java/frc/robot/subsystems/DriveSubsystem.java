@@ -155,13 +155,16 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
         }
       else{
         if (inHighGear){
-          if ((Math.abs(encoderL.getVelocity()) <= 2000) || (Math.abs(encoderR.getVelocity()) <= 2000))
+          differentialDrive.arcadeDrive(slewRateLimiter.calculate(forwardSpeed) * DriveConstants.DRIVE_SPEED, Math.pow(turnSpeed, 3) * -.75);
+
+/*            if ((Math.abs(encoderL.getVelocity()) <= 3000) || (Math.abs(encoderR.getVelocity()) <= 3000))
             {
-              differentialDrive.arcadeDrive(slewRateLimiter.calculate(forwardSpeed) * DriveConstants.DRIVE_SPEED, turnSpeed * -.8);
+              differentialDrive.arcadeDrive(slewRateLimiter.calculate(forwardSpeed) * DriveConstants.DRIVE_SPEED, turnSpeed * -.75);
             }
           else{  
           differentialDrive.arcadeDrive(slewRateLimiter.calculate(forwardSpeed) * DriveConstants.DRIVE_SPEED_HIGH, turnSpeed * DriveConstants.TURNING_SPEED_HIGH);
-          }
+          } 
+          */
         }
       
        else{
@@ -241,9 +244,10 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
     else if (roll_error < -6.0)
     {
       position_adjust = balance_kp * roll_error - min_command;
-      differentialDrive.arcadeDrive(position_adjust, 0);
       if (position_adjust > .3){position_adjust = .3;}
       if (position_adjust < -.3){position_adjust = -.3;}
+      differentialDrive.arcadeDrive(position_adjust, 0);
+
       return false;
     }
     else{

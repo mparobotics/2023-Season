@@ -144,7 +144,7 @@ public class RobotContainer {
     xbox.button(Button.kLeftBumper.value).onTrue(m_driveSubsystem.ShiftDown());
     xbox.button(Button.kRightBumper.value).onTrue(m_driveSubsystem.ShiftUp());
 
-    xbox.button(Button.kBack.value).whileTrue(m_driveSubsystem.setBrakeCommand()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
+    xbox.button(Button.kB.value).whileTrue(m_driveSubsystem.setBrakeCommand()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
     xbox.button(Button.kA.value).whileTrue(m_driveSubsystem.setCoastCommand()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
     //A button shifts the gearbox into high gear
     //flightStickL.button(1).onTrue(m_driveSubsystem.ShiftDown());

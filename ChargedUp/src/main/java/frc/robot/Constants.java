@@ -47,13 +47,13 @@ public final class Constants
   
     //gear shifter solenoids
     public static final int SHIFT_SOLENOID_CHANNEL = 9;
-    public static final double MAX_DRIVE_SPEED = 4000;
+    public static final double MAX_DRIVE_SPEED = 4500;
    
 
     //driving speeds
     public static final double TURNING_SPEED_LIMIT = -.3;
     public static final double TURNING_SPEED_LOW = -.7;
-    public static final double TURNING_SPEED_HIGH = -.5;
+    public static final double TURNING_SPEED_HIGH = -.4;
     public static final double DRIVE_SPEED = -1;
     public static final double DRIVE_SPEED_HIGH = -1;
 
