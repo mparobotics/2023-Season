@@ -42,6 +42,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ArcadeDrive;
+import frc.robot.commands.AutoAlign;
 import frc.robot.commands.AutoDriveBalance;
 import frc.robot.commands.AutoDriveBangBang;
 import frc.robot.commands.AutoDriveBangBangLow;
@@ -147,6 +148,7 @@ public class RobotContainer {
     xbox.button(Button.kB.value).whileTrue(m_driveSubsystem.setBrakeCommand()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
     xbox.button(Button.kA.value).whileTrue(m_driveSubsystem.setCoastCommand()); // when b is pressed, it calls the forwardSolenoid command that is inside the double solenoid subsystem which makes it go forward.
     //A button shifts the gearbox into high gear
+    xbox.button(Button.kX.value).whileTrue(new AutoAlign(m_driveSubsystem));
     //flightStickL.button(1).onTrue(m_driveSubsystem.ShiftDown());
     //B button shifts the gearbox into low gear
     //flightStickR.button(1).onTrue(m_driveSubsystem.ShiftUp());

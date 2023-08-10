@@ -49,7 +49,9 @@ public final class Constants
     public static final int SHIFT_SOLENOID_CHANNEL = 9;
     public static final double MAX_DRIVE_SPEED = 4500;
    
-
+    
+    public static final float ALIGN_Kp = .035f;
+    public static final float min_command = .0f;
     //driving speeds
     public static final double TURNING_SPEED_LIMIT = -.3;
     public static final double TURNING_SPEED_LOW = -.7;
