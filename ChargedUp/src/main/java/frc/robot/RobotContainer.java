@@ -88,7 +88,7 @@ public class RobotContainer {
   //moving the drive kinematics from Constants to DriveSubsystem fixed the static issue
   private  DifferentialDriveKinematics DRIVE_KINEMATICS =
        new DifferentialDriveKinematics(DriveConstants.TRACK_WIDTH_METERS);
-  
+
   //individual pid controllers for the left and right sides of the robot
   PIDController leftController; 
   PIDController rightController; 

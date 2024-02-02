@@ -9,7 +9,7 @@ CRGB leds[NUM_LEDS];
 //2: purple/yellow
 //3:  blue/white
 //4: rainbow
-int color = 4;
+int color = 3;
 int j = 0;
 void setup() { 
   pinMode(buttonPin, INPUT_PULLUP);
@@ -28,8 +28,13 @@ void setup() {
 void button(){
   bool buttonstate = digitalRead(buttonPin);
   if(buttonstate == HIGH && oldButton == LOW){
-    color = (color + 1) % 5;
-    Serial.println("button");
+    color = (color + 1) % 3;
+    j = 0;
+    for(int i = 0; i < NUM_LEDS; i++) {
+    leds[i] = CRGB(0,0,0);  
+    }
+    FastLED.show();
+    delay(10);
   }
   oldButton = buttonstate;
 }
@@ -53,39 +58,7 @@ void loop() {
       else if(color == 1){
         leds[i] = CRGB(127 + ((NUM_LEDS-i-j) % length)*128/length,0,0);  
       }
-      else if(color == 2){
-        CRGB purple = CRGB(50,0,255);
-        CRGB yellow = CRGB(255,255,0);
-        int border1 =  j % NUM_LEDS;
-        int border2 = (j + NUM_LEDS/2) % NUM_LEDS;
-
-        if( (i < border1|| i > border2) && (border2 > border1) || (i > border2 && i < border1 && border2 < border1)){
-          leds[i] = purple;
-        }
-        else{
-          leds[i] = yellow;
-        }
-      }
-      else if (color == 3){
-        CRGB white = CRGB(255,255,255);
-        CRGB blue = CRGB(0,127,255);
-        int border1 =  j % NUM_LEDS;
-        int border2 = (j + NUM_LEDS/2) % NUM_LEDS;
-        
-        if( (i < border1|| i > border2) && (border2 > border1) || (i > border2 && i < border1 && border2 < border1)){
-          
-          
-          
-          leds[i] = blue;
-        }
-        
-        else{
-          leds[i] = white;
-        }
-       
-        
-      }
-      else if (color == 4){
+      else if (color == 2){
         leds[i] = makeColor(float(i+j)/NUM_LEDS * 360);
       }
     } 
